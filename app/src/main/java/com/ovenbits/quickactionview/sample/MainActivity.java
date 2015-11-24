@@ -26,6 +26,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mRoot = (ViewGroup) findViewById(R.id.root);
+        findViewById(R.id.button_recyclerview).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(RecyclerViewActivity.newIntent(MainActivity.this));
+            }
+        });
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final QuickActionView quickActionView = new QuickActionView(this);
