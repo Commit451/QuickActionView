@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,6 +68,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
         mQuickActionView = new QuickActionView(this);
         mQuickActionView.setActions(R.menu.actions);
         mQuickActionView.setScrimColor(Color.parseColor("#BB000000"));
+        mQuickActionView.setCircleMode(QuickActionView.CIRCLE_MODE_STROKE);
         mQuickActionView.setQuickActionListener(new QuickActionView.OnQuickActionSelectedListener() {
 
             @Override
@@ -97,7 +97,6 @@ public class RecyclerViewActivity extends AppCompatActivity {
         mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.d("TEST", "onTouch in recyclerview");
                 if (mQuickActionView.getVisibility() == View.VISIBLE) {
                     return mQuickActionView.onTouchEvent(event);
                 }

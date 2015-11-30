@@ -2,6 +2,8 @@ package com.ovenbits.quickactionview.sample;
 
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +39,10 @@ public class MainActivity extends AppCompatActivity {
         quickActionView.setActions(R.menu.actions);
         //Give one of the quick actions custom colors
         QuickActionConfig quickActionConfig = new QuickActionConfig.Builder(this)
-                .setBackgroundColor(Color.BLUE)
+                .setNormalBackgroundColor(Color.BLUE)
+                .setPressedBackgroundColor(Color.CYAN)
+                .setNormalColorFilter(new PorterDuffColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN))
+                .setPressedColorFilter(new PorterDuffColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN))
                 .setTextBackgroundColor(Color.RED)
                 .setTextColor(Color.BLACK)
                 .build();

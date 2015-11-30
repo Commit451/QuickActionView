@@ -2,6 +2,7 @@ package com.ovenbits.quickactionview;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.support.annotation.ColorInt;
 
 /**
@@ -10,16 +11,31 @@ import android.support.annotation.ColorInt;
  */
 public class QuickActionConfig {
 
-    private @ColorInt int mBackgroundColor;
-    private @ColorInt int mTextBackgroundColor;
-    private @ColorInt int mTextColor;
+    protected ColorFilter mNormalColorFilter;
+    protected ColorFilter mPressedColorFilter;
+    protected @ColorInt int mNormalBackgroundColor;
+    protected @ColorInt int mPressedBackgroundColor;
+    protected @ColorInt int mTextBackgroundColor;
+    protected @ColorInt int mTextColor;
 
     private QuickActionConfig() {
         //Use the builder!
     }
 
-    public @ColorInt int getBackgroundColor() {
-        return mBackgroundColor;
+    public ColorFilter getNormalColorFilter() {
+        return mNormalColorFilter;
+    }
+
+    public ColorFilter getPressedColorFilter() {
+        return mPressedColorFilter;
+    }
+
+    public @ColorInt int getNormalBackgroundColor() {
+        return mNormalBackgroundColor;
+    }
+
+    public @ColorInt int getPressedBackgroundColor() {
+        return mPressedBackgroundColor;
     }
 
     public @ColorInt int getTextBackgroundColor() {
@@ -37,8 +53,23 @@ public class QuickActionConfig {
             config = getDefaultConfig(context);
         }
 
-        public Builder setBackgroundColor(@ColorInt int backgroundColor) {
-            config.mBackgroundColor = backgroundColor;
+        public Builder setNormalColorFilter(ColorFilter colorFilter) {
+            config.mNormalColorFilter = colorFilter;
+            return this;
+        }
+
+        public Builder setPressedColorFilter(ColorFilter colorFilter) {
+            config.mPressedColorFilter = colorFilter;
+            return this;
+        }
+
+        public Builder setNormalBackgroundColor(@ColorInt int backgroundColor) {
+            config.mNormalBackgroundColor = backgroundColor;
+            return this;
+        }
+
+        public Builder setPressedBackgroundColor(@ColorInt int backgroundColor) {
+            config.mPressedBackgroundColor = backgroundColor;
             return this;
         }
 
@@ -60,7 +91,10 @@ public class QuickActionConfig {
     public static QuickActionConfig getDefaultConfig(Context context) {
         QuickActionConfig config = new QuickActionConfig();
         int colorAccent = ColorUtils.getThemeAttrColor(context, R.attr.colorAccent);
-        config.mBackgroundColor = colorAccent;
+        config.mNormalBackgroundColor = colorAccent;
+        config.mPressedBackgroundColor = colorAccent;
+        config.mNormalColorFilter = null;
+        config.mPressedColorFilter = null;
         config.mTextBackgroundColor = colorAccent;
         config.mTextColor = Color.WHITE;
         return config;

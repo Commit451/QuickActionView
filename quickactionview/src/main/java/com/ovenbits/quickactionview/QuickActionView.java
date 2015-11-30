@@ -7,11 +7,12 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorInt;
+import android.support.annotation.IntDef;
 import android.support.annotation.MenuRes;
 import android.support.v7.widget.PopupMenu;
 import android.util.TypedValue;
@@ -22,6 +23,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.OvershootInterpolator;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.HashMap;
 
 /**
@@ -34,44 +37,49 @@ public class QuickActionView extends View {
     private static final int DEFAULT_ACTION_RADIUS = 25;
     private static final int DEFAULT_ACTION_RADIUS_EXPANDED = 30;
     private static final int DEFAULT_TEXT_PADDING = 8;
-    private static final int DEFAULT_TEXT_SIZE = 14;
     private static final int DEFAULT_TEXT_BACKGROUND_PADDING = 8;
-    private static final int DEFAULT_BORDER = 2;
 
-    private int mLineThickness = 1;
-    private int mLineColor = Color.parseColor("#CCFFFFFF");
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({CIRCLE_MODE_FILL, CIRCLE_MODE_STROKE})
+    public @interface CircleMode {}
+    public static final int CIRCLE_MODE_FILL = 0;
+    public static final int CIRCLE_MODE_STROKE = 1;
+
+    public interface OnQuickActionSelectedListener {
+
+        void onQuickActionShow();
+
+        void onQuickActionSelected(View view, int action);
+
+        void onDismiss();
+    }
+
     private float mLineDistance;
-    private float mInnerCircleRadius;
-    private int mInnerCircleColor = Color.parseColor("#CCFFFFFF");
+    private float mTouchCircleRadius;
     private float mActionCircleRadius;
     private float mActionCircleRadiusExpanded;
     private float mStartAngle = 270;
     private float mAngularSpacing = 15;
 
-    private int mNormalIconColor = Color.WHITE;
-    private int mActionIconColor = Color.WHITE;
     private float mLastTouchX = 0;
     private float mLastTouchY = 0;
     private int mScrimColor = Color.TRANSPARENT;
 
     private float mTextPadding = 0;
-    private float mTextSize = 0;
     private float mTextBackgroundPadding;
-    private float mBorderWidth;
 
     private PopupMenu mActions;
     private HashMap<Integer, QuickActionConfig> mQuickActionConfigHashMap;
     private QuickActionConfig mDefaultQuickActionConfig;
     private OnQuickActionSelectedListener mListener;
 
-    private Paint mCirclePaint;
-    private Paint mLinePaint;
+    private Paint mTouchCirclePaint;
     private Paint mActionPaint;
-    private Paint mActionBorderPaint;
     private Paint mTextPaint;
     private Paint mTextBorderPaint;
 
     private Point mInnerCirclePoint = new Point();
+    private RectF mTextRect = new RectF();
 
     public QuickActionView(Context context) {
         super(context);
@@ -95,7 +103,7 @@ public class QuickActionView extends View {
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(WindowManager.LayoutParams.TYPE_APPLICATION_SUB_PANEL);
         params.x = point.x;
         params.y = point.y;
-        setInnerCirclePoint(point);
+        mInnerCirclePoint = point;
         setPivotX(point.x);
         setPivotY(point.y);
         setScaleX(0);
@@ -139,35 +147,23 @@ public class QuickActionView extends View {
         setClickable(true);
         setLayerType(LAYER_TYPE_SOFTWARE, null);
 
-        //Eventually put these in the dimens file and make them changeable attributes to
         mActionCircleRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_ACTION_RADIUS, getResources().getDisplayMetrics());
         mActionCircleRadiusExpanded = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_ACTION_RADIUS_EXPANDED, getResources().getDisplayMetrics());
         mLineDistance = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_DISTANCE, getResources().getDisplayMetrics());
-        mInnerCircleRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_ACTION_RADIUS, getResources().getDisplayMetrics());
+        mTouchCircleRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_ACTION_RADIUS, getResources().getDisplayMetrics());
         mTextPadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_TEXT_PADDING, getResources().getDisplayMetrics());
-        mTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_TEXT_SIZE, getResources().getDisplayMetrics());
         mTextBackgroundPadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_TEXT_BACKGROUND_PADDING, getResources().getDisplayMetrics());
-        mBorderWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_BORDER, getResources().getDisplayMetrics());
 
-        mCirclePaint = new Paint();
-        mCirclePaint.setAntiAlias(true);
-        mCirclePaint.setStyle(Paint.Style.FILL);
-        mCirclePaint.setColor(mInnerCircleColor);
-        mLinePaint = new Paint();
-        mLinePaint.setAntiAlias(true);
-        mLinePaint.setStyle(Paint.Style.STROKE);
-        mLinePaint.setStrokeWidth(mLineThickness);
-        mLinePaint.setColor(mLineColor);
+        mTouchCirclePaint = new Paint();
+        mTouchCirclePaint.setAntiAlias(true);
+        mTouchCirclePaint.setStyle(Paint.Style.FILL);
+        mTouchCirclePaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics()));
+        mTouchCirclePaint.setColor(Color.parseColor("#33FFFFFF"));
         mActionPaint = new Paint();
         mActionPaint.setAntiAlias(true);
         mActionPaint.setStyle(Paint.Style.FILL);
-        mActionBorderPaint = new Paint();
-        mActionBorderPaint.setStrokeWidth(mBorderWidth);
-        mActionBorderPaint.setAntiAlias(true);
-        mActionBorderPaint.setColor(Color.WHITE);
-        mActionBorderPaint.setStyle(Paint.Style.STROKE);
         mTextPaint = new Paint();
-        mTextPaint.setTextSize(mTextSize);
+        mTextPaint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, getResources().getDisplayMetrics()));
         mTextPaint.setAntiAlias(true);
         mTextPaint.setColor(Color.WHITE);
 
@@ -177,47 +173,73 @@ public class QuickActionView extends View {
 
     }
 
+    /**
+     * Set the size of all actions text
+     * @param size the size of text, in pixels
+     */
     public void setTextSize(float size) {
         mTextPaint.setTextSize(size);
     }
 
+
+    public float getTextSize() {
+        return mTextPaint.getTextSize();
+    }
+
+    /**
+     * Set the color of all actions text.
+     * @param color the color of the text
+     */
     public void setTextColor(int color) {
-        mTextPaint.setColor(color);
+        mDefaultQuickActionConfig.mTextColor = color;
+    }
+
+    /**
+     * Get the color of all actions text.
+     * @return color of all text actions
+     */
+    public int getTextColor() {
+        return mDefaultQuickActionConfig.getTextColor();
+    }
+
+    /**
+     * Set the typeface for the text
+     * See {@link Paint#setTypeface(Typeface)}
+     * @param typeface the typeface
+     */
+    public void setTextTypeface(Typeface typeface) {
+        mTextPaint.setTypeface(typeface);
+    }
+
+    /**
+     * Get the typeface of the actions text
+     * @return the typeface currently applied to the actions
+     */
+    public Typeface getTextTypeface() {
+        return mTextPaint.getTypeface();
     }
 
     public void setStartAngle(float angle) {
         mStartAngle = angle;
     }
 
-    public void setNormalIconColor(int normalIconColor) {
-        mNormalIconColor = normalIconColor;
+    public void setNormalColorFilter(ColorFilter normalColorFilter) {
+        mDefaultQuickActionConfig.mNormalColorFilter = normalColorFilter;
     }
 
-    public void setActionIconColor(int actionIconColor) {
-        mActionIconColor = actionIconColor;
-    }
-
-    public Point getInnerCirclePoint() {
-        return mInnerCirclePoint;
-    }
-
-    public void setInnerCirclePoint(Point innerCirclePoint) {
-        mInnerCirclePoint = innerCirclePoint;
+    public void setPressedColorFilter(ColorFilter pressedColorFilter) {
+        mDefaultQuickActionConfig.mPressedColorFilter = pressedColorFilter;
     }
 
     private Point getActionPoint(int index) {
-        float angle = (float) (Math.toRadians(mStartAngle) + index * 2 * (Math.atan2(mActionCircleRadiusExpanded + mAngularSpacing, mInnerCircleRadius + mLineDistance)));
-        Point point = new Point(getInnerCirclePoint());
-        point.offset((int) (Math.cos(angle) * (mInnerCircleRadius + mLineDistance)), (int) (Math.sin(angle) * (mInnerCircleRadius + mLineDistance)));
+        float angle = (float) (Math.toRadians(mStartAngle) + index * 2 * (Math.atan2(mActionCircleRadiusExpanded + mAngularSpacing, mTouchCircleRadius + mLineDistance)));
+        Point point = new Point(mInnerCirclePoint);
+        point.offset((int) (Math.cos(angle) * (mTouchCircleRadius + mLineDistance)), (int) (Math.sin(angle) * (mTouchCircleRadius + mLineDistance)));
         return point;
     }
 
     private float getIconSize(int radius) {
         return (float) ((radius * 2) * Math.sqrt(2));
-    }
-
-    public void setActions(PopupMenu actions) {
-        mActions = actions;
     }
 
     public void setActions(@MenuRes int id) {
@@ -234,8 +256,50 @@ public class QuickActionView extends View {
         mQuickActionConfigHashMap.put(actionId, config);
     }
 
+    /**
+     * Sets the color of the scrim (the background behind the quick actions
+     * @param scrimColor the color you want the scrim to be (please use transparent colors)
+     */
     public void setScrimColor(int scrimColor) {
         mScrimColor = scrimColor;
+    }
+
+    /**
+     * Set the color of the circle that appears where the view was long pressed
+     * @param circleColor the color you want the circle to be
+     */
+    public void setTouchCircleColor(@ColorInt int circleColor) {
+        mTouchCirclePaint.setColor(circleColor);
+    }
+
+    public int getTouchCircleColor() {
+        return mTouchCirclePaint.getColor();
+    }
+
+    /**
+     * Set the mode of the circle, one of {@link com.ovenbits.quickactionview.QuickActionView.CircleMode}
+     * either {@link #CIRCLE_MODE_FILL} (solid circle)
+     * or {@link #CIRCLE_MODE_STROKE} (just the outline of a circle)
+     * @param circleMode the mode you want your circle to be
+     */
+    public void setCircleMode(@CircleMode int circleMode) {
+        switch (circleMode) {
+            case CIRCLE_MODE_FILL:
+                mTouchCirclePaint.setStyle(Paint.Style.FILL);
+                break;
+            case CIRCLE_MODE_STROKE:
+                mTouchCirclePaint.setStyle(Paint.Style.STROKE);
+                break;
+        }
+    }
+
+    /**
+     * Sets the stroke width of the circle
+     * See {@link Paint#setStrokeWidth(float)}
+     * @param pixelWidth the width of the stroke in pixels. Pass 0 for hairline
+     */
+    public void setCircleStrokeWidth(int pixelWidth) {
+        mTouchCirclePaint.setStrokeWidth(pixelWidth);
     }
 
     @Override
@@ -257,7 +321,7 @@ public class QuickActionView extends View {
                     }
                 case MotionEvent.ACTION_CANCEL:
                 case MotionEvent.ACTION_OUTSIDE:
-                    Point point = getInnerCirclePoint();
+                    Point point = mInnerCirclePoint;
                     mLastTouchX = point.x;
                     mLastTouchY = point.y;
                     if (mListener != null) {
@@ -286,9 +350,9 @@ public class QuickActionView extends View {
             canvas.drawColor(mScrimColor);
         }
 
-        Point innerCircle = getInnerCirclePoint();
+        Point innerCircle = mInnerCirclePoint;
 
-        canvas.drawCircle(innerCircle.x, innerCircle.y, mInnerCircleRadius, mCirclePaint);
+        canvas.drawCircle(innerCircle.x, innerCircle.y, mTouchCircleRadius, mTouchCirclePaint);
 
         for (int i = 0; i < mActions.getMenu().size(); i++) {
             MenuItem item = mActions.getMenu().getItem(i);
@@ -299,31 +363,25 @@ public class QuickActionView extends View {
 
             Point point = getActionPoint(i);
 
-            mLinePaint.setColor(mLineColor);
-            mLinePaint.setStrokeWidth(mLineThickness);
-            ColorFilter colorFilter;
-
             float distance = (distance(point, mLastTouchX, mLastTouchY));
             float interpol = Math.min(1, Math.max(0, 1 - (distance / (mActionCircleRadius + mLineDistance))));
             float radius = mActionCircleRadius + (mActionCircleRadiusExpanded - mActionCircleRadius) * interpol;
-            boolean drawText = false;
-            if (insideCircle(point, mActionCircleRadius, mLastTouchX, mLastTouchY)) {
-                drawText = true;
-                colorFilter = new PorterDuffColorFilter(mActionIconColor, PorterDuff.Mode.SRC_IN);
+            boolean isPressed = insideCircle(point, mActionCircleRadius, mLastTouchX, mLastTouchY);
+            if (isPressed) {
+                mActionPaint.setColor(config.getPressedBackgroundColor());
             } else {
-                colorFilter = new PorterDuffColorFilter(mNormalIconColor, PorterDuff.Mode.SRC_IN);
-            }
-            if (config != null) {
-                mActionPaint.setColor(config.getBackgroundColor());
+                mActionPaint.setColor(config.getNormalBackgroundColor());
             }
             mActionPaint.setShadowLayer(radius / 5, 0, (float) (radius - (mActionCircleRadius * .9)), Color.parseColor("#50000000"));
 
             canvas.drawCircle(point.x, point.y, radius, mActionPaint);
-            canvas.drawCircle(point.x, point.y, radius, mActionBorderPaint);
             Drawable icon = item.getIcon();
-            //Do color filtering
 
-            icon.setColorFilter(colorFilter);
+            if (isPressed) {
+                icon.setColorFilter(config.getPressedColorFilter());
+            } else {
+                icon.setColorFilter(config.getNormalColorFilter());
+            }
             Rect bounds = getRectInsideCircle(point, radius);
             bounds.inset((int) mTextBackgroundPadding, (int) mTextBackgroundPadding);
 
@@ -335,18 +393,15 @@ public class QuickActionView extends View {
             icon.setBounds(bounds);
             icon.draw(canvas);
 
-            if (drawText) {
-                if (config != null) {
-                    mTextBorderPaint.setColor(config.getTextBackgroundColor());
-                    mTextPaint.setColor(config.getTextColor());
-                }
-                Point text = getCircleEdgePoint(innerCircle, mInnerCircleRadius + mLineDistance + mActionCircleRadiusExpanded + mTextPadding + mTextBackgroundPadding, (float) Math.toDegrees(Math.atan2(point.y - innerCircle.y, point.x - innerCircle.x)));
+            if (isPressed) {
+                mTextBorderPaint.setColor(config.getTextBackgroundColor());
+                mTextPaint.setColor(config.getTextColor());
+                Point text = getCircleEdgePoint(innerCircle, mTouchCircleRadius + mLineDistance + mActionCircleRadiusExpanded + mTextPadding + mTextBackgroundPadding, (float) Math.toDegrees(Math.atan2(point.y - innerCircle.y, point.x - innerCircle.x)));
                 float measure = mTextPaint.measureText(item.getTitle().toString());
-                RectF rect = new RectF(text.x, text.y - mTextSize, text.x + measure, text.y + mTextPaint.descent());
-                rect.inset(-mTextBackgroundPadding, -mTextBackgroundPadding);
-                canvas.drawRoundRect(rect, mTextPadding, mTextPadding, mTextBorderPaint);
+                mTextRect.set(text.x, text.y - mTextPaint.getTextSize(), text.x + measure, text.y + mTextPaint.descent());
+                mTextRect.inset(-mTextBackgroundPadding, -mTextBackgroundPadding);
+                canvas.drawRoundRect(mTextRect, mTextPadding, mTextPadding, mTextBorderPaint);
 
-                //text.offset(0, (int) -mTextPaint.getTextSize());
                 canvas.drawText(item.getTitle().toString(), text.x, text.y, mTextPaint);
             }
         }
@@ -376,14 +431,4 @@ public class QuickActionView extends View {
         ret.offset((int) (Math.cos(rads) * radius), (int) (Math.sin(rads) * radius));
         return ret;
     }
-
-    public interface OnQuickActionSelectedListener {
-
-        void onQuickActionShow();
-
-        void onQuickActionSelected(View view, int action);
-
-        void onDismiss();
-    }
-
 }
