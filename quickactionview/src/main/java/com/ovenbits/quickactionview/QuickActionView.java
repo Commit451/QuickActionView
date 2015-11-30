@@ -12,8 +12,10 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
+import android.support.annotation.IdRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.MenuRes;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.PopupMenu;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -63,7 +65,7 @@ public class QuickActionView extends View {
 
     private float mLastTouchX = 0;
     private float mLastTouchY = 0;
-    private int mScrimColor = Color.TRANSPARENT;
+    private int mScrimColor = Color.parseColor("#33000000");
 
     private float mTextPadding = 0;
     private float mTextBackgroundPadding;
@@ -289,7 +291,7 @@ public class QuickActionView extends View {
      * Get the normal color filter
      * @return the color filter for the icon normal state
      */
-    public ColorFilter getIconNormalColorFilter() {
+    public @Nullable ColorFilter getIconNormalColorFilter() {
         return mDefaultQuickActionConfig.getNormalColorFilter();
     }
 
@@ -306,7 +308,7 @@ public class QuickActionView extends View {
      * Get the pressed color filter
      * @return the color filter for the icon pressed state
      */
-    public ColorFilter getIconPressedColorFilter() {
+    public @Nullable ColorFilter getIconPressedColorFilter() {
         return mDefaultQuickActionConfig.getPressedColorFilter();
     }
 
@@ -359,16 +361,25 @@ public class QuickActionView extends View {
      * @param actionId the id of the menu item to apply to config to
      * @param config the config for the menu item
      */
-    public QuickActionView setQuickActionConfig(int actionId, QuickActionConfig config) {
+    public QuickActionView setQuickActionConfig(@IdRes int actionId, QuickActionConfig config) {
         mQuickActionConfigHashMap.put(actionId, config);
         return this;
+    }
+
+    /**
+     * Get the {@link QuickActionConfig} for a specified actionId
+     * @param actionId the actionId (menu item resource id)
+     * @return the {@link QuickActionConfig} for the menu item or null if non exists
+     */
+    public @Nullable QuickActionConfig getQuickActionConfig(@IdRes int actionId) {
+        return mQuickActionConfigHashMap.get(actionId);
     }
 
     /**
      * Sets the color of the scrim (the background behind the quick actions)
      * @param scrimColor the color you want the scrim to be (please use semi transparent colors). Set to {@link Color#TRANSPARENT} to remove scrim
      */
-    public QuickActionView setScrimColor(int scrimColor) {
+    public QuickActionView setScrimColor(@ColorInt int scrimColor) {
         mScrimColor = scrimColor;
         return this;
     }

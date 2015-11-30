@@ -67,8 +67,6 @@ public class RecyclerViewActivity extends AppCompatActivity {
 
         mQuickActionView = new QuickActionView(this);
         mQuickActionView.setActions(R.menu.actions);
-        mQuickActionView.setScrimColor(Color.parseColor("#BB000000"));
-        mQuickActionView.setCircleMode(QuickActionView.CIRCLE_MODE_STROKE);
         mQuickActionView.setQuickActionListener(new QuickActionView.OnQuickActionSelectedListener() {
 
             @Override
