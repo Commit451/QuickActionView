@@ -10,9 +10,15 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/actionAddToCart"
+        android:id="@+id/action_add_to_cart"
         android:icon="@drawable/ic_shopping_basket_24dp"
         android:title="@string/action_add_to_cart"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_like"
+        android:icon="@drawable/ic_thumb_up_black_24dp"
+        android:title="@string/action_like"
         app:showAsAction="always"/>
 
 </menu>

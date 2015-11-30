@@ -2,4 +2,5 @@
     <string name="app_name">QuickActionViewSample</string>
     <string name="action_favorite">Favorite</string>
     <string name="action_add_to_cart">Add to cart</string>
+    <string name="action_like">Like</string>
 </resources>

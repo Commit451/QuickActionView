@@ -95,7 +95,7 @@ public class QuickActionConfig {
         config.mPressedBackgroundColor = colorAccent;
         config.mNormalColorFilter = null;
         config.mPressedColorFilter = null;
-        config.mTextBackgroundColor = colorAccent;
+        config.mTextBackgroundColor = Color.parseColor("#CC000000");
         config.mTextColor = Color.WHITE;
         return config;
     }

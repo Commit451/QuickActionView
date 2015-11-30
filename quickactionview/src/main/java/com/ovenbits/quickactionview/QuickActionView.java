@@ -70,6 +70,7 @@ public class QuickActionView extends View {
 
     private PopupMenu mActions;
     private HashMap<Integer, QuickActionConfig> mQuickActionConfigHashMap;
+    //The config that will be used if a custom config does not exist
     private QuickActionConfig mDefaultQuickActionConfig;
     private OnQuickActionSelectedListener mListener;
 
@@ -81,25 +82,71 @@ public class QuickActionView extends View {
     private Point mInnerCirclePoint = new Point();
     private RectF mTextRect = new RectF();
 
+    /**
+     * Creates a QuickActionView. Perform setup, such as {@link #setActions(int)} and then call {@link #show(Point)}
+     * @param context the context
+     */
     public QuickActionView(Context context) {
         super(context);
         init();
     }
 
-    public void show(Context context, View origin, Point offset) {
+    private void init() {
+        mQuickActionConfigHashMap = new HashMap<>();
+        mDefaultQuickActionConfig = QuickActionConfig.getDefaultConfig(getContext());
+        setVisibility(View.GONE);
+        setClickable(true);
+        setLayerType(LAYER_TYPE_SOFTWARE, null);
+
+        mActionCircleRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_ACTION_RADIUS, getResources().getDisplayMetrics());
+        mActionCircleRadiusExpanded = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_ACTION_RADIUS_EXPANDED, getResources().getDisplayMetrics());
+        mLineDistance = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_DISTANCE, getResources().getDisplayMetrics());
+        mTouchCircleRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_ACTION_RADIUS, getResources().getDisplayMetrics());
+        mTextPadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_TEXT_PADDING, getResources().getDisplayMetrics());
+        mTextBackgroundPadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_TEXT_BACKGROUND_PADDING, getResources().getDisplayMetrics());
+
+        mTouchCirclePaint = new Paint();
+        mTouchCirclePaint.setAntiAlias(true);
+        mTouchCirclePaint.setStyle(Paint.Style.STROKE);
+        mTouchCirclePaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics()));
+        mTouchCirclePaint.setColor(Color.parseColor("#33FFFFFF"));
+        mActionPaint = new Paint();
+        mActionPaint.setAntiAlias(true);
+        mActionPaint.setStyle(Paint.Style.FILL);
+        mTextPaint = new Paint();
+        mTextPaint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, getResources().getDisplayMetrics()));
+        mTextPaint.setAntiAlias(true);
+        mTextPaint.setColor(Color.WHITE);
+
+        mTextBorderPaint = new Paint();
+        mTextBorderPaint.setAntiAlias(true);
+        mTextBorderPaint.setStyle(Paint.Style.FILL);
+
+    }
+
+    /**
+     * Show the QuickActionView, with the origin at the View, and a point to specify the offset
+     * @param origin the view to use as the origin
+     * @param offset the offset from the origin
+     */
+    public void show(View origin, Point offset) {
         int[] loc = new int[2];
         origin.getLocationInWindow(loc);
 
         Point point = new Point(offset);
         point.offset(loc[0], loc[1]);
-        show(context, point);
+        show(point);
     }
 
-    public void show(Context context, Point point) {
+    /**
+     * Show the QuickActionView, centered at the point specified
+     * @param point the point to show the view
+     */
+    public void show(Point point) {
         if (mActions == null) {
-            throw new IllegalStateException("You should give the QuickActionView actions before calling show!");
+            throw new IllegalStateException("You need to give the QuickActionView actions before calling show!");
         }
-        WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager manager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(WindowManager.LayoutParams.TYPE_APPLICATION_SUB_PANEL);
         params.x = point.x;
         params.y = point.y;
@@ -126,6 +173,9 @@ public class QuickActionView extends View {
         }
     }
 
+    /**
+     * Dismiss the QuickActionView
+     */
     public void dismiss() {
         AnimationSequencer sequencer = new AnimationSequencer();
         setEnabled(false);
@@ -140,48 +190,19 @@ public class QuickActionView extends View {
         });
     }
 
-    private void init() {
-        mQuickActionConfigHashMap = new HashMap<>();
-        mDefaultQuickActionConfig = QuickActionConfig.getDefaultConfig(getContext());
-        setVisibility(View.GONE);
-        setClickable(true);
-        setLayerType(LAYER_TYPE_SOFTWARE, null);
-
-        mActionCircleRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_ACTION_RADIUS, getResources().getDisplayMetrics());
-        mActionCircleRadiusExpanded = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_ACTION_RADIUS_EXPANDED, getResources().getDisplayMetrics());
-        mLineDistance = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_DISTANCE, getResources().getDisplayMetrics());
-        mTouchCircleRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_ACTION_RADIUS, getResources().getDisplayMetrics());
-        mTextPadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_TEXT_PADDING, getResources().getDisplayMetrics());
-        mTextBackgroundPadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_TEXT_BACKGROUND_PADDING, getResources().getDisplayMetrics());
-
-        mTouchCirclePaint = new Paint();
-        mTouchCirclePaint.setAntiAlias(true);
-        mTouchCirclePaint.setStyle(Paint.Style.FILL);
-        mTouchCirclePaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics()));
-        mTouchCirclePaint.setColor(Color.parseColor("#33FFFFFF"));
-        mActionPaint = new Paint();
-        mActionPaint.setAntiAlias(true);
-        mActionPaint.setStyle(Paint.Style.FILL);
-        mTextPaint = new Paint();
-        mTextPaint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, getResources().getDisplayMetrics()));
-        mTextPaint.setAntiAlias(true);
-        mTextPaint.setColor(Color.WHITE);
-
-        mTextBorderPaint = new Paint();
-        mTextBorderPaint.setAntiAlias(true);
-        mTextBorderPaint.setStyle(Paint.Style.FILL);
-
-    }
-
     /**
      * Set the size of all actions text
      * @param size the size of text, in pixels
      */
-    public void setTextSize(float size) {
+    public QuickActionView setTextSize(float size) {
         mTextPaint.setTextSize(size);
+        return this;
     }
 
-
+    /**
+     * Get the size of all actions text
+     * @return the size of the text, in pixels
+     */
     public float getTextSize() {
         return mTextPaint.getTextSize();
     }
@@ -190,8 +211,9 @@ public class QuickActionView extends View {
      * Set the color of all actions text.
      * @param color the color of the text
      */
-    public void setTextColor(int color) {
+    public QuickActionView setTextColor(int color) {
         mDefaultQuickActionConfig.mTextColor = color;
+        return this;
     }
 
     /**
@@ -207,8 +229,9 @@ public class QuickActionView extends View {
      * See {@link Paint#setTypeface(Typeface)}
      * @param typeface the typeface
      */
-    public void setTextTypeface(Typeface typeface) {
+    public QuickActionView setTextTypeface(Typeface typeface) {
         mTextPaint.setTypeface(typeface);
+        return this;
     }
 
     /**
@@ -219,32 +242,116 @@ public class QuickActionView extends View {
         return mTextPaint.getTypeface();
     }
 
-    public void setStartAngle(float angle) {
+    /**
+     * Set the background color of all actions text.
+     * @param color the color of the text
+     */
+    public QuickActionView setTextBackgroundColor(int color) {
+        mDefaultQuickActionConfig.mTextBackgroundColor = color;
+        return this;
+    }
+
+    /**
+     * Get the background color of all actions text.
+     * @return background color of all text actions
+     */
+    public int getTextBackgroundColor() {
+        return mDefaultQuickActionConfig.getTextBackgroundColor();
+    }
+
+    /**
+     * Set the angle where you would like the actions to start
+     * @param angle starting angle, in degrees
+     */
+    public QuickActionView setStartAngle(float angle) {
         mStartAngle = angle;
+        return this;
     }
 
-    public void setNormalColorFilter(ColorFilter normalColorFilter) {
+    /**
+     * Get the angle where actions will start displaying
+     * @return angle where the actions start from, in degrees
+     */
+    public float getStartAngle() {
+        return mStartAngle;
+    }
+
+    /**
+     * Set the color filter for the actions when they are in the normal state
+     * @param normalColorFilter color filter for the normal state
+     */
+    public QuickActionView setIconNormalColorFilter(ColorFilter normalColorFilter) {
         mDefaultQuickActionConfig.mNormalColorFilter = normalColorFilter;
+        return this;
     }
 
-    public void setPressedColorFilter(ColorFilter pressedColorFilter) {
+    /**
+     * Get the normal color filter
+     * @return the color filter for the icon normal state
+     */
+    public ColorFilter getIconNormalColorFilter() {
+        return mDefaultQuickActionConfig.getNormalColorFilter();
+    }
+
+    /**
+     * Set the color filter for the actions when they are in the pressed state
+     * @param pressedColorFilter color filter for the pressed state
+     */
+    public QuickActionView setIconPressedColorFilter(ColorFilter pressedColorFilter) {
         mDefaultQuickActionConfig.mPressedColorFilter = pressedColorFilter;
+        return this;
     }
 
-    private Point getActionPoint(int index) {
-        float angle = (float) (Math.toRadians(mStartAngle) + index * 2 * (Math.atan2(mActionCircleRadiusExpanded + mAngularSpacing, mTouchCircleRadius + mLineDistance)));
-        Point point = new Point(mInnerCirclePoint);
-        point.offset((int) (Math.cos(angle) * (mTouchCircleRadius + mLineDistance)), (int) (Math.sin(angle) * (mTouchCircleRadius + mLineDistance)));
-        return point;
+    /**
+     * Get the pressed color filter
+     * @return the color filter for the icon pressed state
+     */
+    public ColorFilter getIconPressedColorFilter() {
+        return mDefaultQuickActionConfig.getPressedColorFilter();
     }
 
-    private float getIconSize(int radius) {
-        return (float) ((radius * 2) * Math.sqrt(2));
+    /**
+     * Set the color for the action icon background when they are in the pressed state
+     * @param pressedColor background color for the pressed state
+     */
+    public QuickActionView setIconBackgroundPressedColor(@ColorInt int pressedColor) {
+        mDefaultQuickActionConfig.mPressedBackgroundColor = pressedColor;
+        return this;
     }
 
-    public void setActions(@MenuRes int id) {
+    /**
+     * Get the pressed color for the icon background
+     * @return the color for the icon background pressed state
+     */
+    public @ColorInt int getIconBackgroundPressedColor() {
+        return mDefaultQuickActionConfig.getPressedBackgroundColor();
+    }
+
+    /**
+     * Set the color for the action icon background when they are in the normal state
+     * @param normalColor background color for the normal state
+     */
+    public QuickActionView setIconBackgroundNormalColor(@ColorInt int normalColor) {
+        mDefaultQuickActionConfig.mNormalBackgroundColor = normalColor;
+        return this;
+    }
+
+    /**
+     * Get the normal color for the icon background
+     * @return the color for the icon background normal state
+     */
+    public @ColorInt int getIconBackgroundNormalColor() {
+        return mDefaultQuickActionConfig.getNormalBackgroundColor();
+    }
+
+    /**
+     * Set the actions that populate the QuickActionView.
+     * @param id the menu resource to populate the QuickActionView with
+     */
+    public QuickActionView setActions(@MenuRes int id) {
         mActions = new PopupMenu(getContext(), this);
         mActions.inflate(id);
+        return this;
     }
 
     /**
@@ -252,26 +359,33 @@ public class QuickActionView extends View {
      * @param actionId the id of the menu item to apply to config to
      * @param config the config for the menu item
      */
-    public void setQuickActionConfig(int actionId, QuickActionConfig config) {
+    public QuickActionView setQuickActionConfig(int actionId, QuickActionConfig config) {
         mQuickActionConfigHashMap.put(actionId, config);
+        return this;
     }
 
     /**
-     * Sets the color of the scrim (the background behind the quick actions
-     * @param scrimColor the color you want the scrim to be (please use transparent colors)
+     * Sets the color of the scrim (the background behind the quick actions)
+     * @param scrimColor the color you want the scrim to be (please use semi transparent colors). Set to {@link Color#TRANSPARENT} to remove scrim
      */
-    public void setScrimColor(int scrimColor) {
+    public QuickActionView setScrimColor(int scrimColor) {
         mScrimColor = scrimColor;
+        return this;
     }
 
     /**
      * Set the color of the circle that appears where the view was long pressed
      * @param circleColor the color you want the circle to be
      */
-    public void setTouchCircleColor(@ColorInt int circleColor) {
+    public QuickActionView setTouchCircleColor(@ColorInt int circleColor) {
         mTouchCirclePaint.setColor(circleColor);
+        return this;
     }
 
+    /**
+     * Get the touch circles color
+     * @return the color of the touch circle
+     */
     public int getTouchCircleColor() {
         return mTouchCirclePaint.getColor();
     }
@@ -282,7 +396,7 @@ public class QuickActionView extends View {
      * or {@link #CIRCLE_MODE_STROKE} (just the outline of a circle)
      * @param circleMode the mode you want your circle to be
      */
-    public void setCircleMode(@CircleMode int circleMode) {
+    public QuickActionView setCircleMode(@CircleMode int circleMode) {
         switch (circleMode) {
             case CIRCLE_MODE_FILL:
                 mTouchCirclePaint.setStyle(Paint.Style.FILL);
@@ -291,15 +405,27 @@ public class QuickActionView extends View {
                 mTouchCirclePaint.setStyle(Paint.Style.STROKE);
                 break;
         }
+        return this;
     }
 
     /**
-     * Sets the stroke width of the circle
+     * Sets the stroke width of the circle. Only relavent if the circle is set to {@link #CIRCLE_MODE_STROKE}
      * See {@link Paint#setStrokeWidth(float)}
      * @param pixelWidth the width of the stroke in pixels. Pass 0 for hairline
      */
-    public void setCircleStrokeWidth(int pixelWidth) {
+    public QuickActionView setCircleStrokeWidth(int pixelWidth) {
         mTouchCirclePaint.setStrokeWidth(pixelWidth);
+        return this;
+    }
+
+    /**
+     * Set a listener, which can detect when actions are performed on the
+     * QuickActionView
+     * @param listener the listener you want to recieve the events
+     */
+    public QuickActionView setQuickActionListener(OnQuickActionSelectedListener listener) {
+        mListener = listener;
+        return this;
     }
 
     @Override
@@ -377,21 +503,23 @@ public class QuickActionView extends View {
             canvas.drawCircle(point.x, point.y, radius, mActionPaint);
             Drawable icon = item.getIcon();
 
-            if (isPressed) {
-                icon.setColorFilter(config.getPressedColorFilter());
-            } else {
-                icon.setColorFilter(config.getNormalColorFilter());
+            if (icon != null) {
+                if (isPressed) {
+                    icon.setColorFilter(config.getPressedColorFilter());
+                } else {
+                    icon.setColorFilter(config.getNormalColorFilter());
+                }
+                Rect bounds = getRectInsideCircle(point, radius);
+                bounds.inset((int) mTextBackgroundPadding, (int) mTextBackgroundPadding);
+
+                float aspect = icon.getIntrinsicWidth() / (float) (icon.getIntrinsicHeight());
+                int desiredWidth = (int) Math.min(bounds.width(), bounds.height() * aspect);
+                int desiredHeight = (int) Math.min(bounds.height(), bounds.width() / aspect);
+
+                bounds.inset((bounds.width() - desiredWidth) / 2, (bounds.height() - desiredHeight) / 2);
+                icon.setBounds(bounds);
+                icon.draw(canvas);
             }
-            Rect bounds = getRectInsideCircle(point, radius);
-            bounds.inset((int) mTextBackgroundPadding, (int) mTextBackgroundPadding);
-
-            float aspect = icon.getIntrinsicWidth() / (float) (icon.getIntrinsicHeight());
-            int desiredWidth = (int) Math.min(bounds.width(), bounds.height() * aspect);
-            int desiredHeight = (int) Math.min(bounds.height(), bounds.width() / aspect);
-
-            bounds.inset((bounds.width() - desiredWidth) / 2, (bounds.height() - desiredHeight) / 2);
-            icon.setBounds(bounds);
-            icon.draw(canvas);
 
             if (isPressed) {
                 mTextBorderPaint.setColor(config.getTextBackgroundColor());
@@ -405,10 +533,6 @@ public class QuickActionView extends View {
                 canvas.drawText(item.getTitle().toString(), text.x, text.y, mTextPaint);
             }
         }
-    }
-
-    public void setQuickActionListener(OnQuickActionSelectedListener listener) {
-        mListener = listener;
     }
 
     private boolean insideCircle(Point center, float radius, float x, float y) {
@@ -430,5 +554,12 @@ public class QuickActionView extends View {
         Point ret = new Point(center);
         ret.offset((int) (Math.cos(rads) * radius), (int) (Math.sin(rads) * radius));
         return ret;
+    }
+
+    private Point getActionPoint(int index) {
+        float angle = (float) (Math.toRadians(mStartAngle) + index * 2 * (Math.atan2(mActionCircleRadiusExpanded + mAngularSpacing, mTouchCircleRadius + mLineDistance)));
+        Point point = new Point(mInnerCirclePoint);
+        point.offset((int) (Math.cos(angle) * (mTouchCircleRadius + mLineDistance)), (int) (Math.sin(angle) * (mTouchCircleRadius + mLineDistance)));
+        return point;
     }
 }

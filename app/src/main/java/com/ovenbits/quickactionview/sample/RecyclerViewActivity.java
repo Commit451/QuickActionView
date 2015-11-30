@@ -49,7 +49,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
         @Override
         public void onItemLongClicked(Cheese cheese, CheeseViewHolder holder) {
             mSelectedCheese = cheese;
-            mQuickActionView.show(RecyclerViewActivity.this, new Point((int) mTouchX, (int) mTouchY));
+            mQuickActionView.show(new Point((int) mTouchX, (int) mTouchY));
         }
     };
 
