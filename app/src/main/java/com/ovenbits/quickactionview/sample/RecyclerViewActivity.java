@@ -2,6 +2,7 @@ package com.ovenbits.quickactionview.sample;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -36,6 +37,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
 
     float mTouchX;
     float mTouchY;
+    Cheese mSelectedCheese;
 
     private final CheeseAdapter.Listener mCheeseAdapterListener = new CheeseAdapter.Listener() {
         @Override
@@ -47,9 +49,8 @@ public class RecyclerViewActivity extends AppCompatActivity {
 
         @Override
         public void onItemLongClicked(Cheese cheese, CheeseViewHolder holder) {
-            mRoot.requestDisallowInterceptTouchEvent(true);
-            Log.d("TEST", "onLongClick");
-            mQuickActionView.show(RecyclerViewActivity.this, holder.itemView, new Point((int) mTouchX, (int) mTouchY));
+            mSelectedCheese = cheese;
+            mQuickActionView.show(RecyclerViewActivity.this, new Point((int) mTouchX, (int) mTouchY));
         }
     };
 
@@ -67,12 +68,36 @@ public class RecyclerViewActivity extends AppCompatActivity {
 
         mQuickActionView = new QuickActionView(this);
         mQuickActionView.setActions(R.menu.actions);
-        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+        mQuickActionView.setScrimColor(Color.parseColor("#BB000000"));
+        mQuickActionView.setQuickActionListener(new QuickActionView.OnQuickActionSelectedListener() {
+
+            @Override
+            public void onQuickActionShow() {
+            }
+
+            @Override
+            public void onQuickActionSelected(View view, int action) {
+                Snackbar.make(mRoot, "Action selected for " + mSelectedCheese.getName(), Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+
+            @Override
+            public void onDismiss() {
+
+            }
+        });
+        findViewById(R.id.touch_interceptor).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 mTouchX = event.getX();
                 mTouchY = event.getY();
-
+                return false;
+            }
+        });
+        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d("TEST", "onTouch in recyclerview");
                 if (mQuickActionView.getVisibility() == View.VISIBLE) {
                     return mQuickActionView.onTouchEvent(event);
                 }

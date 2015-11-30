@@ -30,13 +30,12 @@ import java.util.HashMap;
  */
 public class QuickActionView extends View {
 
-    private static final int DEFAULT_RADIUS = 40;
     private static final int DEFAULT_DISTANCE = 70;
     private static final int DEFAULT_ACTION_RADIUS = 25;
     private static final int DEFAULT_ACTION_RADIUS_EXPANDED = 30;
     private static final int DEFAULT_TEXT_PADDING = 8;
-    private static final int DEFAULT_TEXT_SIZE = 12;
-    private static final int DEFAULT_TEXT_BACKGROUND_PADDING = 4;
+    private static final int DEFAULT_TEXT_SIZE = 14;
+    private static final int DEFAULT_TEXT_BACKGROUND_PADDING = 8;
     private static final int DEFAULT_BORDER = 2;
 
     private int mLineThickness = 1;
@@ -53,6 +52,7 @@ public class QuickActionView extends View {
     private int mActionIconColor = Color.WHITE;
     private float mLastTouchX = 0;
     private float mLastTouchY = 0;
+    private int mScrimColor = Color.TRANSPARENT;
 
     private float mTextPadding = 0;
     private float mTextSize = 0;
@@ -113,6 +113,9 @@ public class QuickActionView extends View {
         params.format = PixelFormat.TRANSLUCENT;
 
         manager.addView(this, params);
+        if (mListener != null) {
+            mListener.onQuickActionShow();
+        }
     }
 
     public void dismiss() {
@@ -174,11 +177,6 @@ public class QuickActionView extends View {
 
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
     public void setTextSize(float size) {
         mTextPaint.setTextSize(size);
     }
@@ -188,7 +186,7 @@ public class QuickActionView extends View {
     }
 
     public void setStartAngle(float angle) {
-        this.mStartAngle = angle;
+        mStartAngle = angle;
     }
 
     public void setNormalIconColor(int normalIconColor) {
@@ -236,6 +234,10 @@ public class QuickActionView extends View {
         mQuickActionConfigHashMap.put(actionId, config);
     }
 
+    public void setScrimColor(int scrimColor) {
+        mScrimColor = scrimColor;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (isEnabled()) {
@@ -280,6 +282,9 @@ public class QuickActionView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (mScrimColor != Color.TRANSPARENT) {
+            canvas.drawColor(mScrimColor);
+        }
 
         Point innerCircle = getInnerCirclePoint();
 
@@ -373,6 +378,9 @@ public class QuickActionView extends View {
     }
 
     public interface OnQuickActionSelectedListener {
+
+        void onQuickActionShow();
+
         void onQuickActionSelected(View view, int action);
 
         void onDismiss();

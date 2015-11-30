@@ -16,7 +16,6 @@ import com.ovenbits.quickactionview.QuickActionView;
 
 public class MainActivity extends AppCompatActivity {
 
-
     private ViewGroup mRoot;
     private float mTouchX;
     private float mTouchY;
@@ -44,6 +43,12 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         quickActionView.setQuickActionConfig(R.id.actionAddToCart, quickActionConfig);
         quickActionView.setQuickActionListener(new QuickActionView.OnQuickActionSelectedListener() {
+
+            @Override
+            public void onQuickActionShow() {
+                Log.d("TEST", "onQuickActionShow");
+            }
+
             @Override
             public void onQuickActionSelected(View view, int action) {
                 Log.d("TEST", "onQuickActionSelected " + action);
