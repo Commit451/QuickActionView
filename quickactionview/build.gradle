@@ -48,12 +48,11 @@ publishing {
     }
 }
 
-
 artifactory {
-    contextUrl = project.OVENBITS_ARTIFACTORY_URL
+    contextUrl = project.OVENBITS_ARTIFACTORY_DEPLOY_URL
     publish {
         repository {
-            repoKey = project.OVENBITS_ARTIFACTORY_PATH_LIBS
+            repoKey = "libs"
             username = project.OVENBITS_ARTIFACTORY_USERNAME
             password = project.OVENBITS_ARTIFACTORY_PASSWORD
         }
