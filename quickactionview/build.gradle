@@ -1,8 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.jfrog.artifactory'
-apply plugin: 'maven-publish'
-
-String libraryVersion = "1.0.0"
 
 android {
     compileSdkVersion 23
@@ -12,7 +8,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
-        versionName libraryVersion
+        versionName "1.0.0"
     }
     buildTypes {
         release {
@@ -28,56 +24,4 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
 }
 
-/**
- * Everything below relates to Artifactory publishing.
- * Deploy with:
- * ./gradlew clean build artifactoryPublish
- */
-publishing {
-    publications {
-        aar(MavenPublication) {
-            groupId "com.ovenbits"
-            version = libraryVersion
-            artifactId project.getName()
-
-            // Tell maven to prepare the generated "*.aar" file for publishing
-            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
-            artifact androidJavadocsJar
-            artifact androidSourcesJar
-        }
-    }
-}
-
-artifactory {
-    contextUrl = project.OVENBITS_ARTIFACTORY_DEPLOY_URL
-    publish {
-        repository {
-            repoKey = "libs"
-            username = project.OVENBITS_ARTIFACTORY_USERNAME
-            password = project.OVENBITS_ARTIFACTORY_PASSWORD
-        }
-        defaults {
-            // Tell the Artifactory Plugin which artifacts should be published to Artifactory.
-            publications('aar')
-            publishArtifacts = true
-
-            // Publish generated POM files to Artifactory (true by default)
-            publishPom = true
-        }
-    }
-}
-
-task androidJavadocs(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-    classifier = 'javadoc'
-    from androidJavadocs.destinationDir
-}
-
-task androidSourcesJar(type: Jar) {
-    classifier = 'sources'
-    from android.sourceSets.main.java.srcDirs
-}
+apply from: 'https://raw.githubusercontent.com/ovenbits/gradle-mvn-push/master/gradle-mvn-push.gradle'
