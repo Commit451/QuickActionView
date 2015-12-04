@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewGroup mRoot;
     private QuickActionView mQuickActionView;
 
-    private final QuickActionView.OnQuickActionSelectedListener mQuickActionListener = new QuickActionView.OnQuickActionSelectedListener() {
+    private final QuickActionView.OnQuickActionViewListener mQuickActionListener = new QuickActionView.OnQuickActionViewListener() {
         @Override
         public void onQuickActionShow() {
             Log.d("TEST", "onQuickActionShow");
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(mRoot, "View was clicked", Snackbar.LENGTH_SHORT).show();
             }
         });
-        mQuickActionView.setQuickActionListener(mQuickActionListener);
+        mQuickActionView.setOnQuickActionViewListener(mQuickActionListener);
 
         createCustomQuickActionView();
     }
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         new QuickActionView(this)
                 .setActions(R.menu.actions)
-                .setQuickActionListener(mQuickActionListener)
+                .setOnQuickActionViewListener(mQuickActionListener)
                 .setAnchor(findViewById(R.id.custom_parent))
                 .setCircleMode(QuickActionView.CIRCLE_MODE_FILL)
                 .setScrimColor(Color.parseColor("#CC000000"))

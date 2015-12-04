@@ -63,7 +63,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
 
         mQuickActionView = new QuickActionView(this)
                 .setActions(R.menu.actions)
-                .setQuickActionListener(new QuickActionView.OnQuickActionSelectedListener() {
+                .setOnQuickActionViewListener(new QuickActionView.OnQuickActionViewListener() {
 
                     @Override
                     public void onQuickActionShow() {
