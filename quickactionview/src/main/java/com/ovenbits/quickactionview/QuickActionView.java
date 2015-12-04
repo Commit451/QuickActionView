@@ -549,7 +549,8 @@ public class QuickActionView extends View {
 
         canvas.drawCircle(innerCircle.x, innerCircle.y, mTouchCircleRadius, mTouchCirclePaint);
 
-        for (int i = 0; i < mActions.getMenu().size(); i++) {
+        //Draw in reverse order, for overlapping purposes
+        for (int i = mActions.getMenu().size()-1; i >= 0; i--) {
             MenuItem item = mActions.getMenu().getItem(i);
             QuickActionConfig config = mQuickActionConfigHashMap.get(item.getItemId());
             if (config == null) {
