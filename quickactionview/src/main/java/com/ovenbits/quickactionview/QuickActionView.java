@@ -31,7 +31,6 @@ import java.util.HashMap;
 
 /**
  * QuickActionView, which shows actions emanating from the location where a user long presses.
- * Created by Alex on 6/12/15.
  */
 public class QuickActionView extends View {
 
@@ -47,14 +46,30 @@ public class QuickActionView extends View {
     public static final int CIRCLE_MODE_FILL = 0;
     public static final int CIRCLE_MODE_STROKE = 1;
 
-    public interface OnQuickActionSelectedListener {
+    /**
+     * Receive callbacks when QuickActionView actions occur
+     */
+    public interface OnQuickActionViewListener {
 
+        /**
+         * Called when the QuickActionView is shown
+         */
         void onQuickActionShow();
 
-        void onQuickActionSelected(View view, int action);
+        /**
+         * Called when a choice is made on the QuickActionView
+         * @param view the QuickActionView
+         * @param action the resource id of the menu item that was selected
+         */
+        void onQuickActionSelected(View view, @IdRes int action);
 
+        /**
+         * Called when the QuickActionView is dismissed
+         */
         void onDismiss();
     }
+
+    private OnQuickActionViewListener mListener;
 
     private float mLineDistance;
     private float mTouchCircleRadius;
@@ -74,7 +89,9 @@ public class QuickActionView extends View {
     private HashMap<Integer, QuickActionConfig> mQuickActionConfigHashMap;
     //The config that will be used if a custom config does not exist
     private QuickActionConfig mDefaultQuickActionConfig;
-    private OnQuickActionSelectedListener mListener;
+    private View mAnchorView;
+    private float mTouchX;
+    private float mTouchY;
 
     private Paint mTouchCirclePaint;
     private Paint mActionPaint;
@@ -86,7 +103,7 @@ public class QuickActionView extends View {
 
     /**
      * Creates a QuickActionView. Perform setup, such as {@link #setActions(int)} and then call {@link #show(Point)}
-     * @param context the context
+     * @param context context to initialize the view with
      */
     public QuickActionView(Context context) {
         super(context);
@@ -124,6 +141,47 @@ public class QuickActionView extends View {
         mTextBorderPaint.setAntiAlias(true);
         mTextBorderPaint.setStyle(Paint.Style.FILL);
 
+    }
+
+    /**
+     * Set the specified view as the anchor of the QuickActionView.
+     * This will override the {@link android.view.View.OnLongClickListener} and
+     * the {@link android.view.View.OnTouchListener} for the view in order to properly
+     * show the view in the right position.
+     * @param view the view that serves as an anchor to the QuickActionView
+     */
+    public QuickActionView setAnchor(View view) {
+        mAnchorView = view;
+        mAnchorView.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mTouchX = event.getX();
+                mTouchY = event.getY();
+
+                if (getVisibility() == View.VISIBLE) {
+                    return onTouchEvent(event);
+                }
+                return false;
+            }
+        });
+        mAnchorView.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                show();
+                return false;
+            }
+        });
+        return this;
+    }
+
+    /**
+     * Show the QuickActionView at the anchor view. Call {@link #setAnchor(View)} first
+     */
+    public void show(){
+        if (mAnchorView == null) {
+            throw new IllegalStateException("You must specify the anchor view with 'setAnchor()'");
+        }
+        show(mAnchorView, new Point((int) mTouchX, (int) mTouchY));
     }
 
     /**
@@ -434,7 +492,7 @@ public class QuickActionView extends View {
      * QuickActionView
      * @param listener the listener you want to recieve the events
      */
-    public QuickActionView setQuickActionListener(OnQuickActionSelectedListener listener) {
+    public QuickActionView setOnQuickActionViewListener(OnQuickActionViewListener listener) {
         mListener = listener;
         return this;
     }

@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * Created by Alex on 12/8/14.
+ * Sequencer for ViewPropertyAnimator
  */
 public class AnimationSequencer implements Animator.AnimatorListener {
 

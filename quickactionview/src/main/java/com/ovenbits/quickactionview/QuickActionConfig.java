@@ -6,8 +6,7 @@ import android.graphics.ColorFilter;
 import android.support.annotation.ColorInt;
 
 /**
- * Configuration for the quick action
- * Created by John on 11/24/15.
+ * Configuration for the quick action. Set on an action using {@link QuickActionView#setQuickActionConfig(int, QuickActionConfig)}
  */
 public class QuickActionConfig {
 

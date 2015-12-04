@@ -5,7 +5,6 @@ import android.util.TypedValue;
 
 /**
  * Gets the colors
- * Created by John on 11/24/15.
  */
 public class ColorUtils {
 
