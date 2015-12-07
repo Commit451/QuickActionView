@@ -6,12 +6,19 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
+import com.ovenbits.quickactionview.Action;
+import com.ovenbits.quickactionview.ActionTitleView;
+import com.ovenbits.quickactionview.ActionView;
+import com.ovenbits.quickactionview.ConfigHelper;
+import com.ovenbits.quickactionview.QAV;
 import com.ovenbits.quickactionview.QuickActionConfig;
 import com.ovenbits.quickactionview.QuickActionView;
 
@@ -67,6 +74,12 @@ public class MainActivity extends AppCompatActivity {
         mQuickActionView.setOnQuickActionViewListener(mQuickActionListener);
 
         createCustomQuickActionView();
+
+        Action action = new Action(1337, ContextCompat.getDrawable(this, R.drawable.ic_favorite_24dp), "Fav");
+        LinearLayout viewGroup = (LinearLayout) findViewById(R.id.linear_layout);
+        ConfigHelper configHelper = new ConfigHelper(new Action.Config(), new QAV.Config(this));
+        viewGroup.addView(new ActionView(this, action, configHelper), 0);
+        viewGroup.addView(new ActionTitleView(this, action, configHelper), 0);
     }
 
     private void createCustomQuickActionView() {
