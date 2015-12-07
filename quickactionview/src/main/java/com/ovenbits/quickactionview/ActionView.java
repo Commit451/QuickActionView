@@ -26,6 +26,7 @@ public class ActionView extends View {
 
     private void init() {
         mBackgroundPaint = new Paint();
+        mBackgroundPaint.setAntiAlias(true);
         mIconPaint = new Paint();
         mActionRadius = getResources().getDimensionPixelSize(R.dimen.qav_action_view_radius);
     }
@@ -53,7 +54,7 @@ public class ActionView extends View {
 //
 //        bounds.inset((bounds.width() - desiredWidth) / 2, (bounds.height() - desiredHeight) / 2);
 //        icon.setBounds(bounds);
-//        icon.draw(canvas);
+        mAction.getIcon().draw(canvas);
 
     }
 }
