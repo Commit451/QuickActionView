@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
@@ -293,12 +294,15 @@ public class QAV {
             mIndicatorView = new View(context);
             mIndicatorView.setBackgroundDrawable(mIndicatorDrawable);
             for (Action action : actions) {
-                ActionView actionView = new ActionView(context, action);
+                ConfigHelper helper = new ConfigHelper(action.getConfig(), mConfig);
+                ActionView actionView = new ActionView(context, action, helper);
                 mActionViews.put(action, actionView);
-                addView(actionView);
-                ActionTitleView actionTitleView = new ActionTitleView(context, action);
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                addView(actionView, params);
+                ActionTitleView actionTitleView = new ActionTitleView(context, action, helper);
                 mActionTitleViews.put(action, actionTitleView);
-                addView(actionTitleView);
+                FrameLayout.LayoutParams titleParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                addView(actionTitleView, titleParams);
             }
         }
 
@@ -321,7 +325,7 @@ public class QAV {
             return super.onTouchEvent(event);
         }
 
-
+//
 //        private Point getActionPoint(int index) {
 //            float angle = (float) (Math.toRadians(mStartAngle) + index * 2 * (Math.atan2(mActionCircleRadiusExpanded + mAngularSpacing, mActionDistance)));
 //            Point point = new Point(mCenterPoint);

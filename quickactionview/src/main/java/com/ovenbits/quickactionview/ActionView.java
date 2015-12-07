@@ -42,14 +42,14 @@ public class ActionView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension((int) (mActionCircleRadiusExpanded * 2 + getMaxShadowRadius() * 2), (int) (mActionCircleRadius * 2 + getMaxShadowRadius()*2));
+        setMeasuredDimension((int) (mActionCircleRadiusExpanded * 2 + getMaxShadowRadius() * 2), (int) (mActionCircleRadius * 2 + getMaxShadowRadius() * 2));
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        float x = mActionCircleRadiusExpanded+getMaxShadowRadius();
-        float y = mActionCircleRadius+getMaxShadowRadius()-getShadowOffsetY();
+        float x = getCircleCenterX();
+        float y = getCircleCenterY();
         //TODO 5.0+ = elevation?
         mBackgroundPaint.setShadowLayer(getCurrentShadowRadius(), 0, getShadowOffsetY(), Color.parseColor("#50000000"));
         mBackgroundPaint.setColor(mConfigHelper.getBackgroundColorStateList().getColorForState(getDrawableState(), Color.GRAY));
@@ -82,15 +82,15 @@ public class ActionView extends View {
     }
 
     private float getMaxShadowRadius() {
-        return mActionCircleRadiusExpanded/5;
-    }
-
-    public void setInterpolation(float interpolation) {
-        mInterpolation = interpolation;
+        return mActionCircleRadiusExpanded / 5;
     }
 
     public float getInterpolation() {
         return mInterpolation;
+    }
+
+    public void setInterpolation(float interpolation) {
+        mInterpolation = interpolation;
     }
 
     private float getInterpolatedRadius() {
@@ -98,11 +98,18 @@ public class ActionView extends View {
     }
 
     private float getCurrentShadowRadius() {
-        return getInterpolatedRadius()/5;
+        return getInterpolatedRadius() / 5;
     }
 
-    private float getShadowOffsetY()
-    {
+    protected float getCircleCenterX() {
+        return mActionCircleRadiusExpanded + getMaxShadowRadius();
+    }
+
+    protected float getCircleCenterY() {
+        return mActionCircleRadius + getMaxShadowRadius() - getShadowOffsetY();
+    }
+
+    private float getShadowOffsetY() {
         return 6;
     }
 }
