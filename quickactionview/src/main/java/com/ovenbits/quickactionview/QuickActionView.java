@@ -17,6 +17,7 @@ import android.support.annotation.IntDef;
 import android.support.annotation.MenuRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.PopupMenu;
+import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -86,7 +87,7 @@ public class QuickActionView extends View {
     private float mTextBackgroundPadding;
 
     private PopupMenu mActions;
-    private HashMap<Integer, QuickActionConfig> mQuickActionConfigHashMap;
+    private SparseArray<QuickActionConfig> mQuickActionConfigHashMap;
     //The config that will be used if a custom config does not exist
     private QuickActionConfig mDefaultQuickActionConfig;
     private View mAnchorView;
@@ -111,7 +112,7 @@ public class QuickActionView extends View {
     }
 
     private void init() {
-        mQuickActionConfigHashMap = new HashMap<>();
+        mQuickActionConfigHashMap = new SparseArray<>();
         mDefaultQuickActionConfig = QuickActionConfig.getDefaultConfig(getContext());
         setVisibility(View.GONE);
         setClickable(true);
