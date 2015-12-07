@@ -55,4 +55,21 @@ public class ConfigHelper {
     public int getTextSize() {
         return mQuickActionViewConfig.getTextSize();
     }
+
+    public int getTextPaddingTop() {
+        return mQuickActionViewConfig.getTextPaddingTop();
+    }
+
+    public int getTextPaddingBottom() {
+        return mQuickActionViewConfig.getTextPaddingBottom();
+    }
+
+    public int getTextPaddingLeft() {
+        return mQuickActionViewConfig.getTextPaddingLeft();
+    }
+
+    public int getTextPaddingRight() {
+        return mQuickActionViewConfig.getTextPaddingRight();
+    }
+
 }

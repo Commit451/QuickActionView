@@ -22,7 +22,9 @@ public class ActionTitleView extends TextView {
 
     @TargetApi(21)
     private void init() {
+        setPadding(mConfigHelper.getTextPaddingLeft(), mConfigHelper.getTextPaddingTop(), mConfigHelper.getTextPaddingRight(), mConfigHelper.getTextPaddingBottom());
         setTextColor(mConfigHelper.getTextColorStateList());
+        setTextSize(mConfigHelper.getTextSize());
         if (Build.VERSION.SDK_INT >= 16) {
             setBackgroundDrawable(mConfigHelper.getTextBackgroundDrawable());
         } else {
