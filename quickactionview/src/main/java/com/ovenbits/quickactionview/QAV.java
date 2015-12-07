@@ -198,14 +198,23 @@ public class QAV {
         private Action.Config mDefaultConfig;
         private Typeface mTypeface;
         private int mTextSize;
+        private int mTextPaddingTop;
+        private int mTextPaddingBottom;
+        private int mTextPaddingLeft;
+        private int mTextPaddingRight;
 
         public Config(Context context) {
-            this(context, null, context.getResources().getDimensionPixelSize(R.dimen.qav_action_title_view_text_size));
+            this(context, null, context.getResources().getInteger(R.integer.qav_action_title_view_text_size),
+                    context.getResources().getDimensionPixelSize(R.dimen.qav_action_title_view_text_padding));
         }
 
-        public Config(Context context, Typeface typeface, int textSize) {
+        private Config(Context context, Typeface typeface, int textSize, int textPadding) {
             mTypeface = typeface;
             mTextSize = textSize;
+            mTextPaddingTop = textPadding;
+            mTextPaddingBottom = textPadding;
+            mTextPaddingLeft = textPadding;
+            mTextPaddingRight = textPadding;
             mDefaultConfig = new Action.Config(context);
         }
 
@@ -253,12 +262,52 @@ public class QAV {
             mDefaultConfig.setIconColor(iconColor);
         }
 
+        public void setTypeface(Typeface typeface) {
+            mTypeface = typeface;
+        }
+
         public Typeface getTypeface() {
             return mTypeface;
         }
 
+        public void setTextSize(int textSize) {
+            mTextSize = textSize;
+        }
+
         public int getTextSize() {
             return mTextSize;
+        }
+
+        public int getTextPaddingTop() {
+            return mTextPaddingTop;
+        }
+
+        public void setTextPaddingTop(int textPaddingTop) {
+            mTextPaddingTop = textPaddingTop;
+        }
+
+        public int getTextPaddingBottom() {
+            return mTextPaddingBottom;
+        }
+
+        public void setTextPaddingBottom(int textPaddingBottom) {
+            mTextPaddingBottom = textPaddingBottom;
+        }
+
+        public int getTextPaddingLeft() {
+            return mTextPaddingLeft;
+        }
+
+        public void setTextPaddingLeft(int textPaddingLeft) {
+            mTextPaddingLeft = textPaddingLeft;
+        }
+
+        public int getTextPaddingRight() {
+            return mTextPaddingRight;
+        }
+
+        public void setTextPaddingRight(int textPaddingRight) {
+            mTextPaddingRight = textPaddingRight;
         }
     }
 
