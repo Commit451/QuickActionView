@@ -11,20 +11,22 @@ import android.widget.TextView;
 public class ActionTitleView extends TextView {
 
     private Action mAction;
+    private ConfigHelper mConfigHelper;
 
-    public ActionTitleView(Context context, Action action) {
+    public ActionTitleView(Context context, Action action, ConfigHelper configHelper) {
         super(context);
         mAction = action;
+        mConfigHelper = configHelper;
         init();
     }
 
     @TargetApi(21)
     private void init() {
-        setTextColor(mAction.getConfig().getTextColorStateList());
+        setTextColor(mConfigHelper.getTextColorStateList());
         if (Build.VERSION.SDK_INT >= 16) {
-            setBackgroundDrawable(mAction.getConfig().getTextBackgroundDrawable());
+            setBackgroundDrawable(mConfigHelper.getTextBackgroundDrawable());
         } else {
-            setBackground(mAction.getConfig().getTextBackgroundDrawable());
+            setBackground(mConfigHelper.getTextBackgroundDrawable());
         }
     }
 }
