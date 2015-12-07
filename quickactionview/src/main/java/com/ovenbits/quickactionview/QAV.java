@@ -19,6 +19,7 @@ import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 
 /**
  * Created by Alex on 12/7/15.
@@ -30,13 +31,21 @@ public class QAV {
     private onActionSelectedListener mOnActionSelectedListener;
     private onDismissListener mOnDismissListener;
     private onShowListener mOnShowListener;
+
+
     private Float mStartAngle;
+    private float mActionDistance;
+    private int mActionPadding;
+
+
     private ArrayList<Action> mActions = new ArrayList<>();
     private Bundle mExtras;
     private QuickActionViewLayout mQuickActionViewLayout;
 
     private View mRegisteredView;
     private View.OnLongClickListener mOnLongClickListener;
+    private Config mConfig;
+    private Drawable mIndicatorDrawable;
 
     private QAV(Context context) {
         mContext = context;
@@ -103,8 +112,8 @@ public class QAV {
         for (int i = 0; i < menu.size(); i++) {
             MenuItem item = menu.getItem(i);
             Action action = new Action(item.getItemId(), item.getIcon(), item.getTitle());
+            addAction(action);
         }
-
         return this;
     }
 
@@ -115,19 +124,28 @@ public class QAV {
         return this;
     }
 
-    private void checkShown() {
-        if (mShown) {
-            throw new RuntimeException("QuickActionView cannot be configured if show has already been called.");
-        }
-    }
-
-    public Bundle getExtras() {
-        return mExtras;
-    }
-
-    public QAV setExtras(Bundle extras) {
-        mExtras = extras;
+    public QAV setOnActionSelectedListener(onActionSelectedListener onActionSelectedListener) {
+        mOnActionSelectedListener = onActionSelectedListener;
         return this;
+    }
+
+    public QAV setOnDismissListener(onDismissListener onDismissListener) {
+        mOnDismissListener = onDismissListener;
+        return this;
+    }
+
+    public QAV setOnShowListener(onShowListener onShowListener) {
+        mOnShowListener = onShowListener;
+        return this;
+    }
+
+    public void setStartAngle(Float startAngle) {
+        checkShown();
+        mStartAngle = startAngle;
+    }
+
+    public void setIndicatorDrawable(Drawable indicatorDrawable) {
+        mIndicatorDrawable = indicatorDrawable;
     }
 
     private void display(Point point) {
@@ -166,21 +184,21 @@ public class QAV {
 //        }
     }
 
+    private void checkShown() {
+        if (mShown) {
+            throw new RuntimeException("QuickActionView cannot be configured if show has already been called.");
+        }
+    }
 
-    public QAV setOnActionSelectedListener(onActionSelectedListener onActionSelectedListener) {
-        mOnActionSelectedListener = onActionSelectedListener;
+    public Bundle getExtras() {
+        return mExtras;
+    }
+
+    public QAV setExtras(Bundle extras) {
+        mExtras = extras;
         return this;
     }
 
-    public QAV setOnDismissListener(onDismissListener onDismissListener) {
-        mOnDismissListener = onDismissListener;
-        return this;
-    }
-
-    public QAV setOnShowListener(onShowListener onShowListener) {
-        mOnShowListener = onShowListener;
-        return this;
-    }
 
     public interface onActionSelectedListener {
         public void onActionSelected(Action action, QAV qav);
@@ -312,11 +330,53 @@ public class QAV {
     }
 
     protected class QuickActionViewLayout extends FrameLayout {
-        public QuickActionViewLayout(Context context) {
+
+        private Point mCenterPoint;
+        private View mIndicatorView;
+        private LinkedHashMap<Action, ActionView> mActionViews = new LinkedHashMap<>();
+        private LinkedHashMap<Action, ActionTitleView> mActionTitleViews = new LinkedHashMap<>();
+
+        public QuickActionViewLayout(Context context, ArrayList<Action> actions, Point centerPoint) {
             super(context);
+            mCenterPoint = centerPoint;
+            mIndicatorView = new View(context);
+            mIndicatorView.setBackgroundDrawable(mIndicatorDrawable);
+            for (Action action : actions) {
+                ActionView actionView = new ActionView(context, action);
+                mActionViews.put(action, actionView);
+                addView(actionView);
+                ActionTitleView actionTitleView = new ActionTitleView(context, action);
+                mActionTitleViews.put(action, actionTitleView);
+                addView(actionTitleView);
+            }
         }
 
 
+        @Override
+        protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+            super.onLayout(changed, left, top, right, bottom);
+
+            mIndicatorView.layout(mCenterPoint.x - (int) (mIndicatorView.getMeasuredWidth() / 2.0),
+                    mCenterPoint.y - (int) (mIndicatorView.getMeasuredHeight() / 2.0),
+                    mCenterPoint.x + (int) (mIndicatorView.getMeasuredWidth() / 2.0),
+                    mCenterPoint.y + (int) (mIndicatorView.getMeasuredHeight() / 2.0));
+            for (ActionView actionView : mActionViews.values()) {
+
+            }
+        }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent event) {
+            return super.onTouchEvent(event);
+        }
+
+
+//        private Point getActionPoint(int index) {
+//            float angle = (float) (Math.toRadians(mStartAngle) + index * 2 * (Math.atan2(mActionCircleRadiusExpanded + mAngularSpacing, mActionDistance)));
+//            Point point = new Point(mCenterPoint);
+//            point.offset((int) (Math.cos(angle) * (mTouchCircleRadius + mLineDistance)), (int) (Math.sin(angle) * (mTouchCircleRadius + mLineDistance)));
+//            return point;
+//        }
     }
 
 
