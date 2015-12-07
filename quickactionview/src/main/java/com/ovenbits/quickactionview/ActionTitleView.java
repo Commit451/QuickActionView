@@ -28,5 +28,6 @@ public class ActionTitleView extends TextView {
         } else {
             setBackground(mConfigHelper.getTextBackgroundDrawable());
         }
+        setText(mAction.getTitle());
     }
 }
