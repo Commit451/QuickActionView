@@ -28,7 +28,6 @@ import android.view.animation.OvershootInterpolator;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.HashMap;
 
 /**
  * QuickActionView, which shows actions emanating from the location where a user long presses.
