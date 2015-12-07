@@ -199,6 +199,10 @@ public class QAV {
         private Typeface mTypeface;
         private int mTextSize;
 
+        public Config(Context context) {
+            this(context, null, context.getResources().getDimensionPixelSize(R.dimen.qav_action_view_text_size));
+        }
+
         public Config(Context context, Typeface typeface, int textSize) {
             mTypeface = typeface;
             mTextSize = textSize;

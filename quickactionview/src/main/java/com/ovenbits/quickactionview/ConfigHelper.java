@@ -3,11 +3,10 @@ package com.ovenbits.quickactionview;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 
 /**
- * Created by Alex on 12/7/15.
+ * Determines which config to get values from, based on the state of each config.
  */
 public class ConfigHelper {
     private Action.Config mActionConfig;
