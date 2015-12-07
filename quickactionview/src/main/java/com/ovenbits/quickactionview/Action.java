@@ -22,10 +22,6 @@ public class Action {
         mTitle = title;
     }
 
-    public void setConfig(Config config) {
-        mConfig = config;
-    }
-
     public int getId() {
         return mId;
     }
@@ -36,6 +32,14 @@ public class Action {
 
     public CharSequence getTitle() {
         return mTitle;
+    }
+
+    public Config getConfig() {
+        return mConfig;
+    }
+
+    public void setConfig(Config config) {
+        mConfig = config;
     }
 
     /**
