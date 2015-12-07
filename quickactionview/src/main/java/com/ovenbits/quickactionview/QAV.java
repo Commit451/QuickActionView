@@ -1,8 +1,12 @@
 package com.ovenbits.quickactionview;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Point;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.MenuRes;
 import android.support.v7.view.menu.MenuBuilder;
 import android.view.Menu;
@@ -188,6 +192,70 @@ public class QAV {
 
     public interface onShowListener {
         public void onShow(QAV qav);
+    }
+
+    public static class Config {
+        private Action.Config mDefaultConfig;
+        private Typeface mTypeface;
+        private int mTextSize;
+
+        public Config(Context context, Typeface typeface, int textSize) {
+            mTypeface = typeface;
+            mTextSize = textSize;
+            mDefaultConfig = new Action.Config(context);
+        }
+
+        public ColorStateList getIconColorStateList() {
+            return mDefaultConfig.getIconColorStateList();
+        }
+
+        public void setIconColorStateList(ColorStateList iconColorStateList) {
+            mDefaultConfig.setIconColorStateList(iconColorStateList);
+        }
+
+        public Drawable getTextBackgroundDrawable() {
+            return mDefaultConfig.getTextBackgroundDrawable();
+        }
+
+        public void setTextBackgroundDrawable(Drawable textBackgroundDrawable) {
+            mDefaultConfig.setTextBackgroundDrawable(textBackgroundDrawable);
+        }
+
+        public ColorStateList getTextColorStateList() {
+            return mDefaultConfig.getTextColorStateList();
+        }
+
+        public void setTextColorStateList(ColorStateList textColorStateList) {
+            mDefaultConfig.setTextColorStateList(textColorStateList);
+        }
+
+        public ColorStateList getBackgroundColorStateList() {
+            return mDefaultConfig.getBackgroundColorStateList();
+        }
+
+        public void setBackgroundColorStateList(ColorStateList backgroundColorStateList) {
+            mDefaultConfig.setBackgroundColorStateList(backgroundColorStateList);
+        }
+
+        public void setTextColor(@ColorInt int textColor) {
+            mDefaultConfig.setTextColor(textColor);
+        }
+
+        public void setBackgroundColor(@ColorInt int backgroundColor) {
+            mDefaultConfig.setBackgroundColor(backgroundColor);
+        }
+
+        public void setIconColor(@ColorInt int iconColor) {
+            mDefaultConfig.setIconColor(iconColor);
+        }
+
+        public Typeface getTypeface() {
+            return mTypeface;
+        }
+
+        public int getTextSize() {
+            return mTextSize;
+        }
     }
 
     protected class QuickActionViewLayout extends FrameLayout {

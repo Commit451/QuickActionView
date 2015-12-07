@@ -55,12 +55,16 @@ public class Action {
         protected ColorStateList mTextColorStateList;
         protected Drawable mTextBackgroundDrawable;
 
-        public Config(Context context) {
+        protected Config(Context context) {
             int colorAccent = ColorUtils.getThemeAttrColor(context, R.attr.colorAccent);
             mIconColorStateList = ColorStateList.valueOf(Color.WHITE);
             mBackgroundColorStateList = ColorStateList.valueOf(colorAccent);
             mTextBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.default_text_background);
             mTextColorStateList = ColorStateList.valueOf(Color.WHITE);
+        }
+
+        public Config() {
+
         }
 
 
