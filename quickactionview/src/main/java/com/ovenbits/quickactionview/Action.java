@@ -3,22 +3,20 @@ package com.ovenbits.quickactionview;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.IdRes;
 
 /**
  * Action that can be added to the {@link QuickActionView}
  */
 public class Action {
-    @IdRes
     private int mId;
-    @DrawableRes
-    private int mIcon;
-    private String mTitle;
+    private Drawable mIcon;
+    private CharSequence mTitle;
     private Config mConfig;
 
-    public Action(@IdRes int id, @DrawableRes int icon, String title) {
+    public Action(int id, @DrawableRes Drawable icon, CharSequence title) {
         mId = id;
         mIcon = icon;
         mTitle = title;
@@ -28,6 +26,18 @@ public class Action {
         mConfig = config;
     }
 
+    public int getId() {
+        return mId;
+    }
+
+    public Drawable getIcon() {
+        return mIcon;
+    }
+
+    public CharSequence getTitle() {
+        return mTitle;
+    }
+
     /**
      * Configuration for the {@link Action} which controls the visuals.
      */
@@ -35,10 +45,14 @@ public class Action {
 
         protected ColorFilter mNormalColorFilter;
         protected ColorFilter mPressedColorFilter;
-        protected @ColorInt int mNormalBackgroundColor;
-        protected @ColorInt int mPressedBackgroundColor;
-        protected @ColorInt int mTextBackgroundColor;
-        protected @ColorInt int mTextColor;
+        @ColorInt
+        protected int mNormalBackgroundColor;
+        @ColorInt
+        protected int mPressedBackgroundColor;
+        @ColorInt
+        protected int mTextBackgroundColor;
+        @ColorInt
+        protected int mTextColor;
 
         public Config(Context context) {
             int colorAccent = ColorUtils.getThemeAttrColor(context, R.attr.colorAccent);
