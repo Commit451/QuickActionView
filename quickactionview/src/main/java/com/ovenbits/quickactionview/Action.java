@@ -113,6 +113,10 @@ public class Action {
             return this;
         }
 
+        public int getTextColor() {
+            return mTextColor;
+        }
+
         public Config setTextColor(@ColorInt int textColor) {
             mTextColor = textColor;
             return this;
