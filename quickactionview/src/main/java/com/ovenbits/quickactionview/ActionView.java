@@ -42,16 +42,16 @@ public class ActionView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension((int) (mActionCircleRadiusExpanded * 2 + getMaxShadowRadius() * 2), (int) (mActionCircleRadius * 2 + getMaxShadowRadius()));
+        setMeasuredDimension((int) (mActionCircleRadiusExpanded * 2 + getMaxShadowRadius() * 2), (int) (mActionCircleRadius * 2 + getMaxShadowRadius()*2));
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        float x = getWidth()/2;
-        float y = getWidth()/2;
+        float x = mActionCircleRadiusExpanded+getMaxShadowRadius();
+        float y = mActionCircleRadius+getMaxShadowRadius()-getShadowOffsetY();
         //TODO 5.0+ = elevation?
-        mBackgroundPaint.setShadowLayer(getCurrentShadowRadius(), 0, 6, Color.parseColor("#50000000"));
+        mBackgroundPaint.setShadowLayer(getCurrentShadowRadius(), 0, getShadowOffsetY(), Color.parseColor("#50000000"));
         mBackgroundPaint.setColor(mConfigHelper.getBackgroundColorStateList().getColorForState(getDrawableState(), Color.GRAY));
 
         canvas.drawCircle(x, y, getInterpolatedRadius(), mBackgroundPaint);
@@ -99,5 +99,10 @@ public class ActionView extends View {
 
     private float getCurrentShadowRadius() {
         return getInterpolatedRadius()/5;
+    }
+
+    private float getShadowOffsetY()
+    {
+        return 6;
     }
 }
