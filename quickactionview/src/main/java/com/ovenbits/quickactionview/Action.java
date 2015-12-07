@@ -1,11 +1,12 @@
 package com.ovenbits.quickactionview;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 
 /**
  * Action that can be added to the {@link QuickActionView}
@@ -16,7 +17,7 @@ public class Action {
     private CharSequence mTitle;
     private Config mConfig;
 
-    public Action(int id, @DrawableRes Drawable icon, CharSequence title) {
+    public Action(int id, @NonNull Drawable icon, @NonNull CharSequence title) {
         mId = id;
         mIcon = icon;
         mTitle = title;
@@ -26,19 +27,22 @@ public class Action {
         return mId;
     }
 
+    @NonNull
     public Drawable getIcon() {
         return mIcon;
     }
 
+    @NonNull
     public CharSequence getTitle() {
         return mTitle;
     }
 
+    @NonNull
     public Config getConfig() {
         return mConfig;
     }
 
-    public void setConfig(Config config) {
+    public void setConfig(@NonNull Config config) {
         mConfig = config;
     }
 
@@ -46,76 +50,77 @@ public class Action {
      * Configuration for the {@link Action} which controls the visuals.
      */
     public static class Config {
-
-        protected ColorFilter mNormalColorFilter;
-        protected ColorFilter mPressedColorFilter;
-        @ColorInt
-        protected int mNormalBackgroundColor;
-        @ColorInt
-        protected int mPressedBackgroundColor;
-        @ColorInt
-        protected int mTextBackgroundColor;
-        @ColorInt
-        protected int mTextColor;
+        protected ColorStateList mIconColorStateList;
+        protected ColorStateList mBackgroundColorStateList;
+        protected ColorStateList mTextColorStateList;
+        protected Drawable mTextBackgroundDrawable;
 
         public Config(Context context) {
             int colorAccent = ColorUtils.getThemeAttrColor(context, R.attr.colorAccent);
-            mNormalBackgroundColor = colorAccent;
-            mPressedBackgroundColor = colorAccent;
-            mNormalColorFilter = null;
-            mPressedColorFilter = null;
-            mTextBackgroundColor = Color.parseColor("#CC000000");
-            mTextColor = Color.WHITE;
+            mIconColorStateList = ColorStateList.valueOf(Color.WHITE);
+            mBackgroundColorStateList = ColorStateList.valueOf(colorAccent);
+            mTextBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.default_text_background);
+            mTextColorStateList = ColorStateList.valueOf(Color.WHITE);
         }
 
-        public ColorFilter getNormalColorFilter() {
-            return mNormalColorFilter;
+
+        public Config(ColorStateList iconColorStateList, ColorStateList backgroundColorStateList, ColorStateList textColorStateList, Drawable textBackgroundDrawable) {
+            mIconColorStateList = iconColorStateList;
+            mBackgroundColorStateList = backgroundColorStateList;
+            mTextColorStateList = textColorStateList;
+            mTextBackgroundDrawable = textBackgroundDrawable;
         }
 
-        public Config setNormalColorFilter(ColorFilter colorFilter) {
-            mNormalColorFilter = colorFilter;
-            return this;
+        public Config(@ColorInt int iconColor, @ColorInt int backgroundColor, @ColorInt int textColor, Drawable textBackgroundDrawable) {
+            mIconColorStateList = ColorStateList.valueOf(iconColor);
+            mBackgroundColorStateList = ColorStateList.valueOf(backgroundColor);
+            mTextBackgroundDrawable = textBackgroundDrawable;
+            mTextColorStateList = ColorStateList.valueOf(textColor);
         }
 
-        public ColorFilter getPressedColorFilter() {
-            return mPressedColorFilter;
+
+        public ColorStateList getIconColorStateList() {
+            return mIconColorStateList;
         }
 
-        public Config setPressedColorFilter(ColorFilter colorFilter) {
-            mPressedColorFilter = colorFilter;
-            return this;
+        public void setIconColorStateList(ColorStateList iconColorStateList) {
+            mIconColorStateList = iconColorStateList;
         }
 
-        public int getNormalBackgroundColor() {
-            return mNormalBackgroundColor;
+        public void setIconColor(@ColorInt int iconColor) {
+            mIconColorStateList = ColorStateList.valueOf(iconColor);
         }
 
-        public Config setNormalBackgroundColor(@ColorInt int backgroundColor) {
-            mNormalBackgroundColor = backgroundColor;
-            return this;
+        public ColorStateList getBackgroundColorStateList() {
+            return mBackgroundColorStateList;
         }
 
-        public int getPressedBackgroundColor() {
-            return mPressedBackgroundColor;
+        public void setBackgroundColorStateList(ColorStateList backgroundColorStateList) {
+            mBackgroundColorStateList = backgroundColorStateList;
         }
 
-        public Config setPressedBackgroundColor(@ColorInt int backgroundColor) {
-            mPressedBackgroundColor = backgroundColor;
-            return this;
+        public void setBackgroundColor(@ColorInt int backgroundColor) {
+            mBackgroundColorStateList = ColorStateList.valueOf(backgroundColor);
         }
 
-        public int getTextBackgroundColor() {
-            return mTextBackgroundColor;
+        public Drawable getTextBackgroundDrawable() {
+            return mTextBackgroundDrawable;
         }
 
-        public Config setTextBackgroundColor(@ColorInt int textBackgroundColor) {
-            mTextBackgroundColor = textBackgroundColor;
-            return this;
+        public void setTextBackgroundDrawable(Drawable textBackgroundDrawable) {
+            mTextBackgroundDrawable = textBackgroundDrawable;
         }
 
-        public Config setTextColor(@ColorInt int textColor) {
-            mTextColor = textColor;
-            return this;
+        public ColorStateList getTextColorStateList() {
+            return mTextColorStateList;
+        }
+
+        public void setTextColorStateList(ColorStateList textColorStateList) {
+            mTextColorStateList = textColorStateList;
+        }
+
+        public void setTextColor(@ColorInt int textColor) {
+            mTextColorStateList = ColorStateList.valueOf(textColor);
         }
     }
 }
