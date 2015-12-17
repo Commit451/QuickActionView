@@ -13,6 +13,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.MenuRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.view.menu.MenuBuilder;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by Alex on 12/7/15.
@@ -346,10 +348,15 @@ public class QAV {
                     mCenterPoint.x + (int) (mIndicatorView.getMeasuredWidth() / 2.0),
                     mCenterPoint.y + (int) (mIndicatorView.getMeasuredHeight() / 2.0));
             int index = 0;
-            for (ActionView actionView : mActionViews.values()) {
+            for (Map.Entry<Action, ActionView> entry : mActionViews.entrySet()) {
+                ActionView actionView = entry.getValue();
                 PointF point = getActionPoint(index, actionView);
                 point.offset(-actionView.getCircleCenterX(), -actionView.getCircleCenterY());
                 actionView.layout((int) point.x, (int) point.y, (int) (point.x + actionView.getMeasuredWidth()), (int) (point.y + actionView.getMeasuredHeight()));
+                ActionTitleView titleView = mActionTitleViews.get(entry.getKey());
+                float titleLeft = point.x + (actionView.getMeasuredWidth() / 2) - (titleView.getMeasuredWidth() / 2);
+                float titleTop = point.y - 10 - titleView.getMeasuredHeight();
+                titleView.layout((int) titleLeft, (int) titleTop, (int) (titleLeft + titleView.getMeasuredWidth()), (int) (titleTop + titleView.getMeasuredHeight()));
                 index++;
             }
         }
@@ -361,8 +368,10 @@ public class QAV {
                     case MotionEvent.ACTION_DOWN:
                     case MotionEvent.ACTION_MOVE:
                         mLastTouch.set(event.getRawX(), event.getRawY());
+                        int index = 0;
                         for (ActionView actionView : mActionViews.values()) {
-                            if (insideCircle(getActionPoint(0, actionView), actionView.getActionCircleRadiusExpanded(), event.getRawX(), event.getRawY())) {
+                            Log.d("TOUCHY TOUCHY", getActionPoint(index, actionView).toString() + "  " + actionView.getActionCircleRadiusExpanded() + "  " + event.getRawX() + "  " + event.getRawY());
+                            if (insideCircle(getActionPoint(index, actionView), actionView.getActionCircleRadiusExpanded(), event.getRawX(), event.getRawY())) {
                                 if (!actionView.isSelected()) {
                                     actionView.setSelected(true);
                                     actionView.animateInterpolation(1);
@@ -373,6 +382,7 @@ public class QAV {
                                     actionView.animateInterpolation(0);
                                 }
                             }
+                            index++;
                         }
                         invalidate();
                         break;
@@ -401,6 +411,13 @@ public class QAV {
             PointF point = new PointF(mCenterPoint);
             point.offset((int) (Math.cos(angle) * (mIndicatorView.getWidth() + mActionDistance)), (int) (Math.sin(angle) * (mIndicatorView.getWidth() + mActionDistance)));
             return point;
+        }
+
+        private float getActionAngle(int index, ActionView view) {
+            if (mStartAngle == null) {
+                mStartAngle = 270f;
+            }
+            return (float) (Math.toRadians(mStartAngle) + index * 2 * (Math.atan2(view.getActionCircleRadiusExpanded() + mActionPadding, mActionDistance)));
         }
 
         private boolean insideCircle(PointF center, float radius, float x, float y) {
