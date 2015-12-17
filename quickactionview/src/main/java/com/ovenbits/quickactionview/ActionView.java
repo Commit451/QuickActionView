@@ -45,6 +45,10 @@ public class ActionView extends View {
         setMeasuredDimension((int) (mActionCircleRadiusExpanded * 2 + getMaxShadowRadius() * 2), (int) (mActionCircleRadius * 2 + getMaxShadowRadius() * 2));
     }
 
+    float getActionCircleRadiusExpanded() {
+        return mActionCircleRadiusExpanded;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);

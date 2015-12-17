@@ -18,7 +18,7 @@ public class ConfigHelper {
     }
 
     public ColorStateList getIconColorStateList() {
-        if (mActionConfig.getIconColorStateList() != null) {
+        if (mActionConfig != null && mActionConfig.getIconColorStateList() != null) {
             return mActionConfig.getIconColorStateList();
         }
         return mQuickActionViewConfig.getIconColorStateList();
@@ -26,7 +26,7 @@ public class ConfigHelper {
 
 
     public Drawable getTextBackgroundDrawable() {
-        if (mActionConfig.getTextBackgroundDrawable() != null) {
+        if (mActionConfig != null && mActionConfig.getTextBackgroundDrawable() != null) {
             return mActionConfig.getTextBackgroundDrawable();
         }
         return mQuickActionViewConfig.getTextBackgroundDrawable();
@@ -34,7 +34,7 @@ public class ConfigHelper {
 
 
     public ColorStateList getTextColorStateList() {
-        if (mActionConfig.getTextColorStateList() != null) {
+        if (mActionConfig != null && mActionConfig.getTextColorStateList() != null) {
             return mActionConfig.getTextColorStateList();
         }
         return mQuickActionViewConfig.getTextColorStateList();
@@ -42,7 +42,7 @@ public class ConfigHelper {
 
 
     public ColorStateList getBackgroundColorStateList() {
-        if (mActionConfig.getBackgroundColorStateList() != null) {
+        if (mActionConfig != null && mActionConfig.getBackgroundColorStateList() != null) {
             return mActionConfig.getBackgroundColorStateList();
         }
         return mQuickActionViewConfig.getBackgroundColorStateList();
