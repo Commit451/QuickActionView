@@ -13,7 +13,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.MenuRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.view.menu.MenuBuilder;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,8 +40,8 @@ public class QAV {
 
 
     private Float mStartAngle;
-    private float mActionDistance = 100;
-    private int mActionPadding = 80;
+    private float mActionDistance;
+    private int mActionPadding;
 
 
     private ArrayList<Action> mActions = new ArrayList<>();
@@ -53,21 +52,13 @@ public class QAV {
     private Config mConfig;
     private Drawable mIndicatorDrawable;
     private HashMap<View, RegisteredListener> mRegisteredListeners = new HashMap<>();
-    private View.OnTouchListener mDecorTouchListener = new View.OnTouchListener() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            if (mShown) {
-                mQuickActionViewLayout.onTouchEvent(event);
-            }
-            return mShown;
-        }
-    };
 
     private QAV(Activity context) {
         mContext = context;
         mConfig = new Config(context);
         mIndicatorDrawable = ContextCompat.getDrawable(context, R.drawable.indicator);
+        mActionDistance = context.getResources().getDimensionPixelSize(R.dimen.qav_action_distance);
+        mActionPadding = context.getResources().getDimensionPixelSize(R.dimen.qav_action_padding);
     }
 
     public static QAV make(Activity context) {
@@ -364,20 +355,11 @@ public class QAV {
         }
 
         @Override
-        public boolean onInterceptTouchEvent(MotionEvent ev) {
-            Log.d("QAV", "INTERCEPT!!!!!!!!");
-            return true;
-        }
-
-
-        @Override
         public boolean onTouchEvent(MotionEvent event) {
-            Log.d("QAV", "TOUCHY TOUCHY");
             if (mShown) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                     case MotionEvent.ACTION_MOVE:
-                        int index = 0;
                         mLastTouch.set(event.getRawX(), event.getRawY());
                         for (ActionView actionView : mActionViews.values()) {
                             if (insideCircle(getActionPoint(0, actionView), actionView.getActionCircleRadiusExpanded(), event.getRawX(), event.getRawY())) {
@@ -391,7 +373,6 @@ public class QAV {
                                     actionView.animateInterpolation(0);
                                 }
                             }
-                            index++;
                         }
                         invalidate();
                         break;
