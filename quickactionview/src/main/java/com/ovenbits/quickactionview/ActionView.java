@@ -134,6 +134,7 @@ public class ActionView extends View implements ValueAnimator.AnimatorUpdateList
         }
         mCurrentAnimator = ValueAnimator.ofFloat(mInterpolation, to);
         mCurrentAnimator.setDuration(150).addUpdateListener(this);
+        mCurrentAnimator.start();
     }
 
     @Override
