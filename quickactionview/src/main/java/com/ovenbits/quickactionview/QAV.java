@@ -376,7 +376,22 @@ public class QAV {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                     case MotionEvent.ACTION_MOVE:
+                        int index = 0;
                         mLastTouch.set(event.getRawX(), event.getRawY());
+                        for (ActionView actionView : mActionViews.values()) {
+                            if (insideCircle(getActionPoint(0, actionView), actionView.getActionCircleRadiusExpanded(), event.getRawX(), event.getRawY())) {
+                                if (!actionView.isSelected()) {
+                                    actionView.setSelected(true);
+                                    actionView.animateInterpolation(1);
+                                }
+                            } else {
+                                if (actionView.isSelected()) {
+                                    actionView.setSelected(false);
+                                    actionView.animateInterpolation(0);
+                                }
+                            }
+                            index++;
+                        }
                         invalidate();
                         break;
                     case MotionEvent.ACTION_UP:
@@ -405,6 +420,15 @@ public class QAV {
             point.offset((int) (Math.cos(angle) * (mIndicatorView.getWidth() + mActionDistance)), (int) (Math.sin(angle) * (mIndicatorView.getWidth() + mActionDistance)));
             return point;
         }
+
+        private boolean insideCircle(PointF center, float radius, float x, float y) {
+            return distance(center, x, y) < radius;
+        }
+
+        private float distance(PointF point, float x, float y) {
+            return (float) Math.sqrt(Math.pow(x - point.x, 2) + Math.pow(y - point.y, 2));
+        }
+
     }
 
 

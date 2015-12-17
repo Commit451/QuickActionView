@@ -1,5 +1,6 @@
 package com.ovenbits.quickactionview;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -7,12 +8,13 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 
 /**
  * View that shows the action
  */
-public class ActionView extends View {
+public class ActionView extends View implements ValueAnimator.AnimatorUpdateListener {
 
     private Paint mBackgroundPaint;
 
@@ -23,6 +25,10 @@ public class ActionView extends View {
 
     private Action mAction;
     private ConfigHelper mConfigHelper;
+    private ValueAnimator mCurrentAnimator;
+    private boolean mSelected = false;
+    private Point mCenter = new Point();
+
 
     public ActionView(Context context, Action action, ConfigHelper configHelper) {
         super(context);
@@ -113,7 +119,37 @@ public class ActionView extends View {
         return mActionCircleRadius + getMaxShadowRadius() - getShadowOffsetY();
     }
 
+    Point getCircleCenterPoint() {
+        mCenter.set((int) getCircleCenterX(), (int) getCircleCenterY());
+        return mCenter;
+    }
+
     private float getShadowOffsetY() {
         return 6;
+    }
+
+    void animateInterpolation(float to) {
+        if (mCurrentAnimator != null && mCurrentAnimator.isRunning()) {
+            mCurrentAnimator.cancel();
+        }
+        mCurrentAnimator = ValueAnimator.ofFloat(mInterpolation, to);
+        mCurrentAnimator.setDuration(150).addUpdateListener(this);
+    }
+
+    @Override
+    public boolean isSelected() {
+        return mSelected;
+    }
+
+    @Override
+    public void setSelected(boolean selected) {
+        mSelected = selected;
+    }
+
+    @Override
+    public void onAnimationUpdate(ValueAnimator animation) {
+        mInterpolation = (float) animation.getAnimatedValue();
+        Log.d("Interpol", mInterpolation+"");
+        invalidate();
     }
 }
