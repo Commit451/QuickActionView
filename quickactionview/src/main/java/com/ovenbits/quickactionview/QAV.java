@@ -34,7 +34,7 @@ import java.util.LinkedHashMap;
 public class QAV {
 
     private boolean mShown = false;
-    private Activity mActivity;
+    private Context mContext;
     private OnActionSelectedListener mOnActionSelectedListener;
     private OnDismissListener mOnDismissListener;
     private OnShowListener mOnShowListener;
@@ -64,10 +64,10 @@ public class QAV {
         }
     };
 
-    private QAV(Activity activity) {
-        mActivity = activity;
-        mConfig = new Config(activity);
-        mIndicatorDrawable = ContextCompat.getDrawable(activity, R.drawable.indicator);
+    private QAV(Activity context) {
+        mContext = context;
+        mConfig = new Config(context);
+        mIndicatorDrawable = ContextCompat.getDrawable(context, R.drawable.indicator);
     }
 
     public static QAV make(Activity context) {
@@ -110,8 +110,8 @@ public class QAV {
     }
 
     public QAV setActions(@MenuRes int menuId) {
-        Menu menu = new MenuBuilder(mActivity);
-        new MenuInflater(mActivity).inflate(menuId, menu);
+        Menu menu = new MenuBuilder(mContext);
+        new MenuInflater(mContext).inflate(menuId, menu);
         for (int i = 0; i < menu.size(); i++) {
             MenuItem item = menu.getItem(i);
             Action action = new Action(item.getItemId(), item.getIcon(), item.getTitle());
@@ -156,9 +156,10 @@ public class QAV {
             throw new IllegalStateException("You need to give the QuickActionView actions before calling show!");
         }
 
-        WindowManager manager = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
-        WindowManager.LayoutParams params = new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.TYPE_APPLICATION_SUB_PANEL, WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, PixelFormat.TRANSLUCENT);
-        mQuickActionViewLayout = new QuickActionViewLayout(mActivity, mActions, point);
+        WindowManager manager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager.LayoutParams params = new WindowManager.LayoutParams(WindowManager.LayoutParams.TYPE_APPLICATION_SUB_PANEL);
+        params.format = PixelFormat.TRANSLUCENT;
+        mQuickActionViewLayout = new QuickActionViewLayout(mContext, mActions, point);
         manager.addView(mQuickActionViewLayout, params);
     }
 
@@ -166,7 +167,7 @@ public class QAV {
         if (!mShown) {
             throw new RuntimeException("The QuickActionView must be visible to call dismiss()");
         }
-        WindowManager manager = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager manager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         manager.removeView(mQuickActionViewLayout);
         mQuickActionViewLayout = null;
         mShown = false;
@@ -189,15 +190,15 @@ public class QAV {
 
 
     public interface OnActionSelectedListener {
-        public void onActionSelected(Action action, QAV qav);
+        void onActionSelected(Action action, QAV qav);
     }
 
     public interface OnDismissListener {
-        public void onDismiss(QAV qav);
+        void onDismiss(QAV qav);
     }
 
     public interface OnShowListener {
-        public void onShow(QAV qav);
+        void onShow(QAV qav);
     }
 
     public static class Config {
