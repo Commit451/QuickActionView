@@ -60,7 +60,6 @@ public class QuickActionView {
     private int mScrimColor = Color.parseColor("#99000000");
     private Drawable mIndicatorDrawable;
     private HashMap<View, RegisteredListener> mRegisteredListeners = new HashMap<>();
-    private Action mLastHoveredAction = null;
 
     private View mClickedView;
 
@@ -323,6 +322,9 @@ public class QuickActionView {
         if (!mShown) {
             throw new RuntimeException("The QuickActionView must be visible to call dismiss()");
         }
+        if (mOnDismissListener != null) {
+            mOnDismissListener.onDismiss(QuickActionView.this);
+        }
         animateHide();
     }
 
@@ -482,6 +484,7 @@ public class QuickActionView {
             view.setScaleY(0.1f);
             view.animate().scaleY(1.0f)
                     .scaleX(1.0f)
+                    .setDuration(200)
                     .setInterpolator(mOvershootInterpolator);
         }
 
@@ -503,8 +506,8 @@ public class QuickActionView {
                     .scaleY(0.1f)
                     .alpha(0.0f)
                     .setStartDelay(0)
-                    .setDuration(300);
-            return 300;
+                    .setDuration(200);
+            return 200;
         }
 
         @Override
@@ -645,14 +648,12 @@ public class QuickActionView {
                         for (ActionView actionView : mActionViews.values()) {
                             if (insideCircle(getActionPoint(index, actionView), actionView.getActionCircleRadiusExpanded(), event.getRawX(), event.getRawY())) {
                                 if (!actionView.isSelected()) {
-                                    mLastHoveredAction = actionView.getAction();
                                     actionView.setSelected(true);
                                     actionView.animateInterpolation(1);
                                     mActionTitleViews.get(actionView.getAction()).setVisibility(View.VISIBLE);
                                 }
                             } else {
                                 if (actionView.isSelected()) {
-                                    mLastHoveredAction = null;
                                     actionView.setSelected(false);
                                     actionView.animateInterpolation(0);
                                     mActionTitleViews.get(actionView.getAction()).setVisibility(View.GONE);
@@ -663,14 +664,15 @@ public class QuickActionView {
                         invalidate();
                         break;
                     case MotionEvent.ACTION_UP:
-                        if (mLastHoveredAction != null && mOnActionSelectedListener != null) {
-                            mOnActionSelectedListener.onActionSelected(mLastHoveredAction, QuickActionView.this);
+                        for (Map.Entry<Action, ActionView> entry : mActionViews.entrySet()) {
+                            if (entry.getValue().isSelected() && mOnActionSelectedListener != null) {
+                                mOnActionSelectedListener.onActionSelected(entry.getKey(), QuickActionView.this);
+                                break;
+                            }
                         }
                     case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_OUTSIDE:
-                        if (mOnDismissListener != null) {
-                            mOnDismissListener.onDismiss(QuickActionView.this);
-                        }
+
                         dismiss();
                 }
             }
