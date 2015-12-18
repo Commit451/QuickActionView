@@ -1,9 +1,12 @@
 package com.ovenbits.quickactionview.sample;
 
+import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ovenbits.quickactionview.Action;
 import com.ovenbits.quickactionview.QuickActionView;
 
 import java.util.ArrayList;
@@ -13,14 +16,10 @@ import java.util.Collection;
  * Adapter for the recyclerview, which holds cheeses
  * Created by John on 11/24/15.
  */
-public class CheeseAdapter extends RecyclerView.Adapter<CheeseViewHolder> {
+public class CheeseAdapter extends RecyclerView.Adapter<CheeseViewHolder> implements QuickActionView.OnActionSelectedListener {
 
-    public interface Listener {
-        void onItemClicked(Cheese cheese);
-    }
     private Listener mListener;
     private ArrayList<Cheese> mValues;
-
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -30,10 +29,20 @@ public class CheeseAdapter extends RecyclerView.Adapter<CheeseViewHolder> {
             mListener.onItemClicked(cheese);
         }
     };
+    private QuickActionView mQuickActionView;
 
-    public CheeseAdapter(Listener listener) {
+    public CheeseAdapter(Context context, Listener listener) {
+        mQuickActionView = QuickActionView.make(context).addActions(R.menu.actions).setOnActionSelectedListener(this);
         mListener = listener;
         mValues = new ArrayList<>();
+    }
+
+    @Override
+    public void onActionSelected(Action action, QuickActionView quickActionView) {
+        View view = quickActionView.getClickedView();
+        int position = (int) view.getTag(R.id.list_position);
+        Cheese cheese = getItemAt(position);
+        Snackbar.make(view, "Clicked on " + cheese.getName() + " with action " + action.getTitle(), Snackbar.LENGTH_SHORT).show();
     }
 
     public void setData(Collection<Cheese> cheeses) {
@@ -45,9 +54,7 @@ public class CheeseAdapter extends RecyclerView.Adapter<CheeseViewHolder> {
     public CheeseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         CheeseViewHolder holder = CheeseViewHolder.newInstance(parent);
         holder.itemView.setOnClickListener(mOnClickListener);
-        QuickActionView.make(parent.getContext())
-                .addActions(R.menu.actions)
-                .register(holder.itemView);
+        mQuickActionView.register(holder.itemView);
         return holder;
     }
 
@@ -66,5 +73,9 @@ public class CheeseAdapter extends RecyclerView.Adapter<CheeseViewHolder> {
 
     private Cheese getItemAt(int position) {
         return mValues.get(position);
+    }
+
+    public interface Listener {
+        void onItemClicked(Cheese cheese);
     }
 }

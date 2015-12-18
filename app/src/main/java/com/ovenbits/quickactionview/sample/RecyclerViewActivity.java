@@ -2,18 +2,13 @@ package com.ovenbits.quickactionview.sample;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
-
-import com.ovenbits.quickactionview.QuickActionView;
 
 import java.util.ArrayList;
 
@@ -23,17 +18,6 @@ import java.util.ArrayList;
  */
 public class RecyclerViewActivity extends AppCompatActivity {
 
-    public static Intent newIntent(Context context) {
-        Intent intent = new Intent(context, RecyclerViewActivity.class);
-        return intent;
-    }
-
-    ViewGroup mRoot;
-    RecyclerView mRecyclerView;
-    CheeseAdapter mCheeseAdapter;
-
-    Cheese mSelectedCheese;
-
     private final CheeseAdapter.Listener mCheeseAdapterListener = new CheeseAdapter.Listener() {
         @Override
         public void onItemClicked(Cheese cheese) {
@@ -41,6 +25,14 @@ public class RecyclerViewActivity extends AppCompatActivity {
                     .show();
         }
     };
+    ViewGroup mRoot;
+    RecyclerView mRecyclerView;
+    CheeseAdapter mCheeseAdapter;
+
+    public static Intent newIntent(Context context) {
+        Intent intent = new Intent(context, RecyclerViewActivity.class);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +43,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        mCheeseAdapter = new CheeseAdapter(mCheeseAdapterListener);
+        mCheeseAdapter = new CheeseAdapter(this, mCheeseAdapterListener);
         mRecyclerView.setAdapter(mCheeseAdapter);
 
         loadCheeses();
@@ -59,7 +51,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
 
     private void loadCheeses() {
         ArrayList<Cheese> cheeses = new ArrayList<>();
-        for (int i=0; i<30; i++) {
+        for (int i = 0; i < 30; i++) {
             cheeses.add(Cheeses.getRandomCheese());
         }
         mCheeseAdapter.setData(cheeses);
