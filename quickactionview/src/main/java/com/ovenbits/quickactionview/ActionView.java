@@ -118,7 +118,7 @@ public class ActionView extends View implements ValueAnimator.AnimatorUpdateList
         return mActionCircleRadius + getMaxShadowRadius() - getShadowOffsetY();
     }
 
-    Point getCircleCenterPoint() {
+    public Point getCircleCenterPoint() {
         mCenter.set((int) getCircleCenterX(), (int) getCircleCenterY());
         return mCenter;
     }

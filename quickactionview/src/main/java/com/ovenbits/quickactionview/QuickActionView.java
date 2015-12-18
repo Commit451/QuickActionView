@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IdRes;
 import android.support.annotation.MenuRes;
@@ -33,30 +34,27 @@ import java.util.Map;
 
 /**
  * A QuickActionView, which shows actions when a view is long pressed.
- * <p>
+ * <p/>
  * https://github.com/ovenbits/QuickActionView
  */
 public class QuickActionView {
-
-    public static QuickActionView make(Context context) {
-        return new QuickActionView(context);
-    }
 
     private boolean mShown = false;
     private Context mContext;
     private OnActionSelectedListener mOnActionSelectedListener;
     private OnDismissListener mOnDismissListener;
     private OnShowListener mOnShowListener;
-
     private Float mStartAngle;
     private float mActionDistance;
     private int mActionPadding;
-
     private ArrayList<Action> mActions = new ArrayList<>();
     private Bundle mExtras;
     private QuickActionViewLayout mQuickActionViewLayout;
-
     private Config mConfig;
+    private ActionsInAnimator mActionsInAnimator;
+    private ActionsOutAnimator mActionsOutAnimator;
+
+
     @ColorInt
     private int mScrimColor = Color.parseColor("#99000000");
     private Drawable mIndicatorDrawable;
@@ -69,6 +67,13 @@ public class QuickActionView {
         mIndicatorDrawable = ContextCompat.getDrawable(context, R.drawable.qav_indicator);
         mActionDistance = context.getResources().getDimensionPixelSize(R.dimen.qav_action_distance);
         mActionPadding = context.getResources().getDimensionPixelSize(R.dimen.qav_action_padding);
+        DefaultAnimator defaultAnimator = new DefaultAnimator();
+        mActionsInAnimator = defaultAnimator;
+        mActionsOutAnimator = defaultAnimator;
+    }
+
+    public static QuickActionView make(Context context) {
+        return new QuickActionView(context);
     }
 
     private QuickActionView show(View anchor, Point offset) {
@@ -92,12 +97,11 @@ public class QuickActionView {
         return this;
     }
 
-    public QuickActionView register(View view) {
+    public void register(View view) {
         RegisteredListener listener = new RegisteredListener();
         mRegisteredListeners.put(view, listener);
         view.setOnTouchListener(listener);
         view.setOnLongClickListener(listener);
-        return this;
     }
 
     public QuickActionView addAction(Action action) {
@@ -114,6 +118,7 @@ public class QuickActionView {
 
     /**
      * Add actions to the QuickActionView from the given menu resource id.
+     *
      * @param menuId menu resource id
      * @return the QuickActionView
      */
@@ -228,13 +233,23 @@ public class QuickActionView {
         return this;
     }
 
+    public QuickActionView setActionsInAnimator(ActionsInAnimator actionsInAnimator) {
+        mActionsInAnimator = actionsInAnimator;
+        return this;
+    }
+
+    public QuickActionView setActionsOutAnimator(ActionsOutAnimator actionsOutAnimator) {
+        mActionsOutAnimator = actionsOutAnimator;
+        return this;
+    }
+
     public QuickActionView setActionConfig(Action.Config config, @IdRes int actionId) {
-       for (Action action : mActions) {
-           if (action.getId() == actionId) {
-               action.setConfig(config);
-               return QuickActionView.this;
-           }
-       }
+        for (Action action : mActions) {
+            if (action.getId() == actionId) {
+                action.setConfig(config);
+                return this;
+            }
+        }
 
         throw new IllegalArgumentException("No Action exists with id " + actionId);
     }
@@ -249,59 +264,28 @@ public class QuickActionView {
         params.format = PixelFormat.TRANSLUCENT;
         mQuickActionViewLayout = new QuickActionViewLayout(mContext, mActions, point);
         manager.addView(mQuickActionViewLayout, params);
-        animateShow();
         if (mOnShowListener != null) {
             mOnShowListener.onShow(this);
         }
     }
 
-    private void animateShow() {
-        View scrimView = mQuickActionViewLayout.getScrimView();
-        scrimView.setAlpha(0.0f);
-        scrimView.animate().alpha(1.0f);
-        OvershootInterpolator overshootInterpolator = new OvershootInterpolator();
-        for (ActionView actionView : mQuickActionViewLayout.getActionViews().values()) {
-            actionView.setScaleX(0.1f);
-            actionView.setScaleX(0.1f);
-            actionView.animate().scaleX(1.0f)
-                    .scaleY(1.0f)
-                    .setInterpolator(overshootInterpolator);
-        }
-    }
-
     private void animateHide() {
-        int duration = 300;
-        mQuickActionViewLayout.getIndicatorView().animate()
-                .alpha(0.0f)
-                .setDuration(200);
-        mQuickActionViewLayout.getScrimView().animate()
-                .alpha(0.0f)
-                .setDuration(200);
-        for (ActionView actionView : mQuickActionViewLayout.getActionViews().values()) {
-            actionView.animate().scaleX(0.1f)
-                    .scaleY(0.1f)
-                    .alpha(0.0f)
-                    .setDuration(duration);
-        }
-        for (ActionTitleView actionTitleView : mQuickActionViewLayout.getActionTitleViews().values()) {
-            if (actionTitleView.getVisibility() == View.VISIBLE) {
-                actionTitleView.animate().scaleX(0.1f)
-                        .scaleY(0.1f)
-                        .alpha(0.0f)
-                        .setDuration(duration);
-            }
-        }
-        mQuickActionViewLayout.postDelayed(new Runnable() {
+        int duration = mQuickActionViewLayout.animateOut();
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mQuickActionViewLayout != null) {
-                    WindowManager manager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-                    manager.removeView(mQuickActionViewLayout);
-                    mQuickActionViewLayout = null;
-                    mShown = false;
-                }
+                removeView();
             }
         }, duration);
+    }
+
+    private void removeView() {
+        if (mQuickActionViewLayout != null) {
+            WindowManager manager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+            manager.removeView(mQuickActionViewLayout);
+            mQuickActionViewLayout = null;
+            mShown = false;
+        }
     }
 
     private void dismiss() {
@@ -462,6 +446,7 @@ public class QuickActionView {
         private LinkedHashMap<Action, ActionView> mActionViews = new LinkedHashMap<>();
         private LinkedHashMap<Action, ActionTitleView> mActionTitleViews = new LinkedHashMap<>();
         private PointF mLastTouch = new PointF();
+        private boolean mAnimated = false;
 
         public QuickActionViewLayout(Context context, ArrayList<Action> actions, Point centerPoint) {
             super(context);
@@ -495,8 +480,6 @@ public class QuickActionView {
 
         @Override
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-            super.onLayout(changed, left, top, right, bottom);
-
             mIndicatorView.layout(mCenterPoint.x - (int) (mIndicatorView.getMeasuredWidth() / 2.0),
                     mCenterPoint.y - (int) (mIndicatorView.getMeasuredHeight() / 2.0),
                     mCenterPoint.x + (int) (mIndicatorView.getMeasuredWidth() / 2.0),
@@ -513,6 +496,58 @@ public class QuickActionView {
                 titleView.layout((int) titleLeft, (int) titleTop, (int) (titleLeft + titleView.getMeasuredWidth()), (int) (titleTop + titleView.getMeasuredHeight()));
                 index++;
             }
+
+            if (!mAnimated) {
+                animateActionsIn();
+                animateIndicatorIn();
+                animateScrimIn();
+                mAnimated = true;
+            }
+        }
+
+        private void animateActionsIn() {
+            int index = 0;
+            for (ActionView view : mActionViews.values()) {
+                mActionsInAnimator.animateActionIn(view.getAction(), index, view, mCenterPoint);
+                index++;
+            }
+        }
+
+        private void animateIndicatorIn() {
+            mActionsInAnimator.animateIndicatorIn(mIndicatorView);
+        }
+
+        private void animateScrimIn() {
+            mActionsInAnimator.animateScrimIn(mScrimView);
+        }
+
+        int animateOut() {
+            int maxDuration = 0;
+            maxDuration = Math.max(maxDuration, animateActionsOut());
+            maxDuration = Math.max(maxDuration, animateScrimOut());
+            maxDuration = Math.max(maxDuration, animateIndicatorOut());
+            return maxDuration;
+        }
+
+        private int animateActionsOut() {
+            int index = 0;
+            int maxDuration = 0;
+            for (ActionView view : mActionViews.values()) {
+                view.clearAnimation();
+                maxDuration = Math.max(mActionsOutAnimator.animateActionOut(view.getAction(), index, view, mCenterPoint), maxDuration);
+                index++;
+            }
+            return maxDuration;
+        }
+
+        private int animateIndicatorOut() {
+            mIndicatorView.clearAnimation();
+            return mActionsOutAnimator.animateIndicatorOut(mIndicatorView);
+        }
+
+        private int animateScrimOut() {
+            mScrimView.clearAnimation();
+            return mActionsOutAnimator.animateScrimOut(mScrimView);
         }
 
         @Override
@@ -584,21 +619,6 @@ public class QuickActionView {
             return (float) Math.sqrt(Math.pow(x - point.x, 2) + Math.pow(y - point.y, 2));
         }
 
-        public LinkedHashMap<Action, ActionView> getActionViews() {
-            return mActionViews;
-        }
-
-        public LinkedHashMap<Action, ActionTitleView> getActionTitleViews() {
-            return mActionTitleViews;
-        }
-
-        public View getIndicatorView() {
-            return mIndicatorView;
-        }
-
-        public View getScrimView() {
-            return mScrimView;
-        }
     }
 
 
@@ -621,6 +641,53 @@ public class QuickActionView {
                 mQuickActionViewLayout.onTouchEvent(event);
             }
             return mShown;
+        }
+    }
+
+    private class DefaultAnimator implements ActionsInAnimator, ActionsOutAnimator {
+        private OvershootInterpolator mOvershootInterpolator = new OvershootInterpolator();
+
+        @Override
+        public void animateActionIn(Action action, int position, ActionView view, Point center) {
+            view.setScaleX(0.1f);
+            view.setScaleY(0.1f);
+            view.animate().scaleY(1.0f)
+                    .scaleX(1.0f)
+                    .setInterpolator(mOvershootInterpolator);
+        }
+
+        @Override
+        public void animateIndicatorIn(View indicator) {
+            indicator.setAlpha(0);
+            indicator.animate().alpha(1).setDuration(200);
+        }
+
+        @Override
+        public void animateScrimIn(View scrim) {
+            scrim.setAlpha(0);
+            scrim.animate().alpha(1).setDuration(200);
+        }
+
+        @Override
+        public int animateActionOut(Action action, int position, ActionView view, Point center) {
+            view.animate().scaleX(0.1f)
+                    .scaleY(0.1f)
+                    .alpha(0.0f)
+                    .setStartDelay(0)
+                    .setDuration(300);
+            return 300;
+        }
+
+        @Override
+        public int animateIndicatorOut(View indicator) {
+            indicator.animate().alpha(0).setDuration(200);
+            return 200;
+        }
+
+        @Override
+        public int animateScrimOut(View scrim) {
+            scrim.animate().alpha(0).setDuration(200);
+            return 200;
         }
     }
 
