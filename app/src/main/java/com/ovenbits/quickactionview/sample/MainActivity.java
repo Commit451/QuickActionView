@@ -39,7 +39,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final View view = findViewById(R.id.normal_parent);
-        QuickActionView.make(this).addActions(R.menu.actions).setOnActionSelectedListener(mQuickActionListener).register(view);
+        QuickActionView.make(this)
+                .addActions(R.menu.actions)
+                .setOnActionSelectedListener(mQuickActionListener)
+                .register(view);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

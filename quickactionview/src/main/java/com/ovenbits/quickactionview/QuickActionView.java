@@ -1,6 +1,5 @@
 package com.ovenbits.quickactionview;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.PixelFormat;
@@ -30,9 +29,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Created by Alex on 12/7/15.
+ * A QuickActionView, which shows actions when a view is long pressed.
+ * <p>
+ * https://github.com/ovenbits/QuickActionView
  */
 public class QuickActionView {
+
+    public static QuickActionView make(Context context) {
+        return new QuickActionView(context);
+    }
 
     private boolean mShown = false;
     private Context mContext;
@@ -51,17 +56,14 @@ public class QuickActionView {
     private Config mConfig;
     private Drawable mIndicatorDrawable;
     private HashMap<View, RegisteredListener> mRegisteredListeners = new HashMap<>();
+    private Action mLastHoveredAction = null;
 
-    private QuickActionView(Activity context) {
+    private QuickActionView(Context context) {
         mContext = context;
         mConfig = new Config(context);
         mIndicatorDrawable = ContextCompat.getDrawable(context, R.drawable.indicator);
         mActionDistance = context.getResources().getDimensionPixelSize(R.dimen.qav_action_distance);
         mActionPadding = context.getResources().getDimensionPixelSize(R.dimen.qav_action_padding);
-    }
-
-    public static QuickActionView make(Activity context) {
-        return new QuickActionView(context);
     }
 
     private QuickActionView show(View anchor, Point offset) {
@@ -387,11 +389,13 @@ public class QuickActionView {
                         for (ActionView actionView : mActionViews.values()) {
                             if (insideCircle(getActionPoint(index, actionView), actionView.getActionCircleRadiusExpanded(), event.getRawX(), event.getRawY())) {
                                 if (!actionView.isSelected()) {
+                                    mLastHoveredAction = actionView.getAction();
                                     actionView.setSelected(true);
                                     actionView.animateInterpolation(1);
                                 }
                             } else {
                                 if (actionView.isSelected()) {
+                                    mLastHoveredAction = null;
                                     actionView.setSelected(false);
                                     actionView.animateInterpolation(0);
                                 }
@@ -401,10 +405,9 @@ public class QuickActionView {
                         invalidate();
                         break;
                     case MotionEvent.ACTION_UP:
-//                    MenuItem action = getOverlappingQuickAction(x, y);
-//                    if (action != null && mListener != null) {
-//                        mListener.onQuickActionSelected(this, action.getItemId());
-//                    }
+                        if (mLastHoveredAction != null && mOnActionSelectedListener != null) {
+                            mOnActionSelectedListener.onActionSelected(mLastHoveredAction, QuickActionView.this);
+                        }
                     case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_OUTSIDE:
                         if (mOnDismissListener != null) {

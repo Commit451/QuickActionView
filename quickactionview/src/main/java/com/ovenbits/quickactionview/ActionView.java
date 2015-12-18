@@ -151,4 +151,8 @@ public class ActionView extends View implements ValueAnimator.AnimatorUpdateList
         mInterpolation = (float) animation.getAnimatedValue();
         invalidate();
     }
+
+    public Action getAction() {
+        return mAction;
+    }
 }

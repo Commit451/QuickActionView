@@ -13,6 +13,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ovenbits.quickactionview.QuickActionView;
+
 import java.util.ArrayList;
 
 /**
@@ -29,7 +31,6 @@ public class RecyclerViewActivity extends AppCompatActivity {
     ViewGroup mRoot;
     RecyclerView mRecyclerView;
     CheeseAdapter mCheeseAdapter;
-    QuickActionView mQuickActionView;
 
     Cheese mSelectedCheese;
 
@@ -38,12 +39,6 @@ public class RecyclerViewActivity extends AppCompatActivity {
         public void onItemClicked(Cheese cheese) {
             Snackbar.make(getWindow().getDecorView(), cheese.getName() + " was clicked", Snackbar.LENGTH_SHORT)
                     .show();
-        }
-
-        @Override
-        public void onItemLongClicked(Cheese cheese, CheeseViewHolder holder, Point touchPoint) {
-            mSelectedCheese = cheese;
-            mQuickActionView.show(holder.itemView, touchPoint);
         }
     };
 
@@ -58,36 +53,6 @@ public class RecyclerViewActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mCheeseAdapter = new CheeseAdapter(mCheeseAdapterListener);
         mRecyclerView.setAdapter(mCheeseAdapter);
-
-        mQuickActionView = new QuickActionView(this)
-                .setActions(R.menu.actions)
-                .setOnQuickActionViewListener(new QuickActionView.OnQuickActionViewListener() {
-
-                    @Override
-                    public void onQuickActionShow() {
-                    }
-
-                    @Override
-                    public void onQuickActionSelected(View view, int action) {
-                        Snackbar.make(mRoot, "Action " + getResources().getResourceEntryName(action) + " selected for " + mSelectedCheese.getName(), Snackbar.LENGTH_SHORT)
-                                .show();
-                    }
-
-                    @Override
-                    public void onDismiss() {
-
-                    }
-                });
-
-        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (mQuickActionView.getVisibility() == View.VISIBLE) {
-                    return mQuickActionView.onTouchEvent(event);
-                }
-                return false;
-            }
-        });
 
         loadCheeses();
     }
