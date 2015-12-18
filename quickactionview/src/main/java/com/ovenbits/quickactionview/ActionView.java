@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -150,7 +149,6 @@ public class ActionView extends View implements ValueAnimator.AnimatorUpdateList
     @Override
     public void onAnimationUpdate(ValueAnimator animation) {
         mInterpolation = (float) animation.getAnimatedValue();
-        Log.d("Interpol", mInterpolation+"");
         invalidate();
     }
 }

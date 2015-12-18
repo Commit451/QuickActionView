@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ovenbits.quickactionview.Action;
-import com.ovenbits.quickactionview.QAV;
+import com.ovenbits.quickactionview.QuickActionView;
 
 /**
  * Shows general use of the QuickActionView
@@ -17,9 +17,9 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewGroup mRoot;
 
-    private final QAV.OnActionSelectedListener mQuickActionListener = new QAV.OnActionSelectedListener() {
+    private final QuickActionView.OnActionSelectedListener mQuickActionListener = new QuickActionView.OnActionSelectedListener() {
         @Override
-        public void onActionSelected(Action action, QAV qav) {
+        public void onActionSelected(Action action, QuickActionView quickActionView) {
             Snackbar.make(mRoot, action.getTitle() + " was chosen", Snackbar.LENGTH_SHORT).show();
 
         }
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final View view = findViewById(R.id.normal_parent);
-        QAV.make(this).setActions(R.menu.actions).setOnActionSelectedListener(mQuickActionListener).register(view);
+        QuickActionView.make(this).addActions(R.menu.actions).setOnActionSelectedListener(mQuickActionListener).register(view);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

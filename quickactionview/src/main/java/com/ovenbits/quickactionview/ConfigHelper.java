@@ -10,9 +10,9 @@ import android.support.annotation.NonNull;
  */
 public class ConfigHelper {
     private Action.Config mActionConfig;
-    private QAV.Config mQuickActionViewConfig;
+    private QuickActionView.Config mQuickActionViewConfig;
 
-    public ConfigHelper(@NonNull Action.Config actionConfig, @NonNull QAV.Config quickActionViewConfig) {
+    public ConfigHelper(@NonNull Action.Config actionConfig, @NonNull QuickActionView.Config quickActionViewConfig) {
         mActionConfig = actionConfig;
         mQuickActionViewConfig = quickActionViewConfig;
     }

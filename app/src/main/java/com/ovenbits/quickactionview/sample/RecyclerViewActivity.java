@@ -13,8 +13,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ovenbits.quickactionview.QuickActionView;
-
 import java.util.ArrayList;
 
 /**
