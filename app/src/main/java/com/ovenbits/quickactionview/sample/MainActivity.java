@@ -1,7 +1,9 @@
 package com.ovenbits.quickactionview.sample;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -21,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onActionSelected(Action action, QuickActionView quickActionView) {
             Snackbar.make(mRoot, action.getTitle() + " was chosen", Snackbar.LENGTH_SHORT).show();
-
         }
     };
 
@@ -50,34 +51,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
+        Action.Config actionConfig = new Action.Config()
+                .setBackgroundColor(Color.BLACK)
+                .setIconColor(Color.RED)
+                .setTextColor(Color.MAGENTA);
 
-//    private void createCustomQuickActionView() {
-//
-//        //Give one of the quick actions custom colors
-//        QuickActionConfig quickActionConfig = new QuickActionConfig.Builder(this)
-//                .setNormalBackgroundColor(Color.BLUE)
-//                .setPressedBackgroundColor(Color.CYAN)
-//                .setNormalColorFilter(new PorterDuffColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN))
-//                .setPressedColorFilter(new PorterDuffColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN))
-//                .setTextBackgroundColor(Color.RED)
-//                .setTextColor(Color.BLACK)
-//                .build();
-//        new QuickActionView(this)
-//                .setActions(R.menu.actions)
-//                .setOnQuickActionViewListener(mQuickActionListener)
-//                .setAnchor(findViewById(R.id.custom_parent))
-//                .setCircleMode(QuickActionView.CIRCLE_MODE_FILL)
-//                .setScrimColor(Color.parseColor("#CC000000"))
-//                .setIconNormalColorFilter(new PorterDuffColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN))
-//                .setIconPressedColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN))
-//                .setIconBackgroundNormalColor(Color.WHITE)
-//                .setIconBackgroundPressedColor(Color.RED)
-//                .setTextTypeface(Typeface.createFromAsset(getAssets(), "fonts/RobotoCondensed-Regular.ttf"))
-//                .setTextColor(Color.BLACK)
-//                .setTextBackgroundColor(Color.MAGENTA)
-//                .setTextSize(getResources().getDimensionPixelSize(R.dimen.text_size))
-//                .setTouchCircleColor(Color.parseColor("#66FFFFFF"))
-//                .setQuickActionConfig(R.id.action_like, quickActionConfig);
-//    }
+        QuickActionView.make(this)
+                .addActions(R.menu.actions)
+                .setOnActionSelectedListener(mQuickActionListener)
+                .setBackgroundColor(Color.RED)
+                .setTextColor(Color.BLUE)
+                .setTextSize(30)
+                .setScrimColor(Color.parseColor("#99FFFFFF"))
+                .setTextBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.text_background))
+                .setIndicatorDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.indicator))
+                .setActionConfig(actionConfig, R.id.action_add_to_cart)
+                .register(findViewById(R.id.custom_parent));
+    }
 }

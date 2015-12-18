@@ -2,6 +2,7 @@ package com.ovenbits.quickactionview;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -10,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
+import android.support.annotation.IdRes;
 import android.support.annotation.MenuRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.view.menu.MenuBuilder;
@@ -20,6 +22,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 
 import java.util.ArrayList;
@@ -54,6 +57,8 @@ public class QuickActionView {
     private QuickActionViewLayout mQuickActionViewLayout;
 
     private Config mConfig;
+    @ColorInt
+    private int mScrimColor = Color.parseColor("#99000000");
     private Drawable mIndicatorDrawable;
     private HashMap<View, RegisteredListener> mRegisteredListeners = new HashMap<>();
     private Action mLastHoveredAction = null;
@@ -61,7 +66,7 @@ public class QuickActionView {
     private QuickActionView(Context context) {
         mContext = context;
         mConfig = new Config(context);
-        mIndicatorDrawable = ContextCompat.getDrawable(context, R.drawable.indicator);
+        mIndicatorDrawable = ContextCompat.getDrawable(context, R.drawable.qav_indicator);
         mActionDistance = context.getResources().getDimensionPixelSize(R.dimen.qav_action_distance);
         mActionPadding = context.getResources().getDimensionPixelSize(R.dimen.qav_action_padding);
     }
@@ -148,8 +153,90 @@ public class QuickActionView {
         mStartAngle = startAngle;
     }
 
-    public void setIndicatorDrawable(Drawable indicatorDrawable) {
+    public QuickActionView setIndicatorDrawable(Drawable indicatorDrawable) {
         mIndicatorDrawable = indicatorDrawable;
+        return this;
+    }
+
+    public QuickActionView setScrimColor(@ColorInt int scrimColor) {
+        mScrimColor = scrimColor;
+        return this;
+    }
+
+    public QuickActionView setIconColorStateList(ColorStateList iconColorStateList) {
+        mConfig.setIconColorStateList(iconColorStateList);
+        return this;
+    }
+
+    public QuickActionView setTextBackgroundDrawable(Drawable textBackgroundDrawable) {
+        mConfig.setTextBackgroundDrawable(textBackgroundDrawable);
+        return this;
+    }
+
+    public QuickActionView setTextColorStateList(ColorStateList textColorStateList) {
+        mConfig.setTextColorStateList(textColorStateList);
+        return this;
+    }
+
+    public QuickActionView setBackgroundColorStateList(ColorStateList backgroundColorStateList) {
+        mConfig.setBackgroundColorStateList(backgroundColorStateList);
+        return this;
+    }
+
+    public QuickActionView setTextColor(@ColorInt int textColor) {
+        mConfig.setTextColor(textColor);
+        return this;
+    }
+
+    public QuickActionView setBackgroundColor(@ColorInt int backgroundColor) {
+        mConfig.setBackgroundColor(backgroundColor);
+        return this;
+    }
+
+    public QuickActionView setIconColor(@ColorInt int iconColor) {
+        mConfig.setIconColor(iconColor);
+        return this;
+    }
+
+    public QuickActionView setTypeface(Typeface typeface) {
+        mConfig.setTypeface(typeface);
+        return this;
+    }
+
+    public QuickActionView setTextSize(int textSize) {
+        mConfig.setTextSize(textSize);
+        return this;
+    }
+
+    public QuickActionView setTextPaddingTop(int textPaddingTop) {
+        mConfig.setTextPaddingTop(textPaddingTop);
+        return this;
+    }
+
+    public QuickActionView setTextPaddingBottom(int textPaddingBottom) {
+        mConfig.setTextPaddingBottom(textPaddingBottom);
+        return this;
+    }
+
+    public QuickActionView setTextPaddingLeft(int textPaddingLeft) {
+        mConfig.setTextPaddingLeft(textPaddingLeft);
+        return this;
+    }
+
+    public QuickActionView setTextPaddingRight(int textPaddingRight) {
+        mConfig.setTextPaddingRight(textPaddingRight);
+        return this;
+    }
+
+    public QuickActionView setActionConfig(Action.Config config, @IdRes int actionId) {
+       for (Action action : mActions) {
+           if (action.getId() == actionId) {
+               action.setConfig(config);
+               return QuickActionView.this;
+           }
+       }
+
+        throw new IllegalArgumentException("No Action exists with id " + actionId);
     }
 
     private void display(Point point) {
@@ -162,21 +249,66 @@ public class QuickActionView {
         params.format = PixelFormat.TRANSLUCENT;
         mQuickActionViewLayout = new QuickActionViewLayout(mContext, mActions, point);
         manager.addView(mQuickActionViewLayout, params);
-        mQuickActionViewLayout.setAlpha(0.0f);
-        mQuickActionViewLayout.animate().alpha(1.0f);
+        animateShow();
         if (mOnShowListener != null) {
             mOnShowListener.onShow(this);
         }
+    }
+
+    private void animateShow() {
+        View scrimView = mQuickActionViewLayout.getScrimView();
+        scrimView.setAlpha(0.0f);
+        scrimView.animate().alpha(1.0f);
+        OvershootInterpolator overshootInterpolator = new OvershootInterpolator();
+        for (ActionView actionView : mQuickActionViewLayout.getActionViews().values()) {
+            actionView.setScaleX(0.1f);
+            actionView.setScaleX(0.1f);
+            actionView.animate().scaleX(1.0f)
+                    .scaleY(1.0f)
+                    .setInterpolator(overshootInterpolator);
+        }
+    }
+
+    private void animateHide() {
+        int duration = 300;
+        mQuickActionViewLayout.getIndicatorView().animate()
+                .alpha(0.0f)
+                .setDuration(200);
+        mQuickActionViewLayout.getScrimView().animate()
+                .alpha(0.0f)
+                .setDuration(200);
+        for (ActionView actionView : mQuickActionViewLayout.getActionViews().values()) {
+            actionView.animate().scaleX(0.1f)
+                    .scaleY(0.1f)
+                    .alpha(0.0f)
+                    .setDuration(duration);
+        }
+        for (ActionTitleView actionTitleView : mQuickActionViewLayout.getActionTitleViews().values()) {
+            if (actionTitleView.getVisibility() == View.VISIBLE) {
+                actionTitleView.animate().scaleX(0.1f)
+                        .scaleY(0.1f)
+                        .alpha(0.0f)
+                        .setDuration(duration);
+            }
+        }
+        mQuickActionViewLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mQuickActionViewLayout != null) {
+                    WindowManager manager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+                    manager.removeView(mQuickActionViewLayout);
+                    mQuickActionViewLayout = null;
+                    mShown = false;
+                }
+            }
+        }, duration);
     }
 
     private void dismiss() {
         if (!mShown) {
             throw new RuntimeException("The QuickActionView must be visible to call dismiss()");
         }
-        WindowManager manager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        manager.removeView(mQuickActionViewLayout);
-        mQuickActionViewLayout = null;
-        mShown = false;
+        animateHide();
     }
 
     private void checkShown() {
@@ -193,7 +325,6 @@ public class QuickActionView {
         mExtras = extras;
         return this;
     }
-
 
     public interface OnActionSelectedListener {
         void onActionSelected(Action action, QuickActionView quickActionView);
@@ -327,6 +458,7 @@ public class QuickActionView {
 
         private Point mCenterPoint;
         private View mIndicatorView;
+        private View mScrimView;
         private LinkedHashMap<Action, ActionView> mActionViews = new LinkedHashMap<>();
         private LinkedHashMap<Action, ActionTitleView> mActionTitleViews = new LinkedHashMap<>();
         private PointF mLastTouch = new PointF();
@@ -334,6 +466,10 @@ public class QuickActionView {
         public QuickActionViewLayout(Context context, ArrayList<Action> actions, Point centerPoint) {
             super(context);
             mCenterPoint = centerPoint;
+            mScrimView = new View(context);
+            mScrimView.setBackgroundColor(mScrimColor);
+            FrameLayout.LayoutParams scrimParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            addView(mScrimView, scrimParams);
             mIndicatorView = new View(context);
             if (Build.VERSION.SDK_INT >= 16) {
                 mIndicatorView.setBackground(mIndicatorDrawable);
@@ -349,6 +485,7 @@ public class QuickActionView {
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 addView(actionView, params);
                 ActionTitleView actionTitleView = new ActionTitleView(context, action, helper);
+                actionTitleView.setVisibility(View.GONE);
                 mActionTitleViews.put(action, actionTitleView);
                 FrameLayout.LayoutParams titleParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 addView(actionTitleView, titleParams);
@@ -392,12 +529,14 @@ public class QuickActionView {
                                     mLastHoveredAction = actionView.getAction();
                                     actionView.setSelected(true);
                                     actionView.animateInterpolation(1);
+                                    mActionTitleViews.get(actionView.getAction()).setVisibility(View.VISIBLE);
                                 }
                             } else {
                                 if (actionView.isSelected()) {
                                     mLastHoveredAction = null;
                                     actionView.setSelected(false);
                                     actionView.animateInterpolation(0);
+                                    mActionTitleViews.get(actionView.getAction()).setVisibility(View.GONE);
                                 }
                             }
                             index++;
@@ -445,6 +584,21 @@ public class QuickActionView {
             return (float) Math.sqrt(Math.pow(x - point.x, 2) + Math.pow(y - point.y, 2));
         }
 
+        public LinkedHashMap<Action, ActionView> getActionViews() {
+            return mActionViews;
+        }
+
+        public LinkedHashMap<Action, ActionTitleView> getActionTitleViews() {
+            return mActionTitleViews;
+        }
+
+        public View getIndicatorView() {
+            return mIndicatorView;
+        }
+
+        public View getScrimView() {
+            return mScrimView;
+        }
     }
 
 

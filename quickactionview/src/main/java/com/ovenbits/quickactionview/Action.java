@@ -59,7 +59,7 @@ public class Action {
             int colorAccent = ColorUtils.getThemeAttrColor(context, R.attr.colorAccent);
             mIconColorStateList = ColorStateList.valueOf(Color.WHITE);
             mBackgroundColorStateList = ColorStateList.valueOf(colorAccent);
-            mTextBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.default_text_background);
+            mTextBackgroundDrawable = ContextCompat.getDrawable(context, R.drawable.qav_text_background);
             mTextColorStateList = ColorStateList.valueOf(Color.WHITE);
         }
 
@@ -67,64 +67,55 @@ public class Action {
 
         }
 
-
-        public Config(ColorStateList iconColorStateList, ColorStateList backgroundColorStateList, ColorStateList textColorStateList, Drawable textBackgroundDrawable) {
-            mIconColorStateList = iconColorStateList;
-            mBackgroundColorStateList = backgroundColorStateList;
-            mTextColorStateList = textColorStateList;
-            mTextBackgroundDrawable = textBackgroundDrawable;
-        }
-
-        public Config(@ColorInt int iconColor, @ColorInt int backgroundColor, @ColorInt int textColor, Drawable textBackgroundDrawable) {
-            mIconColorStateList = ColorStateList.valueOf(iconColor);
-            mBackgroundColorStateList = ColorStateList.valueOf(backgroundColor);
-            mTextBackgroundDrawable = textBackgroundDrawable;
-            mTextColorStateList = ColorStateList.valueOf(textColor);
-        }
-
-
         public ColorStateList getIconColorStateList() {
             return mIconColorStateList;
         }
 
-        public void setIconColorStateList(ColorStateList iconColorStateList) {
+        public Config setIconColorStateList(ColorStateList iconColorStateList) {
             mIconColorStateList = iconColorStateList;
+            return this;
         }
 
-        public void setIconColor(@ColorInt int iconColor) {
+        public Config setIconColor(@ColorInt int iconColor) {
             mIconColorStateList = ColorStateList.valueOf(iconColor);
+            return this;
         }
 
         public ColorStateList getBackgroundColorStateList() {
             return mBackgroundColorStateList;
         }
 
-        public void setBackgroundColorStateList(ColorStateList backgroundColorStateList) {
+        public Config setBackgroundColorStateList(ColorStateList backgroundColorStateList) {
             mBackgroundColorStateList = backgroundColorStateList;
+            return this;
         }
 
-        public void setBackgroundColor(@ColorInt int backgroundColor) {
+        public Config setBackgroundColor(@ColorInt int backgroundColor) {
             mBackgroundColorStateList = ColorStateList.valueOf(backgroundColor);
+            return this;
         }
 
         public Drawable getTextBackgroundDrawable() {
             return mTextBackgroundDrawable;
         }
 
-        public void setTextBackgroundDrawable(Drawable textBackgroundDrawable) {
+        public Config setTextBackgroundDrawable(Drawable textBackgroundDrawable) {
             mTextBackgroundDrawable = textBackgroundDrawable;
+            return this;
         }
 
         public ColorStateList getTextColorStateList() {
             return mTextColorStateList;
         }
 
-        public void setTextColorStateList(ColorStateList textColorStateList) {
+        public Config setTextColorStateList(ColorStateList textColorStateList) {
             mTextColorStateList = textColorStateList;
+            return this;
         }
 
-        public void setTextColor(@ColorInt int textColor) {
+        public Config setTextColor(@ColorInt int textColor) {
             mTextColorStateList = ColorStateList.valueOf(textColor);
+            return this;
         }
     }
 }
