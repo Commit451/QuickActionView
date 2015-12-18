@@ -233,16 +233,32 @@ public class QuickActionView {
         return this;
     }
 
+    /**
+     * Override the animations for when the QuickActionView shows
+     * @param actionsInAnimator the animation overrides
+     * @return this QuickActionView
+     */
     public QuickActionView setActionsInAnimator(ActionsInAnimator actionsInAnimator) {
         mActionsInAnimator = actionsInAnimator;
         return this;
     }
 
+    /**
+     * Override the animations for when the QuickActionView dismisses
+     * @param actionsOutAnimator the animation overrides
+     * @return this QuickActionView
+     */
     public QuickActionView setActionsOutAnimator(ActionsOutAnimator actionsOutAnimator) {
         mActionsOutAnimator = actionsOutAnimator;
         return this;
     }
 
+    /**
+     * Set a custom configuration for the action with the given id
+     * @param config the configuration to attach
+     * @param actionId the action id
+     * @return this QuickActionView
+     */
     public QuickActionView setActionConfig(Action.Config config, @IdRes int actionId) {
         for (Action action : mActions) {
             if (action.getId() == actionId) {
@@ -480,6 +496,8 @@ public class QuickActionView {
 
         @Override
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+            mScrimView.layout(0,0,getMeasuredWidth(), getMeasuredHeight());
+
             mIndicatorView.layout(mCenterPoint.x - (int) (mIndicatorView.getMeasuredWidth() / 2.0),
                     mCenterPoint.y - (int) (mIndicatorView.getMeasuredHeight() / 2.0),
                     mCenterPoint.x + (int) (mIndicatorView.getMeasuredWidth() / 2.0),
@@ -644,7 +662,7 @@ public class QuickActionView {
         }
     }
 
-    private class DefaultAnimator implements ActionsInAnimator, ActionsOutAnimator {
+    private static class DefaultAnimator implements ActionsInAnimator, ActionsOutAnimator {
         private OvershootInterpolator mOvershootInterpolator = new OvershootInterpolator();
 
         @Override
@@ -664,8 +682,8 @@ public class QuickActionView {
 
         @Override
         public void animateScrimIn(View scrim) {
-            scrim.setAlpha(0);
-            scrim.animate().alpha(1).setDuration(200);
+            scrim.setAlpha(0f);
+            scrim.animate().alpha(1f).setDuration(200);
         }
 
         @Override
@@ -690,6 +708,4 @@ public class QuickActionView {
             return 200;
         }
     }
-
-
 }
