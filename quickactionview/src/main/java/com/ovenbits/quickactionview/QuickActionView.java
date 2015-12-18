@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.WindowManager;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
@@ -61,6 +62,8 @@ public class QuickActionView {
     private HashMap<View, RegisteredListener> mRegisteredListeners = new HashMap<>();
     private Action mLastHoveredAction = null;
 
+    private View mClickedView;
+
     private QuickActionView(Context context) {
         mContext = context;
         mConfig = new Config(context);
@@ -76,32 +79,33 @@ public class QuickActionView {
         return new QuickActionView(context);
     }
 
-    private QuickActionView show(View anchor, Point offset) {
-        if (mShown) {
-            throw new RuntimeException("Show cannot be called when the QuickActionView is already visible");
-        }
-        int[] loc = new int[2];
-        anchor.getLocationInWindow(loc);
-
-        Point point = new Point(offset);
-        point.offset(loc[0], loc[1]);
-        return show(point);
-    }
-
-    private QuickActionView show(Point point) {
+    private void show(View anchor, Point offset) {
         if (mShown) {
             throw new RuntimeException("Show cannot be called when the QuickActionView is already visible");
         }
         mShown = true;
+
+        ViewParent parent = anchor.getParent();
+        if (parent instanceof View) {
+            parent.requestDisallowInterceptTouchEvent(true);
+        }
+
+        mClickedView = anchor;
+
+        int[] loc = new int[2];
+        anchor.getLocationInWindow(loc);
+        Point point = new Point(offset);
+        point.offset(loc[0], loc[1]);
         display(point);
-        return this;
     }
 
-    public void register(View view) {
+
+    public QuickActionView register(View view) {
         RegisteredListener listener = new RegisteredListener();
         mRegisteredListeners.put(view, listener);
         view.setOnTouchListener(listener);
         view.setOnLongClickListener(listener);
+        return this;
     }
 
     public QuickActionView addAction(Action action) {
@@ -235,6 +239,7 @@ public class QuickActionView {
 
     /**
      * Override the animations for when the QuickActionView shows
+     *
      * @param actionsInAnimator the animation overrides
      * @return this QuickActionView
      */
@@ -245,6 +250,7 @@ public class QuickActionView {
 
     /**
      * Override the animations for when the QuickActionView dismisses
+     *
      * @param actionsOutAnimator the animation overrides
      * @return this QuickActionView
      */
@@ -255,7 +261,8 @@ public class QuickActionView {
 
     /**
      * Set a custom configuration for the action with the given id
-     * @param config the configuration to attach
+     *
+     * @param config   the configuration to attach
      * @param actionId the action id
      * @return this QuickActionView
      */
@@ -296,11 +303,19 @@ public class QuickActionView {
     }
 
     private void removeView() {
+
         if (mQuickActionViewLayout != null) {
             WindowManager manager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
             manager.removeView(mQuickActionViewLayout);
             mQuickActionViewLayout = null;
             mShown = false;
+        }
+
+        if (mClickedView != null) {
+            ViewParent parent = mClickedView.getParent();
+            if (parent instanceof View) {
+                parent.requestDisallowInterceptTouchEvent(false);
+            }
         }
     }
 
@@ -324,6 +339,10 @@ public class QuickActionView {
     public QuickActionView setExtras(Bundle extras) {
         mExtras = extras;
         return this;
+    }
+
+    public View getClickedView() {
+        return mClickedView;
     }
 
     public interface OnActionSelectedListener {
@@ -454,6 +473,53 @@ public class QuickActionView {
         }
     }
 
+    private static class DefaultAnimator implements ActionsInAnimator, ActionsOutAnimator {
+        private OvershootInterpolator mOvershootInterpolator = new OvershootInterpolator();
+
+        @Override
+        public void animateActionIn(Action action, int position, ActionView view, Point center) {
+            view.setScaleX(0.1f);
+            view.setScaleY(0.1f);
+            view.animate().scaleY(1.0f)
+                    .scaleX(1.0f)
+                    .setInterpolator(mOvershootInterpolator);
+        }
+
+        @Override
+        public void animateIndicatorIn(View indicator) {
+            indicator.setAlpha(0);
+            indicator.animate().alpha(1).setDuration(200);
+        }
+
+        @Override
+        public void animateScrimIn(View scrim) {
+            scrim.setAlpha(0f);
+            scrim.animate().alpha(1f).setDuration(200);
+        }
+
+        @Override
+        public int animateActionOut(Action action, int position, ActionView view, Point center) {
+            view.animate().scaleX(0.1f)
+                    .scaleY(0.1f)
+                    .alpha(0.0f)
+                    .setStartDelay(0)
+                    .setDuration(300);
+            return 300;
+        }
+
+        @Override
+        public int animateIndicatorOut(View indicator) {
+            indicator.animate().alpha(0).setDuration(200);
+            return 200;
+        }
+
+        @Override
+        public int animateScrimOut(View scrim) {
+            scrim.animate().alpha(0).setDuration(200);
+            return 200;
+        }
+    }
+
     protected class QuickActionViewLayout extends FrameLayout {
 
         private Point mCenterPoint;
@@ -496,7 +562,7 @@ public class QuickActionView {
 
         @Override
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-            mScrimView.layout(0,0,getMeasuredWidth(), getMeasuredHeight());
+            mScrimView.layout(0, 0, getMeasuredWidth(), getMeasuredHeight());
 
             mIndicatorView.layout(mCenterPoint.x - (int) (mIndicatorView.getMeasuredWidth() / 2.0),
                     mCenterPoint.y - (int) (mIndicatorView.getMeasuredHeight() / 2.0),
@@ -639,7 +705,6 @@ public class QuickActionView {
 
     }
 
-
     private class RegisteredListener implements View.OnLongClickListener, View.OnTouchListener {
 
         private float mTouchX;
@@ -659,53 +724,6 @@ public class QuickActionView {
                 mQuickActionViewLayout.onTouchEvent(event);
             }
             return mShown;
-        }
-    }
-
-    private static class DefaultAnimator implements ActionsInAnimator, ActionsOutAnimator {
-        private OvershootInterpolator mOvershootInterpolator = new OvershootInterpolator();
-
-        @Override
-        public void animateActionIn(Action action, int position, ActionView view, Point center) {
-            view.setScaleX(0.1f);
-            view.setScaleY(0.1f);
-            view.animate().scaleY(1.0f)
-                    .scaleX(1.0f)
-                    .setInterpolator(mOvershootInterpolator);
-        }
-
-        @Override
-        public void animateIndicatorIn(View indicator) {
-            indicator.setAlpha(0);
-            indicator.animate().alpha(1).setDuration(200);
-        }
-
-        @Override
-        public void animateScrimIn(View scrim) {
-            scrim.setAlpha(0f);
-            scrim.animate().alpha(1f).setDuration(200);
-        }
-
-        @Override
-        public int animateActionOut(Action action, int position, ActionView view, Point center) {
-            view.animate().scaleX(0.1f)
-                    .scaleY(0.1f)
-                    .alpha(0.0f)
-                    .setStartDelay(0)
-                    .setDuration(300);
-            return 300;
-        }
-
-        @Override
-        public int animateIndicatorOut(View indicator) {
-            indicator.animate().alpha(0).setDuration(200);
-            return 200;
-        }
-
-        @Override
-        public int animateScrimOut(View scrim) {
-            scrim.animate().alpha(0).setDuration(200);
-            return 200;
         }
     }
 }
