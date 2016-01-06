@@ -7,4 +7,5 @@
     <dimen name="qav_action_view_icon_padding">8dp</dimen>
     <dimen name="qav_action_distance">22dp</dimen>
     <dimen name="qav_action_padding">1dp</dimen>
+    <dimen name="qav_action_shadow_offset_y">3dp</dimen>
 </resources>
