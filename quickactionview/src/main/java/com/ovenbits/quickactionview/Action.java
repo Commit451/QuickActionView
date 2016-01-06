@@ -20,6 +20,9 @@ public class Action {
     private Config mConfig;
 
     public Action(int id, @NonNull Drawable icon, @NonNull CharSequence title) {
+        if (id == 0) {
+            throw new IllegalArgumentException("Actions must have a non-zero id");
+        }
         mId = id;
         mIcon = icon;
         mTitle = title;
