@@ -58,20 +58,24 @@ public class ActionView extends View implements ValueAnimator.AnimatorUpdateList
         return mActionCircleRadiusExpanded;
     }
 
+    private int[] getActionState() {
+        if (mSelected) {
+            return new int[]{android.R.attr.state_selected};
+        } else {
+            return new int[]{};
+        }
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (mSelected) {
-            mAction.getIcon().setState(new int[]{android.R.attr.state_selected});
-        } else {
-            mAction.getIcon().setState(new int[]{});
-        }
+        mAction.getIcon().setState(getActionState());
 
         float x = getCircleCenterX();
         float y = getCircleCenterY();
         mBackgroundPaint.setShadowLayer(getCurrentShadowRadius(), 0, getShadowOffsetY(), Color.parseColor("#50000000"));
-        mBackgroundPaint.setColor(mConfigHelper.getBackgroundColorStateList().getColorForState(getDrawableState(), Color.GRAY));
+        mBackgroundPaint.setColor(mConfigHelper.getBackgroundColorStateList().getColorForState(getActionState(), Color.GRAY));
 
         canvas.drawCircle(x, y, getInterpolatedRadius(), mBackgroundPaint);
 

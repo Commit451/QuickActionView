@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Action.Config actionConfig = new Action.Config()
-                .setBackgroundColor(Color.BLACK)
+                .setBackgroundColorStateList(ContextCompat.getColorStateList(this, R.drawable.sample_background_color))
                 .setTextColor(Color.MAGENTA);
 
         QuickActionView.make(this)
@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
         public void animateActionIn(Action action, int index, ActionView view, Point center) {
             Point actionCenter = view.getCircleCenterPoint();
             actionCenter.offset(view.getLeft(), view.getTop());
-
             view.setTranslationY(center.y - actionCenter.y);
             view.setTranslationX(center.x - actionCenter.x);
             view.animate().translationX(0).translationY(0).setInterpolator(mOvershootInterpolator).setStartDelay(index * 100).setDuration(150);

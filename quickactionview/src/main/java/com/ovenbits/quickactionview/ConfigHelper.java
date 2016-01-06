@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 
 /**
@@ -27,11 +28,12 @@ public class ConfigHelper {
     }
 
 
-    public ColorStateList getTextColorStateList() {
-        if (mActionConfig != null && mActionConfig.getTextColorStateList() != null) {
-            return mActionConfig.getTextColorStateList();
+    @ColorInt
+    public int getTextColor() {
+        if (mActionConfig != null && mActionConfig.getTextColor() != 0) {
+            return mActionConfig.getTextColor();
         }
-        return mQuickActionViewConfig.getTextColorStateList();
+        return mQuickActionViewConfig.getTextColor();
     }
 
 

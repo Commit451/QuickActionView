@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <item
         android:id="@+id/action_favorite"
         android:icon="@drawable/ic_favorite_24dp"
         android:title="@string/action_favorite"
         app:showAsAction="always"/>
-
     <item
         android:id="@+id/action_add_to_cart"
-        android:icon="@drawable/ic_shopping_basket_24dp"
+        android:icon="@drawable/sample_changing_icon"
         android:title="@string/action_add_to_cart"
         app:showAsAction="always"/>
-
     <item
         android:id="@+id/action_like"
         android:icon="@drawable/ic_thumb_up_black_24dp"
         android:title="@string/action_like"
         app:showAsAction="always"/>
-
 </menu>

@@ -184,10 +184,6 @@ public class QuickActionView {
         return this;
     }
 
-    public QuickActionView setTextColorStateList(ColorStateList textColorStateList) {
-        mConfig.setTextColorStateList(textColorStateList);
-        return this;
-    }
 
     public QuickActionView setBackgroundColorStateList(ColorStateList backgroundColorStateList) {
         mConfig.setBackgroundColorStateList(backgroundColorStateList);
@@ -390,13 +386,14 @@ public class QuickActionView {
             mDefaultConfig.setTextBackgroundDrawable(textBackgroundDrawable);
         }
 
-        public ColorStateList getTextColorStateList() {
-            return mDefaultConfig.getTextColorStateList();
+        public int getTextColor() {
+            return mDefaultConfig.getTextColor();
         }
 
-        public void setTextColorStateList(ColorStateList textColorStateList) {
-            mDefaultConfig.setTextColorStateList(textColorStateList);
+        public void setTextColor(@ColorInt int textColor) {
+            mDefaultConfig.setTextColor(textColor);
         }
+
 
         public ColorStateList getBackgroundColorStateList() {
             return mDefaultConfig.getBackgroundColorStateList();
@@ -404,10 +401,6 @@ public class QuickActionView {
 
         public void setBackgroundColorStateList(ColorStateList backgroundColorStateList) {
             mDefaultConfig.setBackgroundColorStateList(backgroundColorStateList);
-        }
-
-        public void setTextColor(@ColorInt int textColor) {
-            mDefaultConfig.setTextColor(textColor);
         }
 
         public void setBackgroundColor(@ColorInt int backgroundColor) {

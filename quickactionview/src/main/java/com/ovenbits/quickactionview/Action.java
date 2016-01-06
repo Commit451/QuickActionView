@@ -53,7 +53,7 @@ public class Action {
      */
     public static class Config {
         protected ColorStateList mBackgroundColorStateList;
-        protected ColorStateList mTextColorStateList;
+        protected int mTextColor;
         @DrawableRes
         protected int mTextBackgroundDrawable;
 
@@ -61,7 +61,7 @@ public class Action {
             int colorAccent = ColorUtils.getThemeAttrColor(context, R.attr.colorAccent);
             mBackgroundColorStateList = ColorStateList.valueOf(colorAccent);
             mTextBackgroundDrawable = R.drawable.qav_text_background;
-            mTextColorStateList = ColorStateList.valueOf(Color.WHITE);
+            mTextColor = Color.WHITE;
         }
 
         public Config() {
@@ -96,17 +96,12 @@ public class Action {
             return this;
         }
 
-        public ColorStateList getTextColorStateList() {
-            return mTextColorStateList;
+        public int getTextColor() {
+            return mTextColor;
         }
 
-        public Config setTextColorStateList(ColorStateList textColorStateList) {
-            mTextColorStateList = textColorStateList;
-            return this;
-        }
-
-        public Config setTextColor(@ColorInt int textColor) {
-            mTextColorStateList = ColorStateList.valueOf(textColor);
+        public Config setTextColor(int textColor) {
+            mTextColor = textColor;
             return this;
         }
     }
