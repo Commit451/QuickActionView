@@ -75,6 +75,12 @@ public class QuickActionView {
         mActionsOutAnimator = defaultAnimator;
     }
 
+    /**
+     * Create a QuickActionView which you can configure as desired, then
+     * call {@link #register(View)} to show it.
+     * @param context activity context
+     * @return the QuickActionView for you to
+     */
     public static QuickActionView make(Context context) {
         return new QuickActionView(context);
     }
@@ -100,6 +106,11 @@ public class QuickActionView {
     }
 
 
+    /**
+     * Register the QuickActionView to appear when the passed view is long pressed
+     * @param view the view to have long press responses
+     * @return the QuickActionView
+     */
     public QuickActionView register(View view) {
         RegisteredListener listener = new RegisteredListener();
         mRegisteredListeners.put(view, listener);
@@ -108,18 +119,32 @@ public class QuickActionView {
         return this;
     }
 
+    /**
+     * Unregister the view so that it can no longer be long pressed to show the QuickActionView
+     * @param view the view to unregister
+     */
     public void unregister(View view) {
         mRegisteredListeners.remove(view);
         view.setOnTouchListener(null);
         view.setOnLongClickListener(null);
     }
 
+    /**
+     * Adds an action to the QuickActionView
+     * @param action the action to add
+     * @return the QuickActionView
+     */
     public QuickActionView addAction(Action action) {
         checkShown();
         mActions.add(action);
         return this;
     }
 
+    /**
+     * Adds a collection of actions to the QuickActionView
+     * @param actions the actions to add
+     * @return the QuickActionView
+     */
     public QuickActionView addActions(Collection<Action> actions) {
         checkShown();
         mActions.addAll(actions);
@@ -128,7 +153,6 @@ public class QuickActionView {
 
     /**
      * Add actions to the QuickActionView from the given menu resource id.
-     *
      * @param menuId menu resource id
      * @return the QuickActionView
      */
@@ -143,9 +167,28 @@ public class QuickActionView {
         return this;
     }
 
-    public QuickActionView clearActions() {
+    /**
+     * Removes all actions from the QuickActionView
+     * @return the QuickActionView
+     */
+    public QuickActionView removeActions() {
         mActions.clear();
         return this;
+    }
+
+    /**
+     * Remove an individual action from the QuickActionView
+     * @param actionId the action id
+     * @return the QuickActionView
+     */
+    public QuickActionView removeAction(int actionId) {
+        for (int i=0; i<mActions.size(); i++) {
+            if (mActions.get(i).getId() == actionId) {
+                mActions.remove(i);
+                return this;
+            }
+        }
+        throw new IllegalArgumentException("No action exists for actionId" + actionId);
     }
 
     public QuickActionView setOnActionSelectedListener(OnActionSelectedListener onActionSelectedListener) {
