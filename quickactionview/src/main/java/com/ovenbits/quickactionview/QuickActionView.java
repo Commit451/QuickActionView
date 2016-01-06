@@ -178,10 +178,6 @@ public class QuickActionView {
         return this;
     }
 
-    public QuickActionView setIconColorStateList(ColorStateList iconColorStateList) {
-        mConfig.setIconColorStateList(iconColorStateList);
-        return this;
-    }
 
     public QuickActionView setTextBackgroundDrawable(@DrawableRes int textBackgroundDrawable) {
         mConfig.setTextBackgroundDrawable(textBackgroundDrawable);
@@ -208,10 +204,6 @@ public class QuickActionView {
         return this;
     }
 
-    public QuickActionView setIconColor(@ColorInt int iconColor) {
-        mConfig.setIconColor(iconColor);
-        return this;
-    }
 
     public QuickActionView setTypeface(Typeface typeface) {
         mConfig.setTypeface(typeface);
@@ -389,13 +381,6 @@ public class QuickActionView {
             mDefaultConfig = new Action.Config(context);
         }
 
-        public ColorStateList getIconColorStateList() {
-            return mDefaultConfig.getIconColorStateList();
-        }
-
-        public void setIconColorStateList(ColorStateList iconColorStateList) {
-            mDefaultConfig.setIconColorStateList(iconColorStateList);
-        }
 
         public Drawable getTextBackgroundDrawable(Context context) {
             return mDefaultConfig.getTextBackgroundDrawable(context);
@@ -429,9 +414,6 @@ public class QuickActionView {
             mDefaultConfig.setBackgroundColor(backgroundColor);
         }
 
-        public void setIconColor(@ColorInt int iconColor) {
-            mDefaultConfig.setIconColor(iconColor);
-        }
 
         public Typeface getTypeface() {
             return mTypeface;

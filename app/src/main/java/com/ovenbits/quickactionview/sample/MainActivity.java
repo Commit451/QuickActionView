@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
 
         Action.Config actionConfig = new Action.Config()
                 .setBackgroundColor(Color.BLACK)
-                .setIconColor(Color.RED)
                 .setTextColor(Color.MAGENTA);
 
         QuickActionView.make(this)

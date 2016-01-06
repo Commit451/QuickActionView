@@ -52,7 +52,6 @@ public class Action {
      * Configuration for the {@link Action} which controls the visuals.
      */
     public static class Config {
-        protected ColorStateList mIconColorStateList;
         protected ColorStateList mBackgroundColorStateList;
         protected ColorStateList mTextColorStateList;
         @DrawableRes
@@ -60,7 +59,6 @@ public class Action {
 
         protected Config(Context context) {
             int colorAccent = ColorUtils.getThemeAttrColor(context, R.attr.colorAccent);
-            mIconColorStateList = ColorStateList.valueOf(Color.WHITE);
             mBackgroundColorStateList = ColorStateList.valueOf(colorAccent);
             mTextBackgroundDrawable = R.drawable.qav_text_background;
             mTextColorStateList = ColorStateList.valueOf(Color.WHITE);
@@ -70,19 +68,6 @@ public class Action {
 
         }
 
-        public ColorStateList getIconColorStateList() {
-            return mIconColorStateList;
-        }
-
-        public Config setIconColorStateList(ColorStateList iconColorStateList) {
-            mIconColorStateList = iconColorStateList;
-            return this;
-        }
-
-        public Config setIconColor(@ColorInt int iconColor) {
-            mIconColorStateList = ColorStateList.valueOf(iconColor);
-            return this;
-        }
 
         public ColorStateList getBackgroundColorStateList() {
             return mBackgroundColorStateList;

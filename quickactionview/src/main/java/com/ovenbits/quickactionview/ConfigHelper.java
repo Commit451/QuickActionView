@@ -18,13 +18,6 @@ public class ConfigHelper {
         mQuickActionViewConfig = quickActionViewConfig;
     }
 
-    public ColorStateList getIconColorStateList() {
-        if (mActionConfig != null && mActionConfig.getIconColorStateList() != null) {
-            return mActionConfig.getIconColorStateList();
-        }
-        return mQuickActionViewConfig.getIconColorStateList();
-    }
-
 
     public Drawable getTextBackgroundDrawable(Context context) {
         if (mActionConfig != null && mActionConfig.getTextBackgroundDrawable(context) != null) {

@@ -61,6 +61,13 @@ public class ActionView extends View implements ValueAnimator.AnimatorUpdateList
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        if (mSelected) {
+            mAction.getIcon().setState(new int[]{android.R.attr.state_selected});
+        } else {
+            mAction.getIcon().setState(new int[]{});
+        }
+
         float x = getCircleCenterX();
         float y = getCircleCenterY();
         mBackgroundPaint.setShadowLayer(getCurrentShadowRadius(), 0, getShadowOffsetY(), Color.parseColor("#50000000"));
@@ -69,11 +76,7 @@ public class ActionView extends View implements ValueAnimator.AnimatorUpdateList
         canvas.drawCircle(x, y, getInterpolatedRadius(), mBackgroundPaint);
 
         Drawable icon = mAction.getIcon();
-//        if (isPressed) {
-//            icon.setColorFilter(config.getPressedColorFilter());
-//        } else {
-//            icon.setColorFilter(config.getNormalColorFilter());
-//        }
+
         Rect bounds = getRectInsideCircle(new Point((int) x, (int) y), getInterpolatedRadius());
         bounds.inset(mIconPadding, mIconPadding);
 
@@ -86,6 +89,7 @@ public class ActionView extends View implements ValueAnimator.AnimatorUpdateList
         mAction.getIcon().draw(canvas);
 
     }
+
 
     private Rect getRectInsideCircle(Point center, float radius) {
         Rect rect = new Rect(0, 0, (int) ((radius * 2) / Math.sqrt(2)), (int) ((radius * 2) / Math.sqrt(2)));
