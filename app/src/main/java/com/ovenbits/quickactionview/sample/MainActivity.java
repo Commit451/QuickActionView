@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 .setTextColor(Color.BLUE)
                 .setTextSize(30)
                 .setScrimColor(Color.parseColor("#99FFFFFF"))
-                .setTextBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.text_background))
+                .setTextBackgroundDrawable(R.drawable.text_background)
                 .setIndicatorDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.indicator))
                 .setActionConfig(actionConfig, R.id.action_add_to_cart)
                 .setActionsInAnimator(new CustomInAnimator())
