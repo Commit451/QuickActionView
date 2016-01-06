@@ -1,6 +1,7 @@
 package com.ovenbits.quickactionview;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,12 +14,14 @@ import android.view.View;
 /**
  * View that shows the action
  */
+@SuppressLint("ViewConstructor")
 public class ActionView extends View implements ValueAnimator.AnimatorUpdateListener {
 
     private Paint mBackgroundPaint;
 
     private int mActionCircleRadius;
     private float mActionCircleRadiusExpanded;
+    private float mActionShadowOffsetY;
     private int mIconPadding;
     private float mInterpolation;
 
@@ -42,6 +45,7 @@ public class ActionView extends View implements ValueAnimator.AnimatorUpdateList
         mBackgroundPaint.setAntiAlias(true);
         mActionCircleRadius = getResources().getDimensionPixelSize(R.dimen.qav_action_view_radius);
         mActionCircleRadiusExpanded = getResources().getDimensionPixelSize(R.dimen.qav_action_view_radius_expanded);
+        mActionShadowOffsetY = getResources().getDimensionPixelSize(R.dimen.qav_action_shadow_offset_y);
         mIconPadding = getResources().getDimensionPixelSize(R.dimen.qav_action_view_icon_padding);
     }
 
@@ -59,7 +63,6 @@ public class ActionView extends View implements ValueAnimator.AnimatorUpdateList
         super.onDraw(canvas);
         float x = getCircleCenterX();
         float y = getCircleCenterY();
-        //TODO 5.0+ = elevation?
         mBackgroundPaint.setShadowLayer(getCurrentShadowRadius(), 0, getShadowOffsetY(), Color.parseColor("#50000000"));
         mBackgroundPaint.setColor(mConfigHelper.getBackgroundColorStateList().getColorForState(getDrawableState(), Color.GRAY));
 
@@ -124,7 +127,7 @@ public class ActionView extends View implements ValueAnimator.AnimatorUpdateList
     }
 
     private float getShadowOffsetY() {
-        return 6;
+        return mActionShadowOffsetY;
     }
 
     void animateInterpolation(float to) {

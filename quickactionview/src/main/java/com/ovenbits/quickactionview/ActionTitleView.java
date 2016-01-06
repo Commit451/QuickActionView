@@ -1,5 +1,6 @@
 package com.ovenbits.quickactionview;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 /**
  * Shows the title of the Action
  */
+@SuppressLint("ViewConstructor")
 public class ActionTitleView extends TextView {
 
     private Action mAction;

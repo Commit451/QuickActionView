@@ -107,6 +107,12 @@ public class QuickActionView {
         return this;
     }
 
+    public void unregister(View view) {
+        mRegisteredListeners.remove(view);
+        view.setOnTouchListener(null);
+        view.setOnLongClickListener(null);
+    }
+
     public QuickActionView addAction(Action action) {
         checkShown();
         mActions.add(action);
