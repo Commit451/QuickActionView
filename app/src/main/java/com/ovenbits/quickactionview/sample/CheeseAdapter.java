@@ -39,10 +39,12 @@ public class CheeseAdapter extends RecyclerView.Adapter<CheeseViewHolder> implem
 
     @Override
     public void onActionSelected(Action action, QuickActionView quickActionView) {
-        View view = quickActionView.getClickedView();
-        int position = (int) view.getTag(R.id.list_position);
-        Cheese cheese = getItemAt(position);
-        Snackbar.make(view, "Clicked on " + cheese.getName() + " with action " + action.getTitle(), Snackbar.LENGTH_SHORT).show();
+        View view = quickActionView.getLongPressedView();
+        if (view != null) {
+            int position = (int) view.getTag(R.id.list_position);
+            Cheese cheese = getItemAt(position);
+            Snackbar.make(view, "Clicked on " + cheese.getName() + " with action " + action.getTitle(), Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     public void setData(Collection<Cheese> cheeses) {

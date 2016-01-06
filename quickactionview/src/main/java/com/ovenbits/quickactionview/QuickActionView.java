@@ -15,6 +15,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.MenuRes;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.view.menu.MenuBuilder;
 import android.text.TextUtils;
@@ -47,6 +48,7 @@ public class QuickActionView {
     private OnActionSelectedListener mOnActionSelectedListener;
     private OnDismissListener mOnDismissListener;
     private OnShowListener mOnShowListener;
+    private OnActionHoverChangedListener mOnActionHoverChangedListener;
     private Float mStartAngle;
     private float mActionDistance;
     private int mActionPadding;
@@ -192,18 +194,43 @@ public class QuickActionView {
         throw new IllegalArgumentException("No action exists for actionId" + actionId);
     }
 
+    /**
+     * @see OnActionSelectedListener
+     * @param onActionSelectedListener the listener
+     * @return the QuickActionView
+     */
     public QuickActionView setOnActionSelectedListener(OnActionSelectedListener onActionSelectedListener) {
         mOnActionSelectedListener = onActionSelectedListener;
         return this;
     }
 
+    /**
+     * @see OnDismissListener
+     * @param onDismissListener the listener
+     * @return the QuickActionView
+     */
     public QuickActionView setOnDismissListener(OnDismissListener onDismissListener) {
         mOnDismissListener = onDismissListener;
         return this;
     }
 
+    /**
+     * @see OnShowListener
+     * @param onShowListener the listener
+     * @return the QuickActionView
+     */
     public QuickActionView setOnShowListener(OnShowListener onShowListener) {
         mOnShowListener = onShowListener;
+        return this;
+    }
+
+    /**
+     * @see OnActionHoverChangedListener
+     * @param listener the listener
+     * @return the QuickActionView
+     */
+    public QuickActionView setOnActionHoverChangedListener(OnActionHoverChangedListener listener) {
+        mOnActionHoverChangedListener = listener;
         return this;
     }
 
@@ -212,64 +239,123 @@ public class QuickActionView {
         mStartAngle = startAngle;
     }
 
+    /**
+     * Set the indicator drawable (the drawable that appears at the point the user has long pressed
+     * @param indicatorDrawable the indicator drawable
+     * @return the QuickActionView
+     */
     public QuickActionView setIndicatorDrawable(Drawable indicatorDrawable) {
         mIndicatorDrawable = indicatorDrawable;
         return this;
     }
 
+    /**
+     * Set the scrim color (the background behind the QuickActionView)
+     * @param scrimColor the desired scrim color
+     * @return the QuickActionView
+     */
     public QuickActionView setScrimColor(@ColorInt int scrimColor) {
         mScrimColor = scrimColor;
         return this;
     }
 
-
+    /**
+     * Set the drawable that appears behind the Action text labels
+     * @param textBackgroundDrawable the desired drawable
+     * @return the QuickActionView
+     */
     public QuickActionView setTextBackgroundDrawable(@DrawableRes int textBackgroundDrawable) {
         mConfig.setTextBackgroundDrawable(textBackgroundDrawable);
         return this;
     }
 
 
+    /**
+     * Set the background color state list for all action items
+     * @param backgroundColorStateList the desired colorstatelist
+     * @return the QuickActionView
+     */
     public QuickActionView setBackgroundColorStateList(ColorStateList backgroundColorStateList) {
         mConfig.setBackgroundColorStateList(backgroundColorStateList);
         return this;
     }
 
+    /**
+     * Set the text color for the Action labels
+     * @param textColor the desired text color
+     * @return the QuickActionView
+     */
     public QuickActionView setTextColor(@ColorInt int textColor) {
         mConfig.setTextColor(textColor);
         return this;
     }
 
+    /**
+     * Set the action's background color. If you want to have a pressed state,
+     * see {@link #setBackgroundColorStateList(ColorStateList)}
+     * @param backgroundColor the desired background color
+     * @return the QuickActionView
+     */
     public QuickActionView setBackgroundColor(@ColorInt int backgroundColor) {
         mConfig.setBackgroundColor(backgroundColor);
         return this;
     }
 
-
+    /**
+     * Set the typeface for the Action labels
+     * @param typeface the desired typeface
+     * @return the QuickActionView
+     */
     public QuickActionView setTypeface(Typeface typeface) {
         mConfig.setTypeface(typeface);
         return this;
     }
 
+    /**
+     * Set the text size for the Action labels
+     * @param textSize the desired textSize (in pixels)
+     * @return the QuickActionView
+     */
     public QuickActionView setTextSize(int textSize) {
         mConfig.setTextSize(textSize);
         return this;
     }
 
+    /**
+     * Set the text top padding for the Action labels
+     * @param textPaddingTop the top padding in pixels
+     * @return the QuickActionView
+     */
     public QuickActionView setTextPaddingTop(int textPaddingTop) {
         mConfig.setTextPaddingTop(textPaddingTop);
         return this;
     }
 
+    /**
+     * Set the text bottom padding for the Action labels
+     * @param textPaddingBottom the top padding in pixels
+     * @return the QuickActionView
+     */
     public QuickActionView setTextPaddingBottom(int textPaddingBottom) {
         mConfig.setTextPaddingBottom(textPaddingBottom);
         return this;
     }
 
+    /**
+     * Set the text left padding for the Action labels
+     * @param textPaddingLeft the top padding in pixels
+     * @return the QuickActionView
+     */
     public QuickActionView setTextPaddingLeft(int textPaddingLeft) {
         mConfig.setTextPaddingLeft(textPaddingLeft);
         return this;
     }
 
+    /**
+     * Set the text right padding for the Action labels
+     * @param textPaddingRight the top padding in pixels
+     * @return the QuickActionView
+     */
     public QuickActionView setTextPaddingRight(int textPaddingRight) {
         mConfig.setTextPaddingRight(textPaddingRight);
         return this;
@@ -277,7 +363,6 @@ public class QuickActionView {
 
     /**
      * Override the animations for when the QuickActionView shows
-     *
      * @param actionsInAnimator the animation overrides
      * @return this QuickActionView
      */
@@ -288,7 +373,6 @@ public class QuickActionView {
 
     /**
      * Override the animations for when the QuickActionView dismisses
-     *
      * @param actionsOutAnimator the animation overrides
      * @return this QuickActionView
      */
@@ -373,32 +457,63 @@ public class QuickActionView {
         }
     }
 
+    /**
+     * Get the extras associated with the QuickActionView. Allows for
+     * saving state to the QuickActionView
+     * @return the bundle for the QuickActionView
+     */
     public Bundle getExtras() {
         return mExtras;
     }
 
+    /**
+     * Set extras to associate with the QuickActionView to allow saving state
+     * @param extras the bundle
+     * @return the QuickActionView
+     */
     public QuickActionView setExtras(Bundle extras) {
         mExtras = extras;
         return this;
     }
 
-    public View getClickedView() {
+    /**
+     * Retrieve the view that has been long pressed
+     * @return the registered view that was long pressed to show the QuickActionView
+     */
+    @Nullable
+    public View getLongPressedView() {
         return mClickedView;
     }
 
+    /**
+     * Listener for when an action is selected (hovered, then released)
+     */
     public interface OnActionSelectedListener {
         void onActionSelected(Action action, QuickActionView quickActionView);
     }
 
+    /**
+     * Listener for when an action has its hover state changed (hovering or stopped hovering)
+     */
+    public interface OnActionHoverChangedListener {
+        void onActionHoverChanged(Action action, QuickActionView quickActionView, boolean hovering);
+    }
+
+    /**
+     * Listen for when the QuickActionView is dismissed
+     */
     public interface OnDismissListener {
         void onDismiss(QuickActionView quickActionView);
     }
 
+    /**
+     * Listener for when the QuickActionView is shown
+     */
     public interface OnShowListener {
         void onShow(QuickActionView quickActionView);
     }
 
-    public static class Config {
+    protected static class Config {
         private Action.Config mDefaultConfig;
         private Typeface mTypeface;
         private int mTextSize;
@@ -407,7 +522,7 @@ public class QuickActionView {
         private int mTextPaddingLeft;
         private int mTextPaddingRight;
 
-        public Config(Context context) {
+        protected Config(Context context) {
             this(context, null, context.getResources().getInteger(R.integer.qav_action_title_view_text_size), context.getResources().getDimensionPixelSize(R.dimen.qav_action_title_view_text_padding));
         }
 
@@ -549,7 +664,10 @@ public class QuickActionView {
         }
     }
 
-    protected class QuickActionViewLayout extends FrameLayout {
+    /**
+     * Parent layout that actually houses all of the quick action views
+     */
+    private class QuickActionViewLayout extends FrameLayout {
 
         private Point mCenterPoint;
         private View mIndicatorView;
@@ -684,6 +802,9 @@ public class QuickActionView {
                                     if (mActionTitleViews.containsKey(actionView.getAction())) {
                                         mActionTitleViews.get(actionView.getAction()).setVisibility(View.VISIBLE);
                                     }
+                                    if (mOnActionHoverChangedListener != null) {
+                                        mOnActionHoverChangedListener.onActionHoverChanged(actionView.getAction(), QuickActionView.this, true);
+                                    }
                                 }
                             } else {
                                 if (actionView.isSelected()) {
@@ -691,6 +812,9 @@ public class QuickActionView {
                                     actionView.animateInterpolation(0);
                                     if (mActionTitleViews.containsKey(actionView.getAction())) {
                                         mActionTitleViews.get(actionView.getAction()).setVisibility(View.GONE);
+                                    }
+                                    if (mOnActionHoverChangedListener != null) {
+                                        mOnActionHoverChangedListener.onActionHoverChanged(actionView.getAction(), QuickActionView.this, false);
                                     }
                                 }
                             }
@@ -740,6 +864,9 @@ public class QuickActionView {
 
     }
 
+    /**
+     * A class to combine a long click listener and a touch listener, to register views with
+     */
     private class RegisteredListener implements View.OnLongClickListener, View.OnTouchListener {
 
         private float mTouchX;

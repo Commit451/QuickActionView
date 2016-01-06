@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
@@ -31,6 +32,27 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private final QuickActionView.OnShowListener mQuickActionShowListener = new QuickActionView.OnShowListener() {
+        @Override
+        public void onShow(QuickActionView quickActionView) {
+            Log.d("MainActivity", "onShow");
+        }
+    };
+
+    private final QuickActionView.OnDismissListener mQuickActionDismissListener = new QuickActionView.OnDismissListener() {
+        @Override
+        public void onDismiss(QuickActionView quickActionView) {
+            Log.d("MainActivity", "onDismiss");
+        }
+    };
+
+    private final QuickActionView.OnActionHoverChangedListener mOnActionHoverChangedListener = new QuickActionView.OnActionHoverChangedListener() {
+        @Override
+        public void onActionHoverChanged(Action action, QuickActionView quickActionView, boolean hovering) {
+            Log.d("MainActivity", "onHover " + hovering);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
         QuickActionView.make(this)
                 .addActions(R.menu.actions)
                 .setOnActionSelectedListener(mQuickActionListener)
+                .setOnShowListener(mQuickActionShowListener)
+                .setOnDismissListener(mQuickActionDismissListener)
+                .setOnActionHoverChangedListener(mOnActionHoverChangedListener)
                 .register(view);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
