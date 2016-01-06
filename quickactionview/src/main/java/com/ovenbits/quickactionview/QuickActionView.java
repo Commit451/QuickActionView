@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.MenuRes;
 import android.support.v4.content.ContextCompat;
@@ -182,7 +183,7 @@ public class QuickActionView {
         return this;
     }
 
-    public QuickActionView setTextBackgroundDrawable(Drawable textBackgroundDrawable) {
+    public QuickActionView setTextBackgroundDrawable(@DrawableRes int textBackgroundDrawable) {
         mConfig.setTextBackgroundDrawable(textBackgroundDrawable);
         return this;
     }
@@ -396,11 +397,11 @@ public class QuickActionView {
             mDefaultConfig.setIconColorStateList(iconColorStateList);
         }
 
-        public Drawable getTextBackgroundDrawable() {
-            return mDefaultConfig.getTextBackgroundDrawable();
+        public Drawable getTextBackgroundDrawable(Context context) {
+            return mDefaultConfig.getTextBackgroundDrawable(context);
         }
 
-        public void setTextBackgroundDrawable(Drawable textBackgroundDrawable) {
+        public void setTextBackgroundDrawable(@DrawableRes int textBackgroundDrawable) {
             mDefaultConfig.setTextBackgroundDrawable(textBackgroundDrawable);
         }
 

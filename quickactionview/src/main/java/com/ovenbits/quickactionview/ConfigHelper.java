@@ -1,5 +1,6 @@
 package com.ovenbits.quickactionview;
 
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -25,11 +26,11 @@ public class ConfigHelper {
     }
 
 
-    public Drawable getTextBackgroundDrawable() {
-        if (mActionConfig != null && mActionConfig.getTextBackgroundDrawable() != null) {
-            return mActionConfig.getTextBackgroundDrawable();
+    public Drawable getTextBackgroundDrawable(Context context) {
+        if (mActionConfig != null && mActionConfig.getTextBackgroundDrawable(context) != null) {
+            return mActionConfig.getTextBackgroundDrawable(context);
         }
-        return mQuickActionViewConfig.getTextBackgroundDrawable();
+        return mQuickActionViewConfig.getTextBackgroundDrawable(context);
     }
 
 

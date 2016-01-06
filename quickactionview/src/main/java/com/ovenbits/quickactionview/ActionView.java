@@ -51,7 +51,7 @@ public class ActionView extends View implements ValueAnimator.AnimatorUpdateList
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension((int) (mActionCircleRadiusExpanded * 2 + getMaxShadowRadius() * 2), (int) (mActionCircleRadius * 2 + getMaxShadowRadius() * 2));
+        setMeasuredDimension((int) (mActionCircleRadiusExpanded * 2 + getMaxShadowRadius() * 2), (int) (mActionCircleRadiusExpanded * 2 + getMaxShadowRadius() * 2));
     }
 
     float getActionCircleRadiusExpanded() {
@@ -94,7 +94,7 @@ public class ActionView extends View implements ValueAnimator.AnimatorUpdateList
     }
 
     private float getMaxShadowRadius() {
-        return mActionCircleRadiusExpanded / 5;
+        return mActionCircleRadiusExpanded / 5.0f;
     }
 
     public float getInterpolation() {
@@ -118,7 +118,7 @@ public class ActionView extends View implements ValueAnimator.AnimatorUpdateList
     }
 
     protected float getCircleCenterY() {
-        return mActionCircleRadius + getMaxShadowRadius() - getShadowOffsetY();
+        return mActionCircleRadiusExpanded + getMaxShadowRadius() - getShadowOffsetY();
     }
 
     public Point getCircleCenterPoint() {

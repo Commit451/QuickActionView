@@ -28,10 +28,11 @@ public class ActionTitleView extends TextView {
         setTextColor(mConfigHelper.getTextColorStateList());
         setTextSize(mConfigHelper.getTextSize());
         if (Build.VERSION.SDK_INT >= 16) {
-            setBackgroundDrawable(mConfigHelper.getTextBackgroundDrawable());
+            setBackgroundDrawable(mConfigHelper.getTextBackgroundDrawable(getContext()));
         } else {
-            setBackground(mConfigHelper.getTextBackgroundDrawable());
+            setBackground(mConfigHelper.getTextBackgroundDrawable(getContext()));
         }
         setText(mAction.getTitle());
     }
+
 }
