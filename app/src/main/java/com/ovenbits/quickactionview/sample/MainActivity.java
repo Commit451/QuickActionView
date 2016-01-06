@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 .setTextColor(Color.MAGENTA);
 
         QuickActionView.make(this)
-                .addActions(R.menu.actions)
+                .addActions(R.menu.actions_2)
                 .setOnActionSelectedListener(mQuickActionListener)
                 .setBackgroundColor(Color.RED)
                 .setTextColor(Color.BLUE)

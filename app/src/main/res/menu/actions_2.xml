@@ -8,7 +8,7 @@
         app:showAsAction="always"/>
     <item
         android:id="@+id/action_add_to_cart"
-        android:icon="@drawable/ic_shopping_basket_24dp"
+        android:icon="@drawable/sample_changing_icon"
         android:title="@string/action_add_to_cart"
         app:showAsAction="always"/>
     <item
