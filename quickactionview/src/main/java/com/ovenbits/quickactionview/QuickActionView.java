@@ -27,8 +27,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.WindowManager;
-import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
+
+import com.ovenbits.quickactionview.animator.PopInAnimator;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -73,7 +74,7 @@ public class QuickActionView {
         mIndicatorDrawable = ContextCompat.getDrawable(context, R.drawable.qav_indicator);
         mActionDistance = context.getResources().getDimensionPixelSize(R.dimen.qav_action_distance);
         mActionPadding = context.getResources().getDimensionPixelSize(R.dimen.qav_action_padding);
-        DefaultAnimator defaultAnimator = new DefaultAnimator();
+        PopInAnimator defaultAnimator = new PopInAnimator();
         mActionsInAnimator = defaultAnimator;
         mActionsOutAnimator = defaultAnimator;
     }
@@ -613,54 +614,6 @@ public class QuickActionView {
 
         public void setTextPaddingRight(int textPaddingRight) {
             mTextPaddingRight = textPaddingRight;
-        }
-    }
-
-    private static class DefaultAnimator implements ActionsInAnimator, ActionsOutAnimator {
-        private OvershootInterpolator mOvershootInterpolator = new OvershootInterpolator();
-
-        @Override
-        public void animateActionIn(Action action, int position, ActionView view, Point center) {
-            view.setScaleX(0.1f);
-            view.setScaleY(0.1f);
-            view.animate().scaleY(1.0f)
-                    .scaleX(1.0f)
-                    .setDuration(200)
-                    .setInterpolator(mOvershootInterpolator);
-        }
-
-        @Override
-        public void animateIndicatorIn(View indicator) {
-            indicator.setAlpha(0);
-            indicator.animate().alpha(1).setDuration(200);
-        }
-
-        @Override
-        public void animateScrimIn(View scrim) {
-            scrim.setAlpha(0f);
-            scrim.animate().alpha(1f).setDuration(200);
-        }
-
-        @Override
-        public int animateActionOut(Action action, int position, ActionView view, Point center) {
-            view.animate().scaleX(0.1f)
-                    .scaleY(0.1f)
-                    .alpha(0.0f)
-                    .setStartDelay(0)
-                    .setDuration(200);
-            return 200;
-        }
-
-        @Override
-        public int animateIndicatorOut(View indicator) {
-            indicator.animate().alpha(0).setDuration(200);
-            return 200;
-        }
-
-        @Override
-        public int animateScrimOut(View scrim) {
-            scrim.animate().alpha(0).setDuration(200);
-            return 200;
         }
     }
 
