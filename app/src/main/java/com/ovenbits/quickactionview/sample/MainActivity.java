@@ -19,33 +19,29 @@ import com.ovenbits.quickactionview.animator.SlideFromCenterAnimator;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private ViewGroup mRoot;
-
-    private final QuickActionView.OnActionSelectedListener mQuickActionListener = new QuickActionView.OnActionSelectedListener() {
-        @Override
-        public void onActionSelected(Action action, QuickActionView quickActionView) {
-            Snackbar.make(mRoot, action.getTitle() + " was chosen", Snackbar.LENGTH_SHORT).show();
-        }
-    };
-
     private final QuickActionView.OnShowListener mQuickActionShowListener = new QuickActionView.OnShowListener() {
         @Override
         public void onShow(QuickActionView quickActionView) {
             Log.d("MainActivity", "onShow");
         }
     };
-
     private final QuickActionView.OnDismissListener mQuickActionDismissListener = new QuickActionView.OnDismissListener() {
         @Override
         public void onDismiss(QuickActionView quickActionView) {
             Log.d("MainActivity", "onDismiss");
         }
     };
-
     private final QuickActionView.OnActionHoverChangedListener mOnActionHoverChangedListener = new QuickActionView.OnActionHoverChangedListener() {
         @Override
         public void onActionHoverChanged(Action action, QuickActionView quickActionView, boolean hovering) {
             Log.d("MainActivity", "onHover " + hovering);
+        }
+    };
+    private ViewGroup mRoot;
+    private final QuickActionView.OnActionSelectedListener mQuickActionListener = new QuickActionView.OnActionSelectedListener() {
+        @Override
+        public void onActionSelected(Action action, QuickActionView quickActionView) {
+            Snackbar.make(mRoot, action.getTitle() + " was chosen", Snackbar.LENGTH_SHORT).show();
         }
     };
 
@@ -81,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 .setBackgroundColorStateList(ContextCompat.getColorStateList(this, R.drawable.sample_background_color))
                 .setTextColor(Color.MAGENTA);
 
-        SlideFromCenterAnimator slideFromCenterAnimator = new SlideFromCenterAnimator();
+        SlideFromCenterAnimator slideFromCenterAnimator = new SlideFromCenterAnimator(true);
         QuickActionView.make(this)
                 .addActions(R.menu.actions_2)
                 .setOnActionSelectedListener(mQuickActionListener)

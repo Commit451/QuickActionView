@@ -50,7 +50,6 @@ public class QuickActionView {
     private OnDismissListener mOnDismissListener;
     private OnShowListener mOnShowListener;
     private OnActionHoverChangedListener mOnActionHoverChangedListener;
-    private Float mStartAngle;
     private float mActionDistance;
     private int mActionPadding;
     private ArrayList<Action> mActions = new ArrayList<>();
@@ -82,6 +81,7 @@ public class QuickActionView {
     /**
      * Create a QuickActionView which you can configure as desired, then
      * call {@link #register(View)} to show it.
+     *
      * @param context activity context
      * @return the QuickActionView for you to
      */
@@ -112,6 +112,7 @@ public class QuickActionView {
 
     /**
      * Register the QuickActionView to appear when the passed view is long pressed
+     *
      * @param view the view to have long press responses
      * @return the QuickActionView
      */
@@ -125,6 +126,7 @@ public class QuickActionView {
 
     /**
      * Unregister the view so that it can no longer be long pressed to show the QuickActionView
+     *
      * @param view the view to unregister
      */
     public void unregister(View view) {
@@ -135,6 +137,7 @@ public class QuickActionView {
 
     /**
      * Adds an action to the QuickActionView
+     *
      * @param action the action to add
      * @return the QuickActionView
      */
@@ -146,6 +149,7 @@ public class QuickActionView {
 
     /**
      * Adds a collection of actions to the QuickActionView
+     *
      * @param actions the actions to add
      * @return the QuickActionView
      */
@@ -157,6 +161,7 @@ public class QuickActionView {
 
     /**
      * Add actions to the QuickActionView from the given menu resource id.
+     *
      * @param menuId menu resource id
      * @return the QuickActionView
      */
@@ -173,6 +178,7 @@ public class QuickActionView {
 
     /**
      * Removes all actions from the QuickActionView
+     *
      * @return the QuickActionView
      */
     public QuickActionView removeActions() {
@@ -182,11 +188,12 @@ public class QuickActionView {
 
     /**
      * Remove an individual action from the QuickActionView
+     *
      * @param actionId the action id
      * @return the QuickActionView
      */
     public QuickActionView removeAction(int actionId) {
-        for (int i=0; i<mActions.size(); i++) {
+        for (int i = 0; i < mActions.size(); i++) {
             if (mActions.get(i).getId() == actionId) {
                 mActions.remove(i);
                 return this;
@@ -196,9 +203,9 @@ public class QuickActionView {
     }
 
     /**
-     * @see OnActionSelectedListener
      * @param onActionSelectedListener the listener
      * @return the QuickActionView
+     * @see OnActionSelectedListener
      */
     public QuickActionView setOnActionSelectedListener(OnActionSelectedListener onActionSelectedListener) {
         mOnActionSelectedListener = onActionSelectedListener;
@@ -206,9 +213,9 @@ public class QuickActionView {
     }
 
     /**
-     * @see OnDismissListener
      * @param onDismissListener the listener
      * @return the QuickActionView
+     * @see OnDismissListener
      */
     public QuickActionView setOnDismissListener(OnDismissListener onDismissListener) {
         mOnDismissListener = onDismissListener;
@@ -216,9 +223,9 @@ public class QuickActionView {
     }
 
     /**
-     * @see OnShowListener
      * @param onShowListener the listener
      * @return the QuickActionView
+     * @see OnShowListener
      */
     public QuickActionView setOnShowListener(OnShowListener onShowListener) {
         mOnShowListener = onShowListener;
@@ -226,22 +233,18 @@ public class QuickActionView {
     }
 
     /**
-     * @see OnActionHoverChangedListener
      * @param listener the listener
      * @return the QuickActionView
+     * @see OnActionHoverChangedListener
      */
     public QuickActionView setOnActionHoverChangedListener(OnActionHoverChangedListener listener) {
         mOnActionHoverChangedListener = listener;
         return this;
     }
 
-    public void setStartAngle(Float startAngle) {
-        checkShown();
-        mStartAngle = startAngle;
-    }
-
     /**
      * Set the indicator drawable (the drawable that appears at the point the user has long pressed
+     *
      * @param indicatorDrawable the indicator drawable
      * @return the QuickActionView
      */
@@ -252,6 +255,7 @@ public class QuickActionView {
 
     /**
      * Set the scrim color (the background behind the QuickActionView)
+     *
      * @param scrimColor the desired scrim color
      * @return the QuickActionView
      */
@@ -262,6 +266,7 @@ public class QuickActionView {
 
     /**
      * Set the drawable that appears behind the Action text labels
+     *
      * @param textBackgroundDrawable the desired drawable
      * @return the QuickActionView
      */
@@ -273,6 +278,7 @@ public class QuickActionView {
 
     /**
      * Set the background color state list for all action items
+     *
      * @param backgroundColorStateList the desired colorstatelist
      * @return the QuickActionView
      */
@@ -283,6 +289,7 @@ public class QuickActionView {
 
     /**
      * Set the text color for the Action labels
+     *
      * @param textColor the desired text color
      * @return the QuickActionView
      */
@@ -294,6 +301,7 @@ public class QuickActionView {
     /**
      * Set the action's background color. If you want to have a pressed state,
      * see {@link #setBackgroundColorStateList(ColorStateList)}
+     *
      * @param backgroundColor the desired background color
      * @return the QuickActionView
      */
@@ -304,6 +312,7 @@ public class QuickActionView {
 
     /**
      * Set the typeface for the Action labels
+     *
      * @param typeface the desired typeface
      * @return the QuickActionView
      */
@@ -314,6 +323,7 @@ public class QuickActionView {
 
     /**
      * Set the text size for the Action labels
+     *
      * @param textSize the desired textSize (in pixels)
      * @return the QuickActionView
      */
@@ -324,6 +334,7 @@ public class QuickActionView {
 
     /**
      * Set the text top padding for the Action labels
+     *
      * @param textPaddingTop the top padding in pixels
      * @return the QuickActionView
      */
@@ -334,6 +345,7 @@ public class QuickActionView {
 
     /**
      * Set the text bottom padding for the Action labels
+     *
      * @param textPaddingBottom the top padding in pixels
      * @return the QuickActionView
      */
@@ -344,6 +356,7 @@ public class QuickActionView {
 
     /**
      * Set the text left padding for the Action labels
+     *
      * @param textPaddingLeft the top padding in pixels
      * @return the QuickActionView
      */
@@ -354,6 +367,7 @@ public class QuickActionView {
 
     /**
      * Set the text right padding for the Action labels
+     *
      * @param textPaddingRight the top padding in pixels
      * @return the QuickActionView
      */
@@ -364,6 +378,7 @@ public class QuickActionView {
 
     /**
      * Override the animations for when the QuickActionView shows
+     *
      * @param actionsInAnimator the animation overrides
      * @return this QuickActionView
      */
@@ -374,6 +389,7 @@ public class QuickActionView {
 
     /**
      * Override the animations for when the QuickActionView dismisses
+     *
      * @param actionsOutAnimator the animation overrides
      * @return this QuickActionView
      */
@@ -461,6 +477,7 @@ public class QuickActionView {
     /**
      * Get the extras associated with the QuickActionView. Allows for
      * saving state to the QuickActionView
+     *
      * @return the bundle for the QuickActionView
      */
     public Bundle getExtras() {
@@ -469,6 +486,7 @@ public class QuickActionView {
 
     /**
      * Set extras to associate with the QuickActionView to allow saving state
+     *
      * @param extras the bundle
      * @return the QuickActionView
      */
@@ -479,6 +497,7 @@ public class QuickActionView {
 
     /**
      * Retrieve the view that has been long pressed
+     *
      * @return the registered view that was long pressed to show the QuickActionView
      */
     @Nullable
@@ -672,8 +691,10 @@ public class QuickActionView {
                     mCenterPoint.y + (int) (mIndicatorView.getMeasuredHeight() / 2.0));
             int index = 0;
             for (Map.Entry<Action, ActionView> entry : mActionViews.entrySet()) {
+
+                float startAngle = getOptimalStartAngle(entry.getValue().getActionCircleRadiusExpanded());
                 ActionView actionView = entry.getValue();
-                PointF point = getActionPoint(index, 270, actionView);
+                PointF point = getActionPoint(index, startAngle, actionView);
                 point.offset(-actionView.getCircleCenterX(), -actionView.getCircleCenterY());
                 actionView.layout((int) point.x, (int) point.y, (int) (point.x + actionView.getMeasuredWidth()), (int) (point.y + actionView.getMeasuredHeight()));
                 ActionTitleView titleView = mActionTitleViews.get(entry.getKey());
@@ -748,12 +769,14 @@ public class QuickActionView {
                         mLastTouch.set(event.getRawX(), event.getRawY());
                         int index = 0;
                         for (ActionView actionView : mActionViews.values()) {
-                            if (insideCircle(getActionPoint(index, 270, actionView), actionView.getActionCircleRadiusExpanded(), event.getRawX(), event.getRawY())) {
+                            if (insideCircle(getActionPoint(index, getOptimalStartAngle(actionView.getActionCircleRadiusExpanded()), actionView), actionView.getActionCircleRadiusExpanded(), event.getRawX(), event.getRawY())) {
                                 if (!actionView.isSelected()) {
                                     actionView.setSelected(true);
                                     actionView.animateInterpolation(1);
-                                    if (mActionTitleViews.containsKey(actionView.getAction())) {
-                                        mActionTitleViews.get(actionView.getAction()).setVisibility(View.VISIBLE);
+                                    ActionTitleView actionTitleView = mActionTitleViews.get(actionView.getAction());
+                                    if (actionTitleView != null) {
+                                        actionTitleView.setVisibility(View.VISIBLE);
+                                        actionTitleView.bringToFront();
                                     }
                                     if (mOnActionHoverChangedListener != null) {
                                         mOnActionHoverChangedListener.onActionHoverChanged(actionView.getAction(), QuickActionView.this, true);
@@ -763,8 +786,9 @@ public class QuickActionView {
                                 if (actionView.isSelected()) {
                                     actionView.setSelected(false);
                                     actionView.animateInterpolation(0);
-                                    if (mActionTitleViews.containsKey(actionView.getAction())) {
-                                        mActionTitleViews.get(actionView.getAction()).setVisibility(View.GONE);
+                                    ActionTitleView actionTitleView = mActionTitleViews.get(actionView.getAction());
+                                    if (actionTitleView != null) {
+                                        actionTitleView.setVisibility(View.GONE);
                                     }
                                     if (mOnActionHoverChangedListener != null) {
                                         mOnActionHoverChangedListener.onActionHoverChanged(actionView.getAction(), QuickActionView.this, false);
@@ -792,19 +816,63 @@ public class QuickActionView {
         }
 
 
-        private PointF getActionPoint(int index, int startAngle, ActionView view) {
+        private PointF getActionPoint(int index, float startAngle, ActionView view) {
             PointF point = new PointF(mCenterPoint);
             float angle = (float) (Math.toRadians(startAngle) + getActionOffsetAngle(index, view));
-            point.offset((int) (Math.cos(angle) * getTotalRadius(view)), (int) (Math.sin(angle) * getTotalRadius(view)));
+            point.offset((int) (Math.cos(angle) * getTotalRadius(view.getActionCircleRadiusExpanded())), (int) (Math.sin(angle) * getTotalRadius(view.getActionCircleRadiusExpanded())));
             return point;
         }
 
         private float getActionOffsetAngle(int index, ActionView view) {
-            return (float) (index * (2 * (Math.atan2(view.getActionCircleRadiusExpanded() + mActionPadding, getTotalRadius(view)))));
+            return (float) (index * (2 * (Math.atan2(view.getActionCircleRadiusExpanded() + mActionPadding, getTotalRadius(view.getActionCircleRadiusExpanded())))));
         }
 
-        private float getTotalRadius(ActionView view) {
-            return mActionDistance + Math.max(mIndicatorView.getWidth(), mIndicatorView.getHeight()) + view.getActionCircleRadiusExpanded();
+        private float getMaxActionAngle() {
+            int index = 0;
+            float max = 0;
+            for (ActionView actionView : mActionViews.values()) {
+                max = getActionOffsetAngle(index, actionView);
+                index++;
+            }
+            return max;
+        }
+
+        private float getTotalRadius(float actionViewRadiusExpanded) {
+            return mActionDistance + Math.max(mIndicatorView.getWidth(), mIndicatorView.getHeight()) + actionViewRadiusExpanded;
+        }
+
+        private float getOptimalStartAngle(float actionViewRadiusExpanded) {
+            if (getMeasuredWidth() > 0) {
+                float radius = getTotalRadius(actionViewRadiusExpanded);
+
+                int top = -mCenterPoint.y;
+                boolean topIntersect = !Double.isNaN(Math.acos(top / radius));
+
+                float horizontalOffset = (mCenterPoint.x - (getMeasuredWidth() / 2.0f)) / (getMeasuredWidth() / 2.0f);
+
+                float angle;
+                float offset = (float) Math.pow(Math.abs(horizontalOffset), 1.2) * Math.signum(horizontalOffset);
+                if (topIntersect) {
+                    angle = 90 + (90 * offset);
+                } else {
+                    angle = 270 - (90 * offset);
+                }
+                normalizeAngle(angle);
+
+                return (float) (angle - Math.toDegrees(getMiddleAngleOffset()));
+            }
+            return (float) (270 - Math.toDegrees(getMiddleAngleOffset()));
+        }
+
+
+        public float normalizeAngle(double angleDegrees) {
+            angleDegrees = angleDegrees % (360);
+            angleDegrees = (angleDegrees + 360) % 360;
+            return (float) angleDegrees;
+        }
+
+        private float getMiddleAngleOffset() {
+            return getMaxActionAngle() / 2f;
         }
 
         private boolean insideCircle(PointF center, float radius, float x, float y) {
@@ -814,7 +882,6 @@ public class QuickActionView {
         private float distance(PointF point, float x, float y) {
             return (float) Math.sqrt(Math.pow(x - point.x, 2) + Math.pow(y - point.y, 2));
         }
-
     }
 
     /**
