@@ -39,7 +39,6 @@ import java.util.Map;
 
 /**
  * A QuickActionView, which shows actions when a view is long pressed.
- * <p/>
  * @see <a href="https://github.com/ovenbits/QuickActionView">https://github.com/ovenbits/QuickActionView</a>
  *
  */
