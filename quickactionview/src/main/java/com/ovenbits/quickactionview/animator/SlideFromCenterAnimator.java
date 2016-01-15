@@ -11,7 +11,8 @@ import com.ovenbits.quickactionview.ActionsInAnimator;
 import com.ovenbits.quickactionview.ActionsOutAnimator;
 
 /**
- * QuickActionView animator that slides actions out from the center point
+ * Animator that slides actions out from the center point. This is the default animation
+ * a QuickActionView uses
  */
 public class SlideFromCenterAnimator implements ActionsInAnimator, ActionsOutAnimator {
 

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.ovenbits.quickactionview.Action;
 import com.ovenbits.quickactionview.QuickActionView;
-import com.ovenbits.quickactionview.animator.SlideFromCenterAnimator;
+import com.ovenbits.quickactionview.animator.PopAnimator;
 
 /**
  * Shows general use of the QuickActionView
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 .setBackgroundColorStateList(ContextCompat.getColorStateList(this, R.drawable.sample_background_color))
                 .setTextColor(Color.MAGENTA);
 
-        SlideFromCenterAnimator slideFromCenterAnimator = new SlideFromCenterAnimator(true);
+        PopAnimator popAnimator = new PopAnimator(true);
         QuickActionView.make(this)
                 .addActions(R.menu.actions_2)
                 .setOnActionSelectedListener(mQuickActionListener)
@@ -88,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
                 .setTextBackgroundDrawable(R.drawable.text_background)
                 .setIndicatorDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.indicator))
                 .setActionConfig(actionConfig, R.id.action_add_to_cart)
-                .setActionsInAnimator(slideFromCenterAnimator)
-                .setActionsOutAnimator(slideFromCenterAnimator)
+                .setActionsInAnimator(popAnimator)
+                .setActionsOutAnimator(popAnimator)
                 .register(findViewById(R.id.custom_parent));
     }
 }

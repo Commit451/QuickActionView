@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 /**
  * Determines which config to get values from, based on the state of each config.
  */
-public class ConfigHelper {
+class ConfigHelper {
     private Action.Config mActionConfig;
     private QuickActionView.Config mQuickActionViewConfig;
 

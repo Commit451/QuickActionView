@@ -2,8 +2,7 @@ package com.ovenbits.quickactionview.animator;
 
 import android.graphics.Point;
 import android.view.View;
-import android.view.ViewPropertyAnimator;
-import android.view.animation.OvershootInterpolator;
+import android.view.animation.LinearInterpolator;
 
 import com.ovenbits.quickactionview.Action;
 import com.ovenbits.quickactionview.ActionView;
@@ -11,32 +10,18 @@ import com.ovenbits.quickactionview.ActionsInAnimator;
 import com.ovenbits.quickactionview.ActionsOutAnimator;
 
 /**
- * Animator where actions pop in
+ * Fades in the quick actions
  */
-public class PopInAnimator implements ActionsInAnimator, ActionsOutAnimator {
+public class FadeAnimator implements ActionsInAnimator, ActionsOutAnimator {
 
-    private OvershootInterpolator mOvershootInterpolator = new OvershootInterpolator();
-    private boolean mStaggered;
-
-    public PopInAnimator() {
-        this(false);
-    }
-
-    public PopInAnimator(boolean staggered) {
-        mStaggered = staggered;
-    }
+    private LinearInterpolator mInterpolator = new LinearInterpolator();
 
     @Override
     public void animateActionIn(Action action, int index, ActionView view, Point center) {
-        view.setScaleX(0.1f);
-        view.setScaleY(0.1f);
-        ViewPropertyAnimator viewPropertyAnimator = view.animate().scaleY(1.0f)
-                .scaleX(1.0f)
+        view.animate()
+                .alpha(1.0f)
                 .setDuration(200)
-                .setInterpolator(mOvershootInterpolator);
-        if (mStaggered) {
-            viewPropertyAnimator.setStartDelay(index * 100);
-        }
+                .setInterpolator(mInterpolator);
     }
 
     @Override

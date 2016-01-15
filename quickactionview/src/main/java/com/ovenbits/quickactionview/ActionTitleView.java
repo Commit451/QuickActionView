@@ -10,7 +10,7 @@ import android.widget.TextView;
  * Shows the title of the Action
  */
 @SuppressLint("ViewConstructor")
-public class ActionTitleView extends TextView {
+class ActionTitleView extends TextView {
 
     private Action mAction;
     private ConfigHelper mConfigHelper;

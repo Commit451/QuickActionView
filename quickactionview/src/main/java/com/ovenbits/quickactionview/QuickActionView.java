@@ -29,7 +29,7 @@ import android.view.ViewParent;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.ovenbits.quickactionview.animator.PopInAnimator;
+import com.ovenbits.quickactionview.animator.SlideFromCenterAnimator;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,7 +40,8 @@ import java.util.Map;
 /**
  * A QuickActionView, which shows actions when a view is long pressed.
  * <p/>
- * https://github.com/ovenbits/QuickActionView
+ * @see <a href="https://github.com/ovenbits/QuickActionView">https://github.com/ovenbits/QuickActionView</a>
+ *
  */
 public class QuickActionView {
 
@@ -73,7 +74,7 @@ public class QuickActionView {
         mIndicatorDrawable = ContextCompat.getDrawable(context, R.drawable.qav_indicator);
         mActionDistance = context.getResources().getDimensionPixelSize(R.dimen.qav_action_distance);
         mActionPadding = context.getResources().getDimensionPixelSize(R.dimen.qav_action_padding);
-        PopInAnimator defaultAnimator = new PopInAnimator();
+        SlideFromCenterAnimator defaultAnimator = new SlideFromCenterAnimator(true);
         mActionsInAnimator = defaultAnimator;
         mActionsOutAnimator = defaultAnimator;
     }

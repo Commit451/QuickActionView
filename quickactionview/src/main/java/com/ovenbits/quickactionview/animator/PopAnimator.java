@@ -2,7 +2,8 @@ package com.ovenbits.quickactionview.animator;
 
 import android.graphics.Point;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
+import android.view.ViewPropertyAnimator;
+import android.view.animation.OvershootInterpolator;
 
 import com.ovenbits.quickactionview.Action;
 import com.ovenbits.quickactionview.ActionView;
@@ -10,18 +11,32 @@ import com.ovenbits.quickactionview.ActionsInAnimator;
 import com.ovenbits.quickactionview.ActionsOutAnimator;
 
 /**
- * Fades in the quick actions
+ * Animator where actions pop in
  */
-public class FadeInAnimator implements ActionsInAnimator, ActionsOutAnimator {
+public class PopAnimator implements ActionsInAnimator, ActionsOutAnimator {
 
-    private LinearInterpolator mInterpolator = new LinearInterpolator();
+    private OvershootInterpolator mOvershootInterpolator = new OvershootInterpolator();
+    private boolean mStaggered;
+
+    public PopAnimator() {
+        this(false);
+    }
+
+    public PopAnimator(boolean staggered) {
+        mStaggered = staggered;
+    }
 
     @Override
     public void animateActionIn(Action action, int index, ActionView view, Point center) {
-        view.animate()
-                .alpha(1.0f)
+        view.setScaleX(0.01f);
+        view.setScaleY(0.01f);
+        ViewPropertyAnimator viewPropertyAnimator = view.animate().scaleY(1.0f)
+                .scaleX(1.0f)
                 .setDuration(200)
-                .setInterpolator(mInterpolator);
+                .setInterpolator(mOvershootInterpolator);
+        if (mStaggered) {
+            viewPropertyAnimator.setStartDelay(index * 100);
+        }
     }
 
     @Override
@@ -38,8 +53,8 @@ public class FadeInAnimator implements ActionsInAnimator, ActionsOutAnimator {
 
     @Override
     public int animateActionOut(Action action, int position, ActionView view, Point center) {
-        view.animate().scaleX(0.1f)
-                .scaleY(0.1f)
+        view.animate().scaleX(0.01f)
+                .scaleY(0.01f)
                 .alpha(0.0f)
                 .setStartDelay(0)
                 .setDuration(200);

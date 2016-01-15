@@ -6,7 +6,7 @@ import android.util.TypedValue;
 /**
  * Gets the colors
  */
-public class ColorUtils {
+class ColorUtils {
 
     private static TypedValue sTypedValue = new TypedValue();
 
