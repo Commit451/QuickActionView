@@ -61,10 +61,7 @@ QuickActionView.make(this)
         .addActions(R.menu.actions)
         //the custom Action.Cofig will only apply to the addToCart action
         .setActionConfig(actionConfig, R.id.action_add_to_cart)
-        .setActionsInAnimator(popAnimator)
-        .setActionsOutAnimator(popAnimator)
         .register(findViewById(R.id.custom_parent));
-quickActionView.setQuickActionConfig(R.id.actionAddToCart, quickActionConfig);
 ```
 
 # Customizing Animations
@@ -77,12 +74,12 @@ and call `setActionsInAnimator` and `setActionsOutAnimator` respectively.
 You can hook into the interesting events a QuickActionView has:
 ```java
 QuickActionView.make(this)
-                .addActions(R.menu.actions)
-                .setOnActionSelectedListener(mQuickActionListener)
-                .setOnShowListener(mQuickActionShowListener)
-                .setOnDismissListener(mQuickActionDismissListener)
-                .setOnActionHoverChangedListener(mOnActionHoverChangedListener)
-                .register(view);
+      .addActions(R.menu.actions)
+      .setOnActionSelectedListener(mQuickActionListener)
+      .setOnShowListener(mQuickActionShowListener)
+      .setOnDismissListener(mQuickActionDismissListener)
+      .setOnActionHoverChangedListener(mOnActionHoverChangedListener)
+      .register(view);
 ```
 
 See the sample for more detail.
