@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 23
@@ -27,4 +28,12 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
 }
 
-apply from: 'https://raw.githubusercontent.com/ovenbits/gradle-mvn-push/master/gradle-mvn-push.gradle'
+// ./gradlew clean build bintrayUpload -PbintrayUser=BINTRAY_USERNAME -PbintrayKey=BINTRAY_KEY -PdryRun=false
+publish {
+    userOrg = 'ovenbits'
+    groupId = 'com.ovenbits'
+    artifactId = 'quickactionview'
+    publishVersion = '1.0.0'
+    desc = 'View that shows quick actions when long pressed, inspired by Pinterest'
+    website = 'https://github.com/ovenbits/QuickActionView'
+}
