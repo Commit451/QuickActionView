@@ -736,6 +736,7 @@ public class QuickActionView {
             maxDuration = Math.max(maxDuration, animateActionsOut());
             maxDuration = Math.max(maxDuration, animateScrimOut());
             maxDuration = Math.max(maxDuration, animateIndicatorOut());
+            maxDuration = Math.max(maxDuration, animateLabelsOut());
             return maxDuration;
         }
 
@@ -748,6 +749,13 @@ public class QuickActionView {
                 index++;
             }
             return maxDuration;
+        }
+
+        private int animateLabelsOut() {
+            for (ActionTitleView view : mActionTitleViews.values()) {
+                view.animate().alpha(0).setDuration(100);
+            }
+            return 200;
         }
 
         private int animateIndicatorOut() {
