@@ -1,6 +1,9 @@
 # QuickActionView
+View that shows quick actions when long pressed, inspired by Pinterest
 
 [![Build Status](https://travis-ci.org/ovenbits/QuickActionView.svg?branch=master)](https://travis-ci.org/ovenbits/QuickActionView)
+
+![Sample Gif](https://raw.githubusercontent.com/ovenbits/QuickActionView/master/screenshots/qav.gif)
 
 # Gradle Dependency
 
@@ -87,7 +90,7 @@ See the sample for more detail.
 License
 --------
 
-    Copyright 2015 Oven Bits, LLC
+    Copyright 2016 Oven Bits, LLC
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
