@@ -11,7 +11,7 @@ Easily reference the library in your Android projects using this dependency in y
 
 ```Gradle
 dependencies {
-    compile 'com.ovenbits:quickactionview:1.0.0’
+    compile 'com.ovenbits:quickactionview:1.0.0'
 }
 ```
 
