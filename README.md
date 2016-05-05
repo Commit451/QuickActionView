@@ -1,7 +1,7 @@
 # QuickActionView
 View that shows quick actions when long pressed, inspired by Pinterest
 
-[![Build Status](https://travis-ci.org/ovenbits/QuickActionView.svg?branch=master)](https://travis-ci.org/ovenbits/QuickActionView)
+[![Build Status](https://travis-ci.org/ovenbits/QuickActionView.svg?branch=master)](https://travis-ci.org/ovenbits/QuickActionView) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-QuickActionView-green.svg?style=true)](https://android-arsenal.com/details/1/3536)
 
 ![Sample Gif](https://raw.githubusercontent.com/ovenbits/QuickActionView/master/screenshots/qav.gif)
 
