@@ -7,11 +7,21 @@ View that shows quick actions when long pressed, inspired by Pinterest
 
 # Gradle Dependency
 
-Easily reference the library in your Android projects using this dependency in your module's `build.gradle` file:
+Add this in your root `build.gradle` file (**not** your module `build.gradle` file):
 
-```Gradle
+```gradle
+allprojects {
+	repositories {
+		...
+		maven { url "https://jitpack.io" }
+	}
+}
+```
+
+Then, add the library to your project `build.gradle`
+```gradle
 dependencies {
-    compile 'com.ovenbits:quickactionview:1.0.0'
+    compile 'com.github.ovenbits:QuickActionView:1.0.1'
 }
 ```
 
