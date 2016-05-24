@@ -416,6 +416,18 @@ public class QuickActionView {
         throw new IllegalArgumentException("No Action exists with id " + actionId);
     }
 
+    /**
+     * Get the center point of the {@link QuickActionView} aka the point at which the actions will eminate from
+     * @return the center point, or null if the view has not yet been created
+     */
+    @Nullable
+    public Point getCenterPoint() {
+        if (mQuickActionViewLayout != null) {
+            return mQuickActionViewLayout.mCenterPoint;
+        }
+        return null;
+    }
+
     private void display(Point point) {
         if (mActions == null) {
             throw new IllegalStateException("You need to give the QuickActionView actions before calling show!");
