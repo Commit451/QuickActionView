@@ -457,7 +457,9 @@ public class QuickActionView {
 
         if (mQuickActionViewLayout != null) {
             WindowManager manager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-            manager.removeView(mQuickActionViewLayout);
+            if (checkAttachedToWindow(mQuickActionViewLayout)) {
+                manager.removeView(mQuickActionViewLayout);
+            }
             mQuickActionViewLayout = null;
             mShown = false;
         }
@@ -468,6 +470,14 @@ public class QuickActionView {
                 parent.requestDisallowInterceptTouchEvent(false);
             }
         }
+    }
+
+    private boolean checkAttachedToWindow(View view) {
+        if (Build.VERSION.SDK_INT >= 19) {
+            return view.isAttachedToWindow();
+        }
+        //Unfortunately, we have no way of truly knowing on versions less than 19
+        return true;
     }
 
     private void dismiss() {
