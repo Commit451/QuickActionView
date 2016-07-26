@@ -1,7 +1,7 @@
 # QuickActionView
 View that shows quick actions when long pressed, inspired by Pinterest
 
-[![Build Status](https://travis-ci.org/ovenbits/QuickActionView.svg?branch=master)](https://travis-ci.org/ovenbits/QuickActionView) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-QuickActionView-green.svg?style=true)](https://android-arsenal.com/details/1/3536)
+[![Build Status](https://travis-ci.org/ovenbits/QuickActionView.svg?branch=master)](https://travis-ci.org/ovenbits/QuickActionView) [![](https://jitpack.io/v/ovenbits/QuickActionView.svg)](https://jitpack.io/#ovenbits/QuickActionView) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-QuickActionView-green.svg?style=true)](https://android-arsenal.com/details/1/3536)
 
 ![Sample Gif](https://raw.githubusercontent.com/ovenbits/QuickActionView/master/screenshots/qav.gif)
 
@@ -21,7 +21,7 @@ allprojects {
 Then, add the library to your project `build.gradle`
 ```gradle
 dependencies {
-    compile 'com.github.ovenbits:QuickActionView:1.0.1'
+    compile 'com.github.ovenbits:QuickActionView:1.0.2'
 }
 ```
 
