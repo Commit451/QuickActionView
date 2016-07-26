@@ -56,8 +56,12 @@ public class QuickActionView {
     private Bundle mExtras;
     private QuickActionViewLayout mQuickActionViewLayout;
     private Config mConfig;
-    private ActionsInAnimator mActionsInAnimator;
-    private ActionsOutAnimator mActionsOutAnimator;
+    @Nullable
+    private ActionsInAnimator mCustomActionsInAnimator;
+    private ActionsInAnimator mDefaultActionsInAnimator;
+    @Nullable
+    private ActionsOutAnimator mCustomActionsOutAnimator;
+    private ActionsOutAnimator mDefaultActionsOutAnimator;
 
 
     @ColorInt
@@ -74,8 +78,8 @@ public class QuickActionView {
         mActionDistance = context.getResources().getDimensionPixelSize(R.dimen.qav_action_distance);
         mActionPadding = context.getResources().getDimensionPixelSize(R.dimen.qav_action_padding);
         SlideFromCenterAnimator defaultAnimator = new SlideFromCenterAnimator(true);
-        mActionsInAnimator = defaultAnimator;
-        mActionsOutAnimator = defaultAnimator;
+        mDefaultActionsInAnimator = defaultAnimator;
+        mDefaultActionsOutAnimator = defaultAnimator;
     }
 
     /**
@@ -383,7 +387,7 @@ public class QuickActionView {
      * @return this QuickActionView
      */
     public QuickActionView setActionsInAnimator(ActionsInAnimator actionsInAnimator) {
-        mActionsInAnimator = actionsInAnimator;
+        mCustomActionsInAnimator = actionsInAnimator;
         return this;
     }
 
@@ -394,7 +398,7 @@ public class QuickActionView {
      * @return this QuickActionView
      */
     public QuickActionView setActionsOutAnimator(ActionsOutAnimator actionsOutAnimator) {
-        mActionsOutAnimator = actionsOutAnimator;
+        mCustomActionsOutAnimator = actionsOutAnimator;
         return this;
     }
 
@@ -740,17 +744,32 @@ public class QuickActionView {
         private void animateActionsIn() {
             int index = 0;
             for (ActionView view : mActionViews.values()) {
-                mActionsInAnimator.animateActionIn(view.getAction(), index, view, mCenterPoint);
+                if (mCustomActionsInAnimator != null) {
+                    boolean animated = mCustomActionsInAnimator.animateActionIn(view.getAction(), index, view, mCenterPoint);
+                    if (!animated) {
+                        mDefaultActionsInAnimator.animateActionIn(view.getAction(), index, view, mCenterPoint);
+                    }
+                }
                 index++;
             }
         }
 
         private void animateIndicatorIn() {
-            mActionsInAnimator.animateIndicatorIn(mIndicatorView);
+            if (mCustomActionsInAnimator != null) {
+                boolean animated = mCustomActionsInAnimator.animateIndicatorIn(mIndicatorView);
+                if (!animated) {
+                    mDefaultActionsInAnimator.animateIndicatorIn(mIndicatorView);
+                }
+            }
         }
 
         private void animateScrimIn() {
-            mActionsInAnimator.animateScrimIn(mScrimView);
+            if (mCustomActionsInAnimator != null) {
+                boolean animated = mCustomActionsInAnimator.animateScrimIn(mScrimView);
+                if (!animated) {
+                    mDefaultActionsInAnimator.animateScrimIn(mScrimView);
+                }
+            }
         }
 
         int animateOut() {
@@ -767,7 +786,15 @@ public class QuickActionView {
             int maxDuration = 0;
             for (ActionView view : mActionViews.values()) {
                 view.clearAnimation();
-                maxDuration = Math.max(mActionsOutAnimator.animateActionOut(view.getAction(), index, view, mCenterPoint), maxDuration);
+                int duration = -1;
+                if (mCustomActionsOutAnimator != null) {
+                    duration = mCustomActionsOutAnimator.animateActionOut(view.getAction(), index, view, mCenterPoint);
+
+                }
+                if (duration < 0) {
+                    duration = mDefaultActionsOutAnimator.animateActionOut(view.getAction(), index, view, mCenterPoint);
+                }
+                maxDuration = Math.max(duration, maxDuration);
                 index++;
             }
             return maxDuration;
@@ -782,12 +809,19 @@ public class QuickActionView {
 
         private int animateIndicatorOut() {
             mIndicatorView.clearAnimation();
-            return mActionsOutAnimator.animateIndicatorOut(mIndicatorView);
+            int duration = -1;
+            if (mCustomActionsOutAnimator != null) {
+                duration = mCustomActionsOutAnimator.animateIndicatorOut(mIndicatorView);
+            }
+            if (duration < 0) {
+                mDefaultActionsOutAnimator.animateIndicatorOut(mIndicatorView);
+            }
+            return duration;
         }
 
         private int animateScrimOut() {
             mScrimView.clearAnimation();
-            return mActionsOutAnimator.animateScrimOut(mScrimView);
+            return mCustomActionsOutAnimator.animateScrimOut(mScrimView);
         }
 
         @Override

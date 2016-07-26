@@ -28,7 +28,7 @@ public class SlideFromCenterAnimator implements ActionsInAnimator, ActionsOutAni
     }
 
     @Override
-    public void animateActionIn(Action action, int index, ActionView view, Point center) {
+    public boolean animateActionIn(Action action, int index, ActionView view, Point center) {
         Point actionCenter = view.getCircleCenterPoint();
         actionCenter.offset(view.getLeft(), view.getTop());
         view.setTranslationY(center.y - actionCenter.y);
@@ -41,18 +41,21 @@ public class SlideFromCenterAnimator implements ActionsInAnimator, ActionsOutAni
         if (mStaggered) {
             viewPropertyAnimator.setStartDelay(index * 100);
         }
+        return true;
     }
 
     @Override
-    public void animateIndicatorIn(View indicator) {
+    public boolean animateIndicatorIn(View indicator) {
         indicator.setAlpha(0);
         indicator.animate().alpha(1).setDuration(200);
+        return true;
     }
 
     @Override
-    public void animateScrimIn(View scrim) {
+    public boolean animateScrimIn(View scrim) {
         scrim.setAlpha(0);
         scrim.animate().alpha(1).setDuration(200);
+        return true;
     }
 
     @Override
