@@ -14,18 +14,21 @@ public interface ActionsInAnimator {
      * @param index the index of the action in the list of actions
      * @param view the action view to animate
      * @param center the final resting center point of the Action
+     * @return true if you are overriding animation, false if you want the default animation
      */
-    void animateActionIn(Action action, int index, ActionView view, Point center);
+    boolean animateActionIn(Action action, int index, ActionView view, Point center);
 
     /**
      * Animate in the indicator as the QuickActionView shows
      * @param indicator the indicator view
+     * @return true if you are overriding animation, false if you want the default animation
      */
-    void animateIndicatorIn(View indicator);
+    boolean animateIndicatorIn(View indicator);
 
     /**
      * Animate in the scrim as the QuickActionView shows
      * @param scrim the scrim view
+     * @return true if you are overriding animation, false if you want the default animation
      */
-    void animateScrimIn(View scrim);
+    boolean animateScrimIn(View scrim);
 }

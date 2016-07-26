@@ -27,7 +27,7 @@ public class PopAnimator implements ActionsInAnimator, ActionsOutAnimator {
     }
 
     @Override
-    public void animateActionIn(Action action, int index, ActionView view, Point center) {
+    public boolean animateActionIn(Action action, int index, ActionView view, Point center) {
         view.setScaleX(0.01f);
         view.setScaleY(0.01f);
         ViewPropertyAnimator viewPropertyAnimator = view.animate().scaleY(1.0f)
@@ -37,18 +37,21 @@ public class PopAnimator implements ActionsInAnimator, ActionsOutAnimator {
         if (mStaggered) {
             viewPropertyAnimator.setStartDelay(index * 100);
         }
+        return true;
     }
 
     @Override
-    public void animateIndicatorIn(View indicator) {
+    public boolean animateIndicatorIn(View indicator) {
         indicator.setAlpha(0);
         indicator.animate().alpha(1).setDuration(200);
+        return true;
     }
 
     @Override
-    public void animateScrimIn(View scrim) {
+    public boolean animateScrimIn(View scrim) {
         scrim.setAlpha(0f);
         scrim.animate().alpha(1f).setDuration(200);
+        return true;
     }
 
     @Override

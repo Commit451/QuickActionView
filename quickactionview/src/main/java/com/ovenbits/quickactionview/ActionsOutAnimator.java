@@ -14,21 +14,21 @@ public interface ActionsOutAnimator {
      * @param index The position of the actionview in its parent
      * @param view The action view
      * @param center The center of the indicator
-     * @return The duration of this animation, in milliseconds
+     * @return The duration of this animation, in milliseconds. Passing -1 indicates you want the default animation to play
      */
     int animateActionOut(Action action, int index, ActionView view, Point center);
 
     /**
      * Animate the indicator view as the QuickActionView dismisses
      * @param indicator The indicator view
-     * @return The duration of this animation, in milliseconds
+     * @return The duration of this animation, in milliseconds. Passing -1 indicates you want the default animation to play
      */
     int animateIndicatorOut(View indicator);
 
     /**
      * Animate the scrim as the QuickActionView dismisses
      * @param scrim The scrimView to animate
-     * @return The duration of this animation, in milliseconds
+     * @return The duration of this animation, in milliseconds. Passing -1 indicates you want the default animation to play
      */
     int animateScrimOut(View scrim);
 
