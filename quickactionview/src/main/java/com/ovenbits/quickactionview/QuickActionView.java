@@ -29,6 +29,7 @@ import android.view.ViewParent;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import com.ovenbits.quickactionview.animator.FadeInFadeOutActionsTitleAnimator;
 import com.ovenbits.quickactionview.animator.SlideFromCenterAnimator;
 
 import java.util.ArrayList;
@@ -58,7 +59,8 @@ public class QuickActionView {
     private Config mConfig;
     private ActionsInAnimator mActionsInAnimator;
     private ActionsOutAnimator mActionsOutAnimator;
-
+    private ActionsTitleInAnimator mActionsTitleInAnimator;
+    private ActionsTitleOutAnimator mActionsTitleOutAnimator;
 
     @ColorInt
     private int mScrimColor = Color.parseColor("#99000000");
@@ -74,8 +76,11 @@ public class QuickActionView {
         mActionDistance = context.getResources().getDimensionPixelSize(R.dimen.qav_action_distance);
         mActionPadding = context.getResources().getDimensionPixelSize(R.dimen.qav_action_padding);
         SlideFromCenterAnimator defaultAnimator = new SlideFromCenterAnimator(true);
+        FadeInFadeOutActionsTitleAnimator defaultTitleAnimator = new FadeInFadeOutActionsTitleAnimator();
         mActionsInAnimator = defaultAnimator;
         mActionsOutAnimator = defaultAnimator;
+        mActionsTitleInAnimator = defaultTitleAnimator;
+        mActionsTitleOutAnimator = defaultTitleAnimator;
     }
 
     /**
@@ -399,6 +404,28 @@ public class QuickActionView {
     }
 
     /**
+     * Override the animations for when the QuickActionView action title shows
+     *
+     * @param actionsTitleInAnimator the custom animator
+     * @return this QuickActionView
+     */
+    public QuickActionView setActionsTitleInAnimator(ActionsTitleInAnimator actionsTitleInAnimator) {
+        mActionsTitleInAnimator = actionsTitleInAnimator;
+        return this;
+    }
+
+    /**
+     * Override the animations for when the QuickActionView dismisses
+     *
+     * @param actionsTitleOutAnimator the custom animator
+     * @return this QuickActionView
+     */
+    public QuickActionView setActionsTitleOutAnimator(ActionsTitleOutAnimator actionsTitleOutAnimator) {
+        mActionsTitleOutAnimator = actionsTitleOutAnimator;
+        return this;
+    }
+
+    /**
      * Set a custom configuration for the action with the given id
      *
      * @param config   the configuration to attach
@@ -702,7 +729,6 @@ public class QuickActionView {
             }
         }
 
-
         @Override
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
             mScrimView.layout(0, 0, getMeasuredWidth(), getMeasuredHeight());
@@ -726,7 +752,6 @@ public class QuickActionView {
                     titleView.layout((int) titleLeft, (int) titleTop, (int) (titleLeft + titleView.getMeasuredWidth()), (int) (titleTop + titleView.getMeasuredHeight()));
                 }
                 index++;
-
             }
 
             if (!mAnimated) {
@@ -807,6 +832,7 @@ public class QuickActionView {
                                     if (actionTitleView != null) {
                                         actionTitleView.setVisibility(View.VISIBLE);
                                         actionTitleView.bringToFront();
+                                        mActionsTitleInAnimator.animateActionTitleIn(actionView.getAction(), index, actionTitleView);
                                     }
                                     if (mOnActionHoverChangedListener != null) {
                                         mOnActionHoverChangedListener.onActionHoverChanged(actionView.getAction(), QuickActionView.this, true);
@@ -816,9 +842,15 @@ public class QuickActionView {
                                 if (actionView.isSelected()) {
                                     actionView.setSelected(false);
                                     actionView.animateInterpolation(0);
-                                    ActionTitleView actionTitleView = mActionTitleViews.get(actionView.getAction());
+                                    final ActionTitleView actionTitleView = mActionTitleViews.get(actionView.getAction());
                                     if (actionTitleView != null) {
-                                        actionTitleView.setVisibility(View.GONE);
+                                        int timeTaken = mActionsTitleOutAnimator.animateActionTitleOut(actionView.getAction(), index, actionTitleView);
+                                        actionTitleView.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                actionTitleView.setVisibility(View.GONE);
+                                            }
+                                        }, timeTaken);
                                     }
                                     if (mOnActionHoverChangedListener != null) {
                                         mOnActionHoverChangedListener.onActionHoverChanged(actionView.getAction(), QuickActionView.this, false);

@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 /**
  * The view holder related to each Cheese item
- * Created by John on 11/24/15.
  */
 public class CheeseViewHolder extends RecyclerView.ViewHolder {
 

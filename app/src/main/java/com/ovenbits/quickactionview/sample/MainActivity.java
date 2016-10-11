@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 .setTextColor(Color.MAGENTA);
 
         PopAnimator popAnimator = new PopAnimator(true);
+        CustomActionsTitleAnimator actionTitleAnimator = new CustomActionsTitleAnimator();
         QuickActionView qav = QuickActionView.make(this)
                 .addActions(R.menu.actions_2)
                 .setOnActionSelectedListener(mQuickActionListener)
@@ -89,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
                 .setIndicatorDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.indicator))
                 .setActionConfig(actionConfig, R.id.action_add_to_cart)
                 .setActionsOutAnimator(popAnimator)
+                .setActionsTitleInAnimator(actionTitleAnimator)
+                .setActionsTitleOutAnimator(actionTitleAnimator)
                 .register(findViewById(R.id.custom_parent));
         CustomActionsInAnimator customActionsInAnimator = new CustomActionsInAnimator(qav);
         qav.setActionsInAnimator(customActionsInAnimator);

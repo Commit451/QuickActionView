@@ -14,7 +14,6 @@ import java.util.ArrayList;
 
 /**
  * Shows usage of the QuickActionView from within a RecyclerView
- * Created by John on 11/24/15.
  */
 public class RecyclerViewActivity extends AppCompatActivity {
 
