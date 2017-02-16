@@ -17,13 +17,6 @@ import java.util.ArrayList;
  */
 public class RecyclerViewActivity extends AppCompatActivity {
 
-    private final CheeseAdapter.Listener mCheeseAdapterListener = new CheeseAdapter.Listener() {
-        @Override
-        public void onItemClicked(Cheese cheese) {
-            Snackbar.make(getWindow().getDecorView(), cheese.getName() + " was clicked", Snackbar.LENGTH_SHORT)
-                    .show();
-        }
-    };
     ViewGroup mRoot;
     RecyclerView mRecyclerView;
     CheeseAdapter mCheeseAdapter;
@@ -42,7 +35,13 @@ public class RecyclerViewActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        mCheeseAdapter = new CheeseAdapter(this, mCheeseAdapterListener);
+        mCheeseAdapter = new CheeseAdapter(this, new CheeseAdapter.Listener() {
+            @Override
+            public void onItemClicked(Cheese cheese) {
+                Snackbar.make(mRecyclerView, cheese.getName() + " was clicked", Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        });
         mRecyclerView.setAdapter(mCheeseAdapter);
 
         loadCheeses();

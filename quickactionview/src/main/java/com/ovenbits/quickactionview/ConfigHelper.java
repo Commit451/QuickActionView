@@ -19,7 +19,6 @@ class ConfigHelper {
         mQuickActionViewConfig = quickActionViewConfig;
     }
 
-
     public Drawable getTextBackgroundDrawable(Context context) {
         if (mActionConfig != null && mActionConfig.getTextBackgroundDrawable(context) != null) {
             return mActionConfig.getTextBackgroundDrawable(context);

@@ -40,8 +40,8 @@ import java.util.Map;
 
 /**
  * A QuickActionView, which shows actions when a view is long pressed.
- * @see <a href="https://github.com/ovenbits/QuickActionView">https://github.com/ovenbits/QuickActionView</a>
  *
+ * @see <a href="https://github.com/ovenbits/QuickActionView">https://github.com/ovenbits/QuickActionView</a>
  */
 public class QuickActionView {
 
@@ -445,6 +445,7 @@ public class QuickActionView {
 
     /**
      * Get the center point of the {@link QuickActionView} aka the point at which the actions will eminate from
+     *
      * @return the center point, or null if the view has not yet been created
      */
     @Nullable

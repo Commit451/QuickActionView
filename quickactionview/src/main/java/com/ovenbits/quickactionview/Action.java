@@ -21,8 +21,9 @@ public class Action {
 
     /**
      * Create a new Action, which you add to the QuickActionView with {@link QuickActionView#addAction(Action)}
-     * @param id the action's unique id
-     * @param icon the drawable icon to display
+     *
+     * @param id    the action's unique id
+     * @param icon  the drawable icon to display
      * @param title the title that appears above the Action button
      */
     public Action(int id, @NonNull Drawable icon, @NonNull CharSequence title) {
