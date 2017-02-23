@@ -30,6 +30,7 @@ public class ActionView extends View implements ValueAnimator.AnimatorUpdateList
     private ValueAnimator mCurrentAnimator;
     private boolean mSelected = false;
     private Point mCenter = new Point();
+    private Point mTempPoint = new Point();
 
 
     public ActionView(Context context, Action action, ConfigHelper configHelper) {
@@ -81,7 +82,9 @@ public class ActionView extends View implements ValueAnimator.AnimatorUpdateList
 
         Drawable icon = mAction.getIcon();
 
-        Rect bounds = getRectInsideCircle(new Point((int) x, (int) y), getInterpolatedRadius());
+        mTempPoint.x = (int) x;
+        mTempPoint.y = (int) y;
+        Rect bounds = getRectInsideCircle(mTempPoint, getInterpolatedRadius());
         bounds.inset(mIconPadding, mIconPadding);
 
         float aspect = icon.getIntrinsicWidth() / (float) (icon.getIntrinsicHeight());
