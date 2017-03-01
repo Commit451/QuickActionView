@@ -1,9 +1,9 @@
 # QuickActionView
 View that shows quick actions when long pressed, inspired by Pinterest
 
-[![Build Status](https://travis-ci.org/ovenbits/QuickActionView.svg?branch=master)](https://travis-ci.org/ovenbits/QuickActionView) [![](https://jitpack.io/v/ovenbits/QuickActionView.svg)](https://jitpack.io/#ovenbits/QuickActionView) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-QuickActionView-green.svg?style=true)](https://android-arsenal.com/details/1/3536)
+[![Build Status](https://travis-ci.org/Commit451/QuickActionView.svg?branch=master)](https://travis-ci.org/Commit451/QuickActionView) [![](https://jitpack.io/v/Commit451/QuickActionView.svg)](https://jitpack.io/#Commit451/QuickActionView)
 
-![Sample Gif](https://raw.githubusercontent.com/ovenbits/QuickActionView/master/screenshots/qav.gif)
+![Sample Gif](https://raw.githubusercontent.com/Commit451/QuickActionView/master/screenshots/qav.gif)
 
 # Gradle Dependency
 
@@ -21,7 +21,7 @@ allprojects {
 Then, add the library to your project `build.gradle`
 ```gradle
 dependencies {
-    compile 'com.github.ovenbits:QuickActionView:latest.release.here'
+    compile 'com.github.Commit451:QuickActionView:latest.release.here'
 }
 ```
 
@@ -100,7 +100,7 @@ See the sample for more detail.
 License
 --------
 
-    Copyright 2016 Oven Bits, LLC
+    Copyright 2017 Commit 451
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
