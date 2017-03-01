@@ -29,7 +29,6 @@ import android.view.ViewParent;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.ovenbits.quickactionview.R;
 import com.commit451.quickactionview.animator.FadeInFadeOutActionsTitleAnimator;
 import com.commit451.quickactionview.animator.SlideFromCenterAnimator;
 
@@ -42,7 +41,7 @@ import java.util.Map;
 /**
  * A QuickActionView, which shows actions when a view is long pressed.
  *
- * @see <a href="https://github.com/ovenbits/QuickActionView">https://github.com/ovenbits/QuickActionView</a>
+ * @see <a href="https://github.com/Commit451/QuickActionView">https://github.com/Commit451/QuickActionView</a>
  */
 public class QuickActionView {
 

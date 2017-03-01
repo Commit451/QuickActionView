@@ -11,8 +11,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
-import com.ovenbits.quickactionview.R;
-
 /**
  * View that shows the action
  */

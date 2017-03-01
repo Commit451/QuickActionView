@@ -10,8 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
-import com.ovenbits.quickactionview.R;
-
 /**
  * Action that can be added to the {@link QuickActionView}
  */
