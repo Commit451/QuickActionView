@@ -4,13 +4,13 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.widget.TextView;
+import android.support.v7.widget.AppCompatTextView;
 
 /**
  * Shows the title of the Action
  */
 @SuppressLint("ViewConstructor")
-class ActionTitleView extends TextView {
+class ActionTitleView extends AppCompatTextView {
 
     private Action mAction;
     private ConfigHelper mConfigHelper;
