@@ -46,6 +46,7 @@ import java.util.Map;
 public class QuickActionView {
 
     private boolean mShown = false;
+    private boolean mDoesShowOnClick = false;
     private Context mContext;
     private OnActionSelectedListener mOnActionSelectedListener;
     private OnDismissListener mOnDismissListener;
@@ -125,7 +126,23 @@ public class QuickActionView {
         RegisteredListener listener = new RegisteredListener();
         mRegisteredListeners.put(view, listener);
         view.setOnTouchListener(listener);
-        view.setOnLongClickListener(listener);
+        if (mDoesShowOnClick) {
+            view.setOnClickListener(listener);
+        } else {
+            view.setOnLongClickListener(listener);
+        }
+        return this;
+    }
+
+
+    /**
+     * Set if the QuickActionView appears when the passed view is clicked
+     *
+     * @param showsOnclick boolean value, indicates if the QuickActionView shows on click instead of long pressed
+     * @return the QuickActionView
+     */
+    public QuickActionView setDoesShowOnClick(boolean showsOnclick) {
+        this.mDoesShowOnClick = showsOnclick;
         return this;
     }
 
@@ -950,10 +967,15 @@ public class QuickActionView {
     /**
      * A class to combine a long click listener and a touch listener, to register views with
      */
-    private class RegisteredListener implements View.OnLongClickListener, View.OnTouchListener {
+    private class RegisteredListener implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener {
 
         private float mTouchX;
         private float mTouchY;
+
+        @Override
+        public void onClick(View v) {
+            show(v, new Point((int) mTouchX, (int) mTouchY));
+        }
 
         @Override
         public boolean onLongClick(View v) {
