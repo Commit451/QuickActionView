@@ -11,13 +11,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.IdRes;
-import android.support.annotation.MenuRes;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.view.menu.MenuBuilder;
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IdRes;
+import androidx.annotation.MenuRes;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.view.menu.MenuBuilder;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,6 +43,7 @@ import java.util.Map;
  *
  * @see <a href="https://github.com/Commit451/QuickActionView">https://github.com/Commit451/QuickActionView</a>
  */
+@SuppressWarnings("unused")
 public class QuickActionView {
 
     private boolean mShown = false;

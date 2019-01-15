@@ -12,6 +12,7 @@ import com.commit451.quickactionview.ActionsOutAnimator;
 /**
  * Fades in the quick actions
  */
+@SuppressWarnings("unused")
 public class FadeAnimator implements ActionsInAnimator, ActionsOutAnimator {
 
     private LinearInterpolator mInterpolator = new LinearInterpolator();

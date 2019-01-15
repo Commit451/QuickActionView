@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 /**
  * Action that can be added to the {@link QuickActionView}
@@ -68,7 +68,7 @@ public class Action {
         protected int mTextBackgroundDrawable;
 
         protected Config(Context context) {
-            int colorAccent = ColorUtils.getThemeAttrColor(context, R.attr.colorAccent);
+            int colorAccent = ColorUtils.INSTANCE.getThemeAttrColor(context, R.attr.colorAccent);
             mBackgroundColorStateList = ColorStateList.valueOf(colorAccent);
             mTextBackgroundDrawable = R.drawable.qav_text_background;
             mTextColor = Color.WHITE;
