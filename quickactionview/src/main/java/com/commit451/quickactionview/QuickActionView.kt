@@ -452,6 +452,7 @@ class QuickActionView private constructor(private val context: Context) {
         val manager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val params = WindowManager.LayoutParams()
         params.format = PixelFormat.TRANSLUCENT
+        params.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR
         quickActionViewLayout = QuickActionViewLayout(context, actions, point)
         manager.addView(quickActionViewLayout, params)
         onShowListener?.invoke(this)
