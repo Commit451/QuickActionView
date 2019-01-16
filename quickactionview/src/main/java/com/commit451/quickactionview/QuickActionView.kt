@@ -450,7 +450,7 @@ class QuickActionView private constructor(private val context: Context) {
         }
 
         val manager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val params = WindowManager.LayoutParams(WindowManager.LayoutParams.TYPE_APPLICATION_SUB_PANEL)
+        val params = WindowManager.LayoutParams()
         params.format = PixelFormat.TRANSLUCENT
         quickActionViewLayout = QuickActionViewLayout(context, actions, point)
         manager.addView(quickActionViewLayout, params)
@@ -458,8 +458,8 @@ class QuickActionView private constructor(private val context: Context) {
     }
 
     private fun animateHide() {
-        val duration = quickActionViewLayout!!.animateOut()
-        quickActionViewLayout!!.postDelayed({ removeView() }, duration)
+        val duration = quickActionViewLayout?.animateOut() ?: 0L
+        quickActionViewLayout?.postDelayed({ removeView() }, duration)
     }
 
     private fun removeView() {
