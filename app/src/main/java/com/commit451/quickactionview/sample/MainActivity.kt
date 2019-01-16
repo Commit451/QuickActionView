@@ -42,8 +42,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         @SuppressLint("ResourceType")
-        val actionConfig = Action.Config()
-                .setBackgroundColorStateList(ContextCompat.getColorStateList(this, R.drawable.sample_background_color))
+        val actionConfig = Action.Config(this)
+                .setBackgroundColorStateList(ContextCompat.getColorStateList(this, R.drawable.sample_background_color)!!)
                 .setTextColor(Color.MAGENTA)
 
         val popAnimator = PopAnimator(true)
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                 .setTextSize(30)
                 .setScrimColor(Color.parseColor("#99FFFFFF"))
                 .setTextBackgroundDrawable(R.drawable.text_background)
-                .setIndicatorDrawable(ContextCompat.getDrawable(this@MainActivity, R.drawable.indicator))
+                .setIndicatorDrawable(ContextCompat.getDrawable(this@MainActivity, R.drawable.indicator)!!)
                 .setActionConfig(actionConfig, R.id.action_add_to_cart)
                 .setActionsOutAnimator(popAnimator)
                 .setActionsTitleInAnimator(actionTitleAnimator)

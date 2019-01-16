@@ -1,12 +1,12 @@
-package com.commit451.quickactionview;
+package com.commit451.quickactionview
 
-import android.graphics.Point;
-import android.view.View;
+import android.graphics.Point
+import android.view.View
 
 /**
  * Custom animations for QuickActionView animating in
  */
-public interface ActionsInAnimator {
+interface ActionsInAnimator {
 
     /**
      * Animate in the action view within the QuickActionView
@@ -16,19 +16,19 @@ public interface ActionsInAnimator {
      * @param view   the action view to animate
      * @param center the final resting center point of the Action
      */
-    void animateActionIn(Action action, int index, ActionView view, Point center);
+    fun animateActionIn(action: Action, index: Int, view: ActionView, center: Point)
 
     /**
      * Animate in the indicator as the QuickActionView shows
      *
      * @param indicator the indicator view
      */
-    void animateIndicatorIn(View indicator);
+    fun animateIndicatorIn(indicator: View)
 
     /**
      * Animate in the scrim as the QuickActionView shows
      *
      * @param scrim the scrim view
      */
-    void animateScrimIn(View scrim);
+    fun animateScrimIn(scrim: View)
 }

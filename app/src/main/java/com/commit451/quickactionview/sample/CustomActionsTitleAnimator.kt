@@ -28,12 +28,12 @@ class CustomActionsTitleAnimator : ActionsTitleInAnimator, ActionsTitleOutAnimat
                 .setDuration(DURATION)
     }
 
-    override fun animateActionTitleOut(action: Action, index: Int, view: View): Int {
+    override fun animateActionTitleOut(action: Action, index: Int, view: View): Long {
         view.animate()
                 .alpha(0.0f)
                 .scaleX(0.0f)
                 .scaleY(0.0f)
                 .setDuration(DURATION)
-        return DURATION.toInt()
+        return DURATION
     }
 }

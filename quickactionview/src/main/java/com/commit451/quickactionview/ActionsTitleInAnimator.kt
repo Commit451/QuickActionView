@@ -1,11 +1,11 @@
-package com.commit451.quickactionview;
+package com.commit451.quickactionview
 
-import android.view.View;
+import android.view.View
 
 /**
- * Custom animations for an {@link Action} label animating in
+ * Custom animations for an [Action] label animating in
  */
-public interface ActionsTitleInAnimator {
+interface ActionsTitleInAnimator {
 
     /**
      * Animate the action title view as the QuickActionView action title appears
@@ -14,5 +14,5 @@ public interface ActionsTitleInAnimator {
      * @param index  The position of the action in its parent
      * @param view   The action title view
      */
-    void animateActionTitleIn(Action action, int index, View view);
+    fun animateActionTitleIn(action: Action, index: Int, view: View)
 }

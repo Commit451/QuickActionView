@@ -1,12 +1,12 @@
-package com.commit451.quickactionview;
+package com.commit451.quickactionview
 
-import android.graphics.Point;
-import android.view.View;
+import android.graphics.Point
+import android.view.View
 
 /**
  * Custom animations for QuickActionView animating out
  */
-public interface ActionsOutAnimator {
+interface ActionsOutAnimator {
 
     /**
      * Animate the action view as the QuickActionView dismisses
@@ -17,7 +17,7 @@ public interface ActionsOutAnimator {
      * @param center The center of the indicator
      * @return The duration of this animation, in milliseconds
      */
-    int animateActionOut(Action action, int index, ActionView view, Point center);
+    fun animateActionOut(action: Action, index: Int, view: ActionView, center: Point): Long
 
     /**
      * Animate the indicator view as the QuickActionView dismisses
@@ -25,7 +25,7 @@ public interface ActionsOutAnimator {
      * @param indicator The indicator view
      * @return The duration of this animation, in milliseconds
      */
-    int animateIndicatorOut(View indicator);
+    fun animateIndicatorOut(indicator: View): Long
 
     /**
      * Animate the scrim as the QuickActionView dismisses
@@ -33,6 +33,6 @@ public interface ActionsOutAnimator {
      * @param scrim The scrimView to animate
      * @return The duration of this animation, in milliseconds
      */
-    int animateScrimOut(View scrim);
+    fun animateScrimOut(scrim: View): Long
 
 }

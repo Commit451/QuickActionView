@@ -6,12 +6,13 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 
 import com.commit451.quickactionview.Action
+import com.commit451.quickactionview.OnActionSelectedListener
 import com.commit451.quickactionview.QuickActionView
 
 /**
  * Adapter for the RecyclerView, which holds cheeses
  */
-class CheeseAdapter(context: Context, private val listener: Listener) : RecyclerView.Adapter<CheeseViewHolder>(), QuickActionView.OnActionSelectedListener {
+class CheeseAdapter(context: Context, private val listener: Listener) : RecyclerView.Adapter<CheeseViewHolder>(), OnActionSelectedListener {
 
     private val values = mutableListOf<Cheese>()
 
@@ -19,7 +20,7 @@ class CheeseAdapter(context: Context, private val listener: Listener) : Recycler
             .addActions(R.menu.actions)
             .setOnActionSelectedListener(this)
 
-    override fun onActionSelected(action: Action, quickActionView: QuickActionView) {
+    override fun invoke(action: Action, quickActionView: QuickActionView) {
         val view = quickActionView.longPressedView
         if (view != null) {
             val position = view.getTag(R.id.list_position) as Int

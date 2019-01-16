@@ -1,11 +1,11 @@
-package com.commit451.quickactionview;
+package com.commit451.quickactionview
 
-import android.view.View;
+import android.view.View
 
 /**
- * Custom animations for an {@link Action} label animating in
+ * Custom animations for an [Action] label animating in
  */
-public interface ActionsTitleOutAnimator {
+interface ActionsTitleOutAnimator {
 
     /**
      * Animate the action title view as the QuickActionView action title disappears
@@ -16,5 +16,5 @@ public interface ActionsTitleOutAnimator {
      * @return The duration of this animation, in milliseconds, so that the view can be properly
      * hidden when the animation completes
      */
-    int animateActionTitleOut(Action action, int index, View view);
+    fun animateActionTitleOut(action: Action, index: Int, view: View): Long
 }
