@@ -100,7 +100,7 @@ See the sample for more detail.
 License
 --------
 
-    Copyright 2017 Commit 451
+    Copyright 2020 Commit 451
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
