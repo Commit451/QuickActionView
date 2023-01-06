@@ -176,7 +176,7 @@ class QuickActionView private constructor(private val context: Context) {
         MenuInflater(context).inflate(menuId, menu)
         for (i in 0 until menu.size()) {
             val item = menu.getItem(i)
-            val action = Action(item.itemId, item.icon, item.title)
+            val action = Action(item.itemId, item.icon!!, item.title!!)
             addAction(action)
         }
         return this

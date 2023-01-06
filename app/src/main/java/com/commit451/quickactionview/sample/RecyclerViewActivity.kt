@@ -3,15 +3,10 @@ package com.commit451.quickactionview.sample
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.appcompat.widget.Toolbar
-import android.view.ViewGroup
-import kotlinx.android.synthetic.main.activity_recyclerview.*
-
-import java.util.ArrayList
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * Shows usage of the QuickActionView from within a RecyclerView
@@ -30,12 +25,13 @@ class RecyclerViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recyclerview)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         setSupportActionBar(toolbar)
         recyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, 2)
         adapter = CheeseAdapter(this, object : CheeseAdapter.Listener {
             override fun onItemClicked(cheese: Cheese) {
                 Snackbar.make(recyclerView, cheese.name + " was clicked", Snackbar.LENGTH_SHORT)
-                        .show()
+                    .show()
             }
         })
         recyclerView.adapter = adapter
@@ -44,7 +40,7 @@ class RecyclerViewActivity : AppCompatActivity() {
     }
 
     private fun loadCheeses() {
-        val cheeses = ArrayList<Cheese>()
+        val cheeses = mutableListOf<Cheese>()
         for (i in 0..29) {
             cheeses.add(Cheeses.randomCheese())
         }
