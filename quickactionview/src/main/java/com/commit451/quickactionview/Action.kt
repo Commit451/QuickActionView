@@ -33,7 +33,7 @@ class Action
      * Configuration for the [Action] which controls the visuals.
      */
     class Config constructor(context: Context) {
-        internal var backgroundColorStateList: ColorStateList = ColorStateList.valueOf(ColorUtils.getThemeAttrColor(context, R.attr.colorAccent))
+        internal var backgroundColorStateList: ColorStateList = ColorStateList.valueOf(ColorUtils.getThemeAttrColor(context, androidx.appcompat.R.attr.colorAccent))
         internal var textColor: Int = Color.WHITE
         @DrawableRes
         internal var textBackgroundDrawable: Int = R.drawable.qav_text_background
