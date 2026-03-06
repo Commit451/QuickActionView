@@ -1,27 +1,17 @@
 # QuickActionView
 View that shows quick actions when long pressed, inspired by Pinterest
 
-[![Build Status](https://travis-ci.org/Commit451/QuickActionView.svg?branch=master)](https://travis-ci.org/Commit451/QuickActionView) [![](https://jitpack.io/v/Commit451/QuickActionView.svg)](https://jitpack.io/#Commit451/QuickActionView)
+[![Build](https://github.com/Commit451/QuickActionView/actions/workflows/ci.yml/badge.svg)](https://github.com/Commit451/QuickActionView/actions/workflows/ci.yml) [![Maven Central](https://img.shields.io/maven-central/v/com.commit451/quickactionview.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/com.commit451/quickactionview)
 
-![Sample Gif](https://raw.githubusercontent.com/Commit451/QuickActionView/master/screenshots/qav.gif)
+![Sample Gif](https://raw.githubusercontent.com/Commit451/QuickActionView/main/screenshots/qav.gif)
 
 # Gradle Dependency
 
-Add this in your root `build.gradle` file (**not** your module `build.gradle` file):
+Add the library to your project `build.gradle`:
 
-```gradle
-allprojects {
-	repositories {
-		...
-		maven { url "https://jitpack.io" }
-	}
-}
-```
-
-Then, add the library to your project `build.gradle`
 ```gradle
 dependencies {
-    compile 'com.github.Commit451:QuickActionView:latest.release.here'
+    implementation("com.commit451:quickactionview:latest.release.here")
 }
 ```
 
